@@ -1,0 +1,496 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		D2E5787715F8A4F9001BA957 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787615F8A4F9001BA957 /* UIKit.framework */; };
+		D2E5787915F8A4F9001BA957 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787815F8A4F9001BA957 /* Foundation.framework */; };
+		D2E5787B15F8A4F9001BA957 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787A15F8A4F9001BA957 /* CoreGraphics.framework */; };
+		D2E5788115F8A4F9001BA957 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2E5787F15F8A4F9001BA957 /* InfoPlist.strings */; };
+		D2E5788315F8A4F9001BA957 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E5788215F8A4F9001BA957 /* main.m */; };
+		D2E5788715F8A4F9001BA957 /* AbeloAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E5788615F8A4F9001BA957 /* AbeloAppDelegate.m */; };
+		D2E5788A15F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2E5788815F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard */; };
+		D2E5788D15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D2E5788B15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard */; };
+		D2E5789015F8A4F9001BA957 /* AbeloViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E5788F15F8A4F9001BA957 /* AbeloViewController.m */; };
+		D2E5789815F8A4FA001BA957 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5789715F8A4FA001BA957 /* SenTestingKit.framework */; };
+		D2E5789915F8A4FA001BA957 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787615F8A4F9001BA957 /* UIKit.framework */; };
+		D2E5789A15F8A4FA001BA957 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787815F8A4F9001BA957 /* Foundation.framework */; };
+		D2E578A215F8A4FA001BA957 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2E578A015F8A4FA001BA957 /* InfoPlist.strings */; };
+		D2E578A515F8A4FA001BA957 /* AbeloTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E578A415F8A4FA001BA957 /* AbeloTests.m */; };
+		D2E578B015F8A569001BA957 /* receipt2.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = D2E578AE15F8A569001BA957 /* receipt2.jpeg */; };
+		D2E578B115F8A569001BA957 /* dinner_receipt.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = D2E578AF15F8A569001BA957 /* dinner_receipt.jpeg */; };
+		D2E578B515F8BC53001BA957 /* AbeloBill.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E578B415F8BC53001BA957 /* AbeloBill.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D2E5789B15F8A4FA001BA957 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D2E5786915F8A4F9001BA957 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D2E5787115F8A4F9001BA957;
+			remoteInfo = Abelo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D2E5787215F8A4F9001BA957 /* Abelo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abelo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2E5787615F8A4F9001BA957 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D2E5787815F8A4F9001BA957 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		D2E5787A15F8A4F9001BA957 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		D2E5787E15F8A4F9001BA957 /* Abelo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Abelo-Info.plist"; sourceTree = "<group>"; };
+		D2E5788015F8A4F9001BA957 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D2E5788215F8A4F9001BA957 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D2E5788415F8A4F9001BA957 /* Abelo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Abelo-Prefix.pch"; sourceTree = "<group>"; };
+		D2E5788515F8A4F9001BA957 /* AbeloAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloAppDelegate.h; sourceTree = "<group>"; };
+		D2E5788615F8A4F9001BA957 /* AbeloAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AbeloAppDelegate.m; sourceTree = "<group>"; };
+		D2E5788915F8A4F9001BA957 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		D2E5788C15F8A4F9001BA957 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
+		D2E5788E15F8A4F9001BA957 /* AbeloViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloViewController.h; sourceTree = "<group>"; };
+		D2E5788F15F8A4F9001BA957 /* AbeloViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AbeloViewController.m; sourceTree = "<group>"; };
+		D2E5789615F8A4FA001BA957 /* AbeloTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AbeloTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D2E5789715F8A4FA001BA957 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		D2E5789F15F8A4FA001BA957 /* AbeloTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AbeloTests-Info.plist"; sourceTree = "<group>"; };
+		D2E578A115F8A4FA001BA957 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D2E578A315F8A4FA001BA957 /* AbeloTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloTests.h; sourceTree = "<group>"; };
+		D2E578A415F8A4FA001BA957 /* AbeloTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AbeloTests.m; sourceTree = "<group>"; };
+		D2E578AE15F8A569001BA957 /* receipt2.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = receipt2.jpeg; path = "../../../Downloads/Chrome Downloads/receipt2.jpeg"; sourceTree = "<group>"; };
+		D2E578AF15F8A569001BA957 /* dinner_receipt.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = dinner_receipt.jpeg; path = "../../../Downloads/Chrome Downloads/dinner_receipt.jpeg"; sourceTree = "<group>"; };
+		D2E578B315F8BC53001BA957 /* AbeloBill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloBill.h; sourceTree = "<group>"; };
+		D2E578B415F8BC53001BA957 /* AbeloBill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloBill.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2E5786F15F8A4F9001BA957 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2E5787715F8A4F9001BA957 /* UIKit.framework in Frameworks */,
+				D2E5787915F8A4F9001BA957 /* Foundation.framework in Frameworks */,
+				D2E5787B15F8A4F9001BA957 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2E5789215F8A4FA001BA957 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2E5789815F8A4FA001BA957 /* SenTestingKit.framework in Frameworks */,
+				D2E5789915F8A4FA001BA957 /* UIKit.framework in Frameworks */,
+				D2E5789A15F8A4FA001BA957 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D2E5786715F8A4F9001BA957 = {
+			isa = PBXGroup;
+			children = (
+				D2E578B215F8A56F001BA957 /* Reources */,
+				D2E5787C15F8A4F9001BA957 /* Abelo */,
+				D2E5789D15F8A4FA001BA957 /* AbeloTests */,
+				D2E5787515F8A4F9001BA957 /* Frameworks */,
+				D2E5787315F8A4F9001BA957 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D2E5787315F8A4F9001BA957 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2E5787215F8A4F9001BA957 /* Abelo.app */,
+				D2E5789615F8A4FA001BA957 /* AbeloTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D2E5787515F8A4F9001BA957 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D2E5787615F8A4F9001BA957 /* UIKit.framework */,
+				D2E5787815F8A4F9001BA957 /* Foundation.framework */,
+				D2E5787A15F8A4F9001BA957 /* CoreGraphics.framework */,
+				D2E5789715F8A4FA001BA957 /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D2E5787C15F8A4F9001BA957 /* Abelo */ = {
+			isa = PBXGroup;
+			children = (
+				D2E578B615F8D6FF001BA957 /* Model */,
+				D2E5788515F8A4F9001BA957 /* AbeloAppDelegate.h */,
+				D2E5788615F8A4F9001BA957 /* AbeloAppDelegate.m */,
+				D2E5788815F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard */,
+				D2E5788B15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard */,
+				D2E5788E15F8A4F9001BA957 /* AbeloViewController.h */,
+				D2E5788F15F8A4F9001BA957 /* AbeloViewController.m */,
+				D2E5787D15F8A4F9001BA957 /* Supporting Files */,
+			);
+			path = Abelo;
+			sourceTree = "<group>";
+		};
+		D2E5787D15F8A4F9001BA957 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D2E5787E15F8A4F9001BA957 /* Abelo-Info.plist */,
+				D2E5787F15F8A4F9001BA957 /* InfoPlist.strings */,
+				D2E5788215F8A4F9001BA957 /* main.m */,
+				D2E5788415F8A4F9001BA957 /* Abelo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D2E5789D15F8A4FA001BA957 /* AbeloTests */ = {
+			isa = PBXGroup;
+			children = (
+				D2E578A315F8A4FA001BA957 /* AbeloTests.h */,
+				D2E578A415F8A4FA001BA957 /* AbeloTests.m */,
+				D2E5789E15F8A4FA001BA957 /* Supporting Files */,
+			);
+			path = AbeloTests;
+			sourceTree = "<group>";
+		};
+		D2E5789E15F8A4FA001BA957 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				D2E5789F15F8A4FA001BA957 /* AbeloTests-Info.plist */,
+				D2E578A015F8A4FA001BA957 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		D2E578B215F8A56F001BA957 /* Reources */ = {
+			isa = PBXGroup;
+			children = (
+				D2E578AE15F8A569001BA957 /* receipt2.jpeg */,
+				D2E578AF15F8A569001BA957 /* dinner_receipt.jpeg */,
+			);
+			name = Reources;
+			sourceTree = "<group>";
+		};
+		D2E578B615F8D6FF001BA957 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				D2E578B315F8BC53001BA957 /* AbeloBill.h */,
+				D2E578B415F8BC53001BA957 /* AbeloBill.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D2E5787115F8A4F9001BA957 /* Abelo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2E578A815F8A4FA001BA957 /* Build configuration list for PBXNativeTarget "Abelo" */;
+			buildPhases = (
+				D2E5786E15F8A4F9001BA957 /* Sources */,
+				D2E5786F15F8A4F9001BA957 /* Frameworks */,
+				D2E5787015F8A4F9001BA957 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Abelo;
+			productName = Abelo;
+			productReference = D2E5787215F8A4F9001BA957 /* Abelo.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D2E5789515F8A4FA001BA957 /* AbeloTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D2E578AB15F8A4FA001BA957 /* Build configuration list for PBXNativeTarget "AbeloTests" */;
+			buildPhases = (
+				D2E5789115F8A4FA001BA957 /* Sources */,
+				D2E5789215F8A4FA001BA957 /* Frameworks */,
+				D2E5789315F8A4FA001BA957 /* Resources */,
+				D2E5789415F8A4FA001BA957 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D2E5789C15F8A4FA001BA957 /* PBXTargetDependency */,
+			);
+			name = AbeloTests;
+			productName = AbeloTests;
+			productReference = D2E5789615F8A4FA001BA957 /* AbeloTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D2E5786915F8A4F9001BA957 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = Abelo;
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Alasdair McCall";
+			};
+			buildConfigurationList = D2E5786C15F8A4F9001BA957 /* Build configuration list for PBXProject "Abelo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D2E5786715F8A4F9001BA957;
+			productRefGroup = D2E5787315F8A4F9001BA957 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2E5787115F8A4F9001BA957 /* Abelo */,
+				D2E5789515F8A4FA001BA957 /* AbeloTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D2E5787015F8A4F9001BA957 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2E5788115F8A4F9001BA957 /* InfoPlist.strings in Resources */,
+				D2E5788A15F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard in Resources */,
+				D2E5788D15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard in Resources */,
+				D2E578B015F8A569001BA957 /* receipt2.jpeg in Resources */,
+				D2E578B115F8A569001BA957 /* dinner_receipt.jpeg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2E5789315F8A4FA001BA957 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2E578A215F8A4FA001BA957 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D2E5789415F8A4FA001BA957 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2E5786E15F8A4F9001BA957 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2E5788315F8A4F9001BA957 /* main.m in Sources */,
+				D2E5788715F8A4F9001BA957 /* AbeloAppDelegate.m in Sources */,
+				D2E5789015F8A4F9001BA957 /* AbeloViewController.m in Sources */,
+				D2E578B515F8BC53001BA957 /* AbeloBill.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2E5789115F8A4FA001BA957 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D2E578A515F8A4FA001BA957 /* AbeloTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D2E5789C15F8A4FA001BA957 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D2E5787115F8A4F9001BA957 /* Abelo */;
+			targetProxy = D2E5789B15F8A4FA001BA957 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		D2E5787F15F8A4F9001BA957 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2E5788015F8A4F9001BA957 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D2E5788815F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2E5788915F8A4F9001BA957 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		D2E5788B15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2E5788C15F8A4F9001BA957 /* en */,
+			);
+			name = MainStoryboard_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		D2E578A015F8A4FA001BA957 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D2E578A115F8A4FA001BA957 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		D2E578A615F8A4FA001BA957 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D2E578A715F8A4FA001BA957 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D2E578A915F8A4FA001BA957 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Abelo/Abelo-Prefix.pch";
+				INFOPLIST_FILE = "Abelo/Abelo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		D2E578AA15F8A4FA001BA957 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Abelo/Abelo-Prefix.pch";
+				INFOPLIST_FILE = "Abelo/Abelo-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		D2E578AC15F8A4FA001BA957 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Abelo.app/Abelo";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Abelo/Abelo-Prefix.pch";
+				INFOPLIST_FILE = "AbeloTests/AbeloTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		D2E578AD15F8A4FA001BA957 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Abelo.app/Abelo";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Abelo/Abelo-Prefix.pch";
+				INFOPLIST_FILE = "AbeloTests/AbeloTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D2E5786C15F8A4F9001BA957 /* Build configuration list for PBXProject "Abelo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2E578A615F8A4FA001BA957 /* Debug */,
+				D2E578A715F8A4FA001BA957 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D2E578A815F8A4FA001BA957 /* Build configuration list for PBXNativeTarget "Abelo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2E578A915F8A4FA001BA957 /* Debug */,
+				D2E578AA15F8A4FA001BA957 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		D2E578AB15F8A4FA001BA957 /* Build configuration list for PBXNativeTarget "AbeloTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D2E578AC15F8A4FA001BA957 /* Debug */,
+				D2E578AD15F8A4FA001BA957 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D2E5786915F8A4F9001BA957 /* Project object */;
+}
