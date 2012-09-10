@@ -81,18 +81,6 @@
     <resources>
         <image name="receipt2.jpeg" width="420" height="727"/>
     </resources>
-    <classes>
-        <class className="AbeloViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AbeloViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addGuestInputAction:" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="addGuestButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="addGuestInput" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="addGuestLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="addGuestView" candidateClass="UIView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

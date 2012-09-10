@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D2D5F27515FE4A2A00923EFB /* AbeloUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */; };
 		D2E5787715F8A4F9001BA957 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787615F8A4F9001BA957 /* UIKit.framework */; };
 		D2E5787915F8A4F9001BA957 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787815F8A4F9001BA957 /* Foundation.framework */; };
 		D2E5787B15F8A4F9001BA957 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787A15F8A4F9001BA957 /* CoreGraphics.framework */; };
@@ -37,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D2D5F27315FE4A2A00923EFB /* AbeloUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloUtilities.h; sourceTree = "<group>"; };
+		D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloUtilities.m; sourceTree = "<group>"; };
 		D2E5787215F8A4F9001BA957 /* Abelo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abelo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E5787615F8A4F9001BA957 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D2E5787815F8A4F9001BA957 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -129,6 +132,8 @@
 				D2E5788E15F8A4F9001BA957 /* AbeloViewController.h */,
 				D2E5788F15F8A4F9001BA957 /* AbeloViewController.m */,
 				D2E5787D15F8A4F9001BA957 /* Supporting Files */,
+				D2D5F27315FE4A2A00923EFB /* AbeloUtilities.h */,
+				D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */,
 			);
 			path = Abelo;
 			sourceTree = "<group>";
@@ -296,6 +301,7 @@
 				D2E5788715F8A4F9001BA957 /* AbeloAppDelegate.m in Sources */,
 				D2E5789015F8A4F9001BA957 /* AbeloViewController.m in Sources */,
 				D2E578B515F8BC53001BA957 /* AbeloBill.m in Sources */,
+				D2D5F27515FE4A2A00923EFB /* AbeloUtilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -481,6 +487,7 @@
 				D2E578AA15F8A4FA001BA957 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		D2E578AB15F8A4FA001BA957 /* Build configuration list for PBXNativeTarget "AbeloTests" */ = {
 			isa = XCConfigurationList;
@@ -489,6 +496,7 @@
 				D2E578AD15F8A4FA001BA957 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

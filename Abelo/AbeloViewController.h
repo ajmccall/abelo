@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 
-@interface AbeloViewController : UIViewController<UITextFieldDelegate>
+@interface AbeloViewController : UIViewController<UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *addGuestView;
 @property (weak, nonatomic) IBOutlet UILabel *addGuestLabel;

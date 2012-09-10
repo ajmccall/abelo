@@ -8,6 +8,7 @@
 
 #import "AbeloViewController.h"
 #import "AbeloBill.h"
+#import "AbeloUtilities.h"
 
 @interface AbeloViewController ()
 
@@ -18,7 +19,8 @@
 @property (nonatomic) AbeloBill *bill;
 @property (nonatomic) CGPoint newLabelPoint;
 
-@property (nonatomic) NSMutableArray *guestViews;
+@property (nonatomic) NSMutableArray *partyMemberViews;
+@property (nonatomic) UIPopoverController *popover;
 
 @end
 
@@ -29,18 +31,22 @@
 @synthesize addGuestInput;
 @synthesize addGuestButton;
 
-@synthesize guestViews = _guestViews;
+@synthesize partyMemberViews = _partyMemberViews;
 @synthesize bill = _bill;
+@synthesize popover = _popover;
 
-+ (void)initialize {
-    
+- (NSMutableArray *)partyMemberViews {
+    if(!_partyMemberViews) {
+        _partyMemberViews = [[NSMutableArray alloc] init];
+    }
+    return _partyMemberViews;
 }
 
-- (NSMutableArray *)guestViews {
-    if(!_guestViews) {
-        _guestViews = [[NSMutableArray alloc] init];
+- (UIPopoverController *)popover {
+    if(!_popover) {
+        _popover = [[UIPopoverController alloc] initWithContentViewController:self];
     }
-    return _guestViews;
+    return _popover;
 }
 
 - (AbeloBill *)bill {
@@ -96,15 +102,53 @@
 
 
 - (void) addGuestViewWithName:(NSString *)guestName {
-    int index = [self.bill addPartyEntity:guestName];
+    [self.bill addPartyEntity:guestName];
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.newLabelPoint.x, self.newLabelPoint.y, 87, 33)];
     label.text = guestName;
     [self.view addSubview:label];
-    
     [self.view setNeedsDisplay];
     self.newLabelPoint = CGPointMake(self.newLabelPoint.x, self.newLabelPoint.y + 33);
+    [self.partyMemberViews addObject:label];
 }
+
+# pragma mark -
+# pragma mark Button actions
+
+- (IBAction)cameraAction {
+
+    if(![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
+        DLog(@"No camera found")
+        return;
+    }
+    
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+    imagePickerController.delegate = self;
+    
+    [self presentViewController:imagePickerController
+                       animated:YES
+                     completion:^(void){
+                     }];
+
+//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
+//        UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:imagePickerController];
+//        [popover presentPopoverFromRect:self.view.bounds inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+//        self.popover = popover;
+//        [self addChildViewController:self.popover];
+//    } else {
+//        [self presentModalViewController:imagePickerController animated:YES];
+//    }
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
 
 # pragma mark -
 # pragma mark UITextFieldDelegate
@@ -115,7 +159,6 @@
     }
     return YES;
 }
-
 
 # pragma mark -
 # pragma mark Private methods
