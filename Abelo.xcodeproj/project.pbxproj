@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		D2D5F27515FE4A2A00923EFB /* AbeloUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */; };
+		D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F27715FF4E2600923EFB /* dimt.jpg */; };
+		D2D5F28F15FF596E00923EFB /* AbeloReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F28D15FF596E00923EFB /* AbeloReceiptViewController.m */; };
+		D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */; };
+		D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */; };
 		D2E5787715F8A4F9001BA957 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787615F8A4F9001BA957 /* UIKit.framework */; };
 		D2E5787915F8A4F9001BA957 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787815F8A4F9001BA957 /* Foundation.framework */; };
 		D2E5787B15F8A4F9001BA957 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787A15F8A4F9001BA957 /* CoreGraphics.framework */; };
@@ -40,6 +44,12 @@
 /* Begin PBXFileReference section */
 		D2D5F27315FE4A2A00923EFB /* AbeloUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloUtilities.h; sourceTree = "<group>"; };
 		D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloUtilities.m; sourceTree = "<group>"; };
+		D2D5F27715FF4E2600923EFB /* dimt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dimt.jpg; sourceTree = "<group>"; };
+		D2D5F28C15FF596E00923EFB /* AbeloReceiptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloReceiptViewController.h; sourceTree = "<group>"; };
+		D2D5F28D15FF596E00923EFB /* AbeloReceiptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloReceiptViewController.m; sourceTree = "<group>"; };
+		D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AbeloReceiptViewController.xib; sourceTree = "<group>"; };
+		D2D5F29115FF5D1600923EFB /* AbeloReceiptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloReceiptView.h; sourceTree = "<group>"; };
+		D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloReceiptView.m; sourceTree = "<group>"; };
 		D2E5787215F8A4F9001BA957 /* Abelo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abelo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E5787615F8A4F9001BA957 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D2E5787815F8A4F9001BA957 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -90,6 +100,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D2D5F27915FF4E5000923EFB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D2D5F29115FF5D1600923EFB /* AbeloReceiptView.h */,
+				D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		D2E5786715F8A4F9001BA957 = {
 			isa = PBXGroup;
 			children = (
@@ -124,7 +143,8 @@
 		D2E5787C15F8A4F9001BA957 /* Abelo */ = {
 			isa = PBXGroup;
 			children = (
-				D2E578B615F8D6FF001BA957 /* Model */,
+				D2D5F27915FF4E5000923EFB /* Views */,
+				D2E578B615F8D6FF001BA957 /* Models */,
 				D2E5788515F8A4F9001BA957 /* AbeloAppDelegate.h */,
 				D2E5788615F8A4F9001BA957 /* AbeloAppDelegate.m */,
 				D2E5788815F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard */,
@@ -134,6 +154,9 @@
 				D2E5787D15F8A4F9001BA957 /* Supporting Files */,
 				D2D5F27315FE4A2A00923EFB /* AbeloUtilities.h */,
 				D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */,
+				D2D5F28C15FF596E00923EFB /* AbeloReceiptViewController.h */,
+				D2D5F28D15FF596E00923EFB /* AbeloReceiptViewController.m */,
+				D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */,
 			);
 			path = Abelo;
 			sourceTree = "<group>";
@@ -172,18 +195,19 @@
 			isa = PBXGroup;
 			children = (
 				D2E578AE15F8A569001BA957 /* receipt2.jpeg */,
+				D2D5F27715FF4E2600923EFB /* dimt.jpg */,
 				D2E578AF15F8A569001BA957 /* dinner_receipt.jpeg */,
 			);
 			name = Reources;
 			sourceTree = "<group>";
 		};
-		D2E578B615F8D6FF001BA957 /* Model */ = {
+		D2E578B615F8D6FF001BA957 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				D2E578B315F8BC53001BA957 /* AbeloBill.h */,
 				D2E578B415F8BC53001BA957 /* AbeloBill.m */,
 			);
-			name = Model;
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -263,6 +287,8 @@
 				D2E5788D15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard in Resources */,
 				D2E578B015F8A569001BA957 /* receipt2.jpeg in Resources */,
 				D2E578B115F8A569001BA957 /* dinner_receipt.jpeg in Resources */,
+				D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */,
+				D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,6 +328,8 @@
 				D2E5789015F8A4F9001BA957 /* AbeloViewController.m in Sources */,
 				D2E578B515F8BC53001BA957 /* AbeloBill.m in Sources */,
 				D2D5F27515FE4A2A00923EFB /* AbeloUtilities.m in Sources */,
+				D2D5F28F15FF596E00923EFB /* AbeloReceiptViewController.m in Sources */,
+				D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

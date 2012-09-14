@@ -9,6 +9,7 @@
 #import "AbeloViewController.h"
 #import "AbeloBill.h"
 #import "AbeloUtilities.h"
+#import "AbeloReceiptView.h"
 
 @interface AbeloViewController ()
 
@@ -22,6 +23,8 @@
 @property (nonatomic) NSMutableArray *partyMemberViews;
 @property (nonatomic) UIPopoverController *popover;
 
+@property (nonatomic) AbeloCreationState creationState;
+
 @end
 
 @implementation AbeloViewController
@@ -30,6 +33,13 @@
 @synthesize addGuestLabel;
 @synthesize addGuestInput;
 @synthesize addGuestButton;
+@synthesize receiptView = _receiptView;
+
+- (void)setReceiptView:(AbeloReceiptView *)receiptView {
+    _receiptView = receiptView;
+    [self.receiptView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:_receiptView action:@selector(panGesture:)]];
+
+}
 
 @synthesize partyMemberViews = _partyMemberViews;
 @synthesize bill = _bill;
@@ -78,17 +88,9 @@
     [self setAddGuestInput:nil];
 
     [self setAddGuestButton:nil];
+    [self setReceiptView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    } else {
-        return YES;
-    }
 }
 
 - (IBAction)addGuestButtonPressed {
@@ -115,7 +117,7 @@
 # pragma mark -
 # pragma mark Button actions
 
-- (IBAction)cameraAction {
+- (void) initialiseCamera {
 
     if(![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]){
         DLog(@"No camera found")
@@ -125,23 +127,79 @@
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
     imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
     imagePickerController.delegate = self;
+    imagePickerController.allowsEditing = NO;
     
     [self presentViewController:imagePickerController
                        animated:YES
                      completion:^(void){
                      }];
+}
 
-//    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-//        UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:imagePickerController];
-//        [popover presentPopoverFromRect:self.view.bounds inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-//        self.popover = popover;
-//        [self addChildViewController:self.popover];
-//    } else {
-//        [self presentModalViewController:imagePickerController animated:YES];
-//    }
+- (IBAction)backButtonAction:(id)sender {
+    if(self.creationState != AbeloCreationState0Start) {
+        self.creationState--;
+    }
+    
+    switch (self.creationState) {
+        case AbeloCreationState5End:
+        case AbeloCreationState4PartyMembers:
+        case AbeloCreationState3Total:
+        case AbeloCreationState2MenuItems:
+        case AbeloCreationState1Image:
+        case AbeloCreationState0Start:
+        default:
+            break;
+    }
+}
+
+- (IBAction)nextButtonAction {
+    if(self.creationState != AbeloCreationState5End){
+        self.creationState++;
+    }
+    
+    switch (self.creationState) {
+        case AbeloCreationState1Image:
+            [self initialiseCamera];
+            break;
+        case AbeloCreationState2MenuItems:
+            self.receiptView.drawState = RecieptViewDrawMenuItems;
+            break;
+        case AbeloCreationState3Total:
+        case AbeloCreationState4PartyMembers:
+        case AbeloCreationState5End:
+        default:
+            break;
+    }
+}
+
+- (IBAction)okButtonAction {
+    switch (self.creationState) {
+        case AbeloCreationState2MenuItems:
+//            self.receiptView
+            break;
+        case AbeloCreationState1Image:
+        case AbeloCreationState3Total:
+        case AbeloCreationState4PartyMembers:
+        case AbeloCreationState5End:
+        default:
+            break;
+    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
+    UIImage *originalImage, *editedImage, *imageToSave;
+    
+    editedImage = (UIImage *) [info objectForKey:UIImagePickerControllerEditedImage];
+    originalImage = (UIImage *) [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    if (editedImage) {
+        imageToSave = editedImage;
+    } else {
+        imageToSave = originalImage;
+    }
+    
+    self.receiptView.image = imageToSave;
     [self dismissModalViewControllerAnimated:YES];
 }
 
