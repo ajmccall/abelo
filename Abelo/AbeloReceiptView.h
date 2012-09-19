@@ -21,10 +21,13 @@ enum RecieptViewDrawState {
 
 @property (nonatomic) RecieptViewDrawState drawState;
 
-- (void) setMenuItemsBoundsPoint1:(CGFloat) p1 point2:(CGFloat) p2;
 - (void) clearView;
+
+
+- (void) setCurrentMenuItemAndDrawNext;
+- (void) resetCurrentMenuItem;
+
 - (void) pinchGesture:(UIPinchGestureRecognizer *) gesture;
-//- (void) tapGesture:(UITapGestureRecognizer *) gesture;
 - (void) panGesture:(UIPanGestureRecognizer *) gesture;
 
 @end

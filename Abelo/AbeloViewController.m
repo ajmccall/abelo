@@ -29,6 +29,7 @@
 
 @implementation AbeloViewController
 
+
 @synthesize addGuestView;
 @synthesize addGuestLabel;
 @synthesize addGuestInput;
@@ -38,6 +39,7 @@
 - (void)setReceiptView:(AbeloReceiptView *)receiptView {
     _receiptView = receiptView;
     [self.receiptView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:_receiptView action:@selector(panGesture:)]];
+    [self.receiptView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:_receiptView action:@selector(pinchGesture:)]];
 
 }
 
@@ -68,6 +70,10 @@
 
 - (void) setup {
     [self hideAddGuestView];
+    
+    //testing
+    self.creationState = AbeloCreationState2MenuItems;
+    self.receiptView.drawState = RecieptViewDrawMenuItems;
     
     CGRect buttonRect = addGuestButton.frame;
     self.newLabelPoint =  CGPointMake(buttonRect.origin.x, buttonRect.origin.y + buttonRect.size.height);
@@ -135,7 +141,29 @@
                      }];
 }
 
-- (IBAction)backButtonAction:(id)sender {
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    
+    UIImage *originalImage, *editedImage, *imageToSave;
+    
+    editedImage = (UIImage *) [info objectForKey:UIImagePickerControllerEditedImage];
+    originalImage = (UIImage *) [info objectForKey:UIImagePickerControllerOriginalImage];
+    
+    if (editedImage) {
+        imageToSave = editedImage;
+    } else {
+        imageToSave = originalImage;
+    }
+    
+    self.receiptView.image = imageToSave;
+    [self incrementCreationStep];
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (IBAction)decrementCreationStep {
     if(self.creationState != AbeloCreationState0Start) {
         self.creationState--;
     }
@@ -152,7 +180,7 @@
     }
 }
 
-- (IBAction)nextButtonAction {
+- (IBAction)incrementCreationStep {
     if(self.creationState != AbeloCreationState5End){
         self.creationState++;
     }
@@ -175,7 +203,7 @@
 - (IBAction)okButtonAction {
     switch (self.creationState) {
         case AbeloCreationState2MenuItems:
-//            self.receiptView
+            [self.receiptView setCurrentMenuItemAndDrawNext];
             break;
         case AbeloCreationState1Image:
         case AbeloCreationState3Total:
@@ -184,27 +212,6 @@
         default:
             break;
     }
-}
-
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    
-    UIImage *originalImage, *editedImage, *imageToSave;
-    
-    editedImage = (UIImage *) [info objectForKey:UIImagePickerControllerEditedImage];
-    originalImage = (UIImage *) [info objectForKey:UIImagePickerControllerOriginalImage];
-    
-    if (editedImage) {
-        imageToSave = editedImage;
-    } else {
-        imageToSave = originalImage;
-    }
-    
-    self.receiptView.image = imageToSave;
-    [self dismissModalViewControllerAnimated:YES];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 

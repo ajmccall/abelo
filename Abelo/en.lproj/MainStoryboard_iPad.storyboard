@@ -31,11 +31,11 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="nextButtonAction" destination="2" eventType="touchUpInside" id="Wuu-o3-JZi"/>
+                                    <action selector="incrementCreationStep" destination="2" eventType="touchUpInside" id="zRg-AV-IbQ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="4nT-GM-7Nq">
-                                <rect key="frame" x="262" y="947" width="85" height="37"/>
+                                <rect key="frame" x="261" y="947" width="85" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="OK">
@@ -46,7 +46,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="okButtonAction" destination="2" eventType="touchUpInside" id="zQT-iw-OrQ"/>
+                                    <action selector="okButtonAction" destination="2" eventType="touchUpInside" id="ZYc-kY-Jfs"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8f3-Ae-drJ">
