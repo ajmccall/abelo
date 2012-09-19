@@ -47,6 +47,11 @@
     return _partyMemberViews;
 }
 
+- (void)setReceiptView:(AbeloReceiptView *)receiptView {
+    _receiptView = receiptView;
+    _receiptView.delegate = self;
+}
+
 #pragma mark - Setup
 
 - (UIPopoverController *)popover {

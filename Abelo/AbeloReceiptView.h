@@ -10,14 +10,14 @@
 
 // enum to control the drawing state of the recipet view
 enum AbeloReceiptViewDrawState {
-    AbeloReceiptViewDrawStateFinished = 4,
-    AbeloReceiptViewDrawStateMenuItems = 3,
-    AbeloReceiptViewDrawStateTotalBounds = 2,
+    AbeloReceiptViewDrawStateStart = 0,
     AbeloReceiptViewDrawStateImage = 1,
-    AbeloReceiptViewDrawStateStart = 0
+    AbeloReceiptViewDrawStateMenuItems = 2,
+    AbeloReceiptViewDrawStateTotalBounds = 3,
+    AbeloReceiptViewDrawStateFinished = 4
 } typedef AbeloReceiptViewDrawState;
 
-@protocol ReceiptViewDelegate
+@protocol ReceiptViewDelegate <NSObject>
 
 - (UIImage *) getImage;
 @optional
@@ -28,7 +28,6 @@ enum AbeloReceiptViewDrawState {
 @interface AbeloReceiptView : UIView
 
 @property (nonatomic) UIImage *image;
-@property (nonatomic) AbeloReceiptViewDrawState drawState;
 @property (nonatomic, weak) id<ReceiptViewDelegate> delegate;
 
 - (void) clearView;

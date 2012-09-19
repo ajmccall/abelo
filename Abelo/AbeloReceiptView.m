@@ -20,6 +20,8 @@ typedef struct MenuItemTuple{
 
 @interface AbeloReceiptView ()
 
+@property (nonatomic) AbeloReceiptViewDrawState drawState;
+
 @property (nonatomic) CGFloat drawScale;
 @property (nonatomic) CGPoint drawOffset;
 
@@ -40,6 +42,8 @@ typedef struct MenuItemTuple{
 - (void) setCurrentMenuItemAndDrawNext;
 - (BOOL) clearLastMenuItem;
 
+- (IBAction)nextButtonAction:(id) sender;
+
 @end
 
 @implementation AbeloReceiptView
@@ -49,7 +53,6 @@ typedef struct MenuItemTuple{
 #pragma mark - Property synthesis
 
 - (void)setImage:(UIImage *)image {
-    [self clearView];
     switch ([image imageOrientation]) {
         case UIImageOrientationRight:
             _image = image;
@@ -116,7 +119,7 @@ typedef struct MenuItemTuple{
 
 //drawing properties
 @synthesize menuItemRects;
-@synthesize drawState;
+@synthesize drawState = _drawState;
 @synthesize drawOffset = _drawOffset;
 @synthesize drawScale = _drawScale;
 
@@ -301,6 +304,7 @@ typedef struct MenuItemTuple{
     UITouch *touch = [touches anyObject];
 
     if([touches count] == 1 && self.drawState == AbeloReceiptViewDrawStateMenuItems) {
+        DLog(@"touch[%d] at p(%g, %g)", [touches count], [touch locationInView:nil].x, [touch locationInView:nil].y);
         [self addMenuItemPoint:[touch locationInView:nil]];
     }
 }
@@ -311,7 +315,7 @@ typedef struct MenuItemTuple{
 
 #pragma mark - Button actions
 
-- (IBAction)backButtonAction {
+- (IBAction)backButtonAction:(id) sender {
     switch (self.drawState) {
         case AbeloReceiptViewDrawStateMenuItems:
             if([self clearLastMenuItem]) {
@@ -322,12 +326,12 @@ typedef struct MenuItemTuple{
         case AbeloReceiptViewDrawStateFinished:
         case AbeloReceiptViewDrawStateTotalBounds:
         default:
-            self.drawState++;
+            self.drawState--;
             break;
     }
 }
 
-- (IBAction)nextButtonAction {
+- (IBAction)nextButtonAction:(id) sender {
     if(self.drawState != AbeloReceiptViewDrawStateFinished){
         self.drawState++;
     }
@@ -335,7 +339,7 @@ typedef struct MenuItemTuple{
     switch (self.drawState) {
         case AbeloReceiptViewDrawStateImage:
             self.image = [self.delegate getImage];
-            [self nextButtonAction];
+            [self nextButtonAction:sender];
             break;
         case AbeloReceiptViewDrawStateMenuItems:
         case AbeloReceiptViewDrawStateStart:
@@ -346,7 +350,7 @@ typedef struct MenuItemTuple{
     }
 }
 
-- (IBAction)okButtonAction {
+- (IBAction)okButtonAction:(id) sender {
     switch (self.drawState) {
         case AbeloReceiptViewDrawStateMenuItems:
             [self setCurrentMenuItemAndDrawNext];
@@ -423,9 +427,8 @@ typedef struct MenuItemTuple{
     [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)]];
     [self addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)]];
 
-    
+    self.drawState = AbeloReceiptViewDrawStateStart;
     self.multipleTouchEnabled = YES;
-    self.image = [UIImage imageNamed:@"dimt.jpg"];
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -454,7 +457,9 @@ typedef struct MenuItemTuple{
         return YES;
     } else if([self.menuItemRects count] > 0){
         //notify the controller that you removed the menu item
-        [self.delegate clearMenuItemWithIndex:[self.menuItemRects count]];
+        if([self.delegate respondsToSelector:@selector(clearMenuItemWithIndex:)]){
+            [self.delegate clearMenuItemWithIndex:[self.menuItemRects count]];
+        }
         [self.menuItemRects removeLastObject];
         [self setNeedsDisplay];
         return YES;
