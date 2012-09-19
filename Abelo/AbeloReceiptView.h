@@ -19,8 +19,10 @@ enum AbeloReceiptViewDrawState {
 
 @protocol ReceiptViewDelegate
 
+@optional
 - (void) addPartyGuestWithTitle:(NSString *) title atIndex:(int) index;
 - (void) addMenuItemWithIndex:(int) index;
+- (void) setImage:(UIImage *) image;
 
 @end
     

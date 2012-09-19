@@ -296,7 +296,6 @@ typedef struct MenuItemTuple{
                                           self.drawOffset.y + [gesture translationInView:nil].y);
 
             [gesture setTranslation:CGPointMake(0,0) inView:nil];
-//            DLog(@"drawOffset(%g, %g)", self.drawOffset.x, self.drawOffset.y);
         }
     }
 }
@@ -305,10 +304,8 @@ typedef struct MenuItemTuple{
     [super touchesBegan:touches withEvent:event];
     UITouch *touch = [touches anyObject];
 
-//    DLog(@"point(%g,%g) number[%d]", [touch locationInView:nil].x, [touch locationInView:nil].y, [touches count]);
     if([touches count] == 1 && self.drawState == ReceiptViewDrawMenuItems) {
         [self addMenuItemPoint:[touch locationInView:nil]];
-//        self.currentTouch = [touch locationInView:nil];
     }
 }
 
@@ -330,22 +327,16 @@ typedef struct MenuItemTuple{
 - (void) drawMenuItems:(CGContextRef) context {
     
     UIGraphicsPushContext(context);
-//    DLog(@"currRect(%g, %g, %g, %g), array[%d]",
-//         self.currentMenuItemRect.origin.x,
-//         self.currentMenuItemRect.origin.y,
-//         self.currentMenuItemRect.size.width,
-//         self.currentMenuItemRect.size.height,
-//         [self.menuItemRects count]);
 
-    
+    // draw current rectanlgle
     [self.redTransparent setFill];
     [[UIColor blackColor] setStroke];
-    
     if(self.currentMenuItemRect.origin.x != NIL_FLOAT) {
         CGContextFillRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
         CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
     }
     
+    // draw previous rectanlgles
     [self.blueTransparent setFill];
     int i=0;
     while(i < [self.menuItemRects count]) {
