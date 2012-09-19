@@ -13,10 +13,12 @@ typedef struct MenuItemTuple{
     CGPoint topLeft, bottomRight;
 } MenuItemTuple;
 
-@interface AbeloReceiptView ()
+#pragma mark - Constants
 
-@property (nonatomic) CGFloat leftMenuItemsBounds;
-@property (nonatomic) CGFloat rightMenuItemsBounds;
+#define NIL_FLOAT -1
+#define MAX_SCALE 5.0
+
+@interface AbeloReceiptView ()
 
 @property (nonatomic) CGFloat drawScale;
 @property (nonatomic) CGPoint drawOffset;
@@ -30,40 +32,19 @@ typedef struct MenuItemTuple{
 @property (nonatomic, readonly) UIColor *blueTransparent;
 @property (nonatomic, readonly) UIColor *greenTransparent;
 
+@property (nonatomic) UIButton *nextButton;
+@property (nonatomic) UIButton *backButton;
+@property (nonatomic) UIButton *okButton;
+
 - (CGPoint) translateAndScalePoint:(CGPoint) p;
 
 @end
 
 @implementation AbeloReceiptView
 
-#define NIL_FLOAT -1
-#define DEFAULT_MENU_ITEM_HEIGHT 40.0
-#define BOUNDS_LINE_WIDTH 2.0
-#define MAX_SCALE 5.0
-
-#pragma mark -
-#pragma mark Props
-
 @synthesize image = _image;
-@synthesize currentMenuItemRect = _currentMenuItemRect;
-@synthesize currentTouch = _currentTouch;
 
-@synthesize menuItemRects;
-@synthesize drawState;
-@synthesize drawOffset = _drawOffset;
-@synthesize drawScale = _drawScale;
-//not in use
-@synthesize rightMenuItemsBounds;
-@synthesize leftMenuItemsBounds;
-
-- (void)setCurrentTouch:(CGPoint)currentTouch {
-    _currentTouch = [self translateAndScalePoint:currentTouch];
-}
-
-- (void)setCurrentMenuItemRect:(CGRect)currentMenuItemRect {
-    _currentMenuItemRect = currentMenuItemRect;
-    [self setNeedsDisplay];
-}
+#pragma mark - Property synthesis
 
 - (void)setImage:(UIImage *)image {
     [self clearView];
@@ -77,6 +58,65 @@ typedef struct MenuItemTuple{
     }
     [self setNeedsDisplay];
 }
+
+//buttons
+@synthesize nextButton = _nextButton;
+@synthesize backButton = _backButton;
+@synthesize okButton = _okButton;
+
+- (UIButton *)nextButton {
+    if(!_nextButton){
+        _nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _nextButton.frame = CGRectMake(18, 947, 85, 37);
+        _nextButton.titleLabel.text = @"Next";
+        [_nextButton addTarget:self action:@selector(nextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_nextButton];
+    }
+    return _nextButton;
+}
+
+- (UIButton *)backButton {
+    if(!_backButton) {
+        _backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _backButton.frame = CGRectMake(470, 947, 85, 37);
+        _backButton.titleLabel.text = @"Back";
+        [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_backButton];
+    }
+    return _backButton;
+}
+
+- (UIButton *)okButton {
+    if(!_okButton){
+        _okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _okButton.frame = CGRectMake(261, 947, 85, 37);
+        _okButton.titleLabel.text = @"Next";
+        [_okButton addTarget:self action:@selector(okButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_okButton];
+    }
+    return _okButton;
+}
+
+//current touch & current rect
+
+@synthesize currentMenuItemRect = _currentMenuItemRect;
+
+- (void)setCurrentMenuItemRect:(CGRect)currentMenuItemRect {
+    _currentMenuItemRect = currentMenuItemRect;
+    [self setNeedsDisplay];
+}
+
+@synthesize currentTouch = _currentTouch;
+
+- (void)setCurrentTouch:(CGPoint)currentTouch {
+    _currentTouch = [self translateAndScalePoint:currentTouch];
+}
+
+//drawing properties
+@synthesize menuItemRects;
+@synthesize drawState;
+@synthesize drawOffset = _drawOffset;
+@synthesize drawScale = _drawScale;
 
 - (void)setDrawOffset:(CGPoint)drawOffset {
     
@@ -126,6 +166,7 @@ typedef struct MenuItemTuple{
     
 }
 
+// colors - could be constants
 - (UIColor *)redTransparent {
     return [UIColor colorWithRed:255 green:0 blue:0 alpha:0.3];
 }
@@ -138,15 +179,12 @@ typedef struct MenuItemTuple{
     return [UIColor colorWithRed:0 green:0 blue:255 alpha:0.3];
 }
 
-#pragma mark -
-#pragma mark Methods Implementations
+#pragma mark - Methods Implementations
 
 - (void)clearView {
     
-    self.drawState = RecieptViewDrawNone;
+    self.drawState = ReceiptViewDrawNone;
     
-    self.leftMenuItemsBounds = NIL_FLOAT;
-    self.rightMenuItemsBounds = NIL_FLOAT;
     _currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
     self.menuItemRects = [NSMutableArray array];
     
@@ -157,38 +195,24 @@ typedef struct MenuItemTuple{
     [self setNeedsDisplay];
 }
 
-- (void) setMenuItemsBoundsPoint1:(CGFloat)p1 point2:(CGFloat)p2 {
-    
-    // error checking
-    CGFloat frameWidth = self.frame.size.width;
-    if(p1 < 0 || p2 < 0 || p1 > frameWidth || p2 > frameWidth || p1 == p2) {
-        return;
-    }
-    
-    // set the left/right bounds and setNeedsLayout
-    if(p1 < p2) {
-        self.leftMenuItemsBounds = p1;
-        self.rightMenuItemsBounds = p2;
-    } else {
-        self.leftMenuItemsBounds = p2;
-        self.rightMenuItemsBounds = p1;
-    }
-    
-    // could optimise here by specifying the rectangle to use
-//    [self setNeedsDisplayInRect:CGRectMake(self.leftMenuItemsBounds, 0, self.rightMenuItemsBounds, self.frame.size.height)];
-    [self setNeedsDisplay];
-}
-
 - (CGPoint) translateAndScalePoint:(CGPoint) p {
     return CGPointMake((p.x - self.drawOffset.x) / self.drawScale, (p.y - self.drawOffset.y) / self.drawScale);
-//    return p;
 }
 
-- (CGRect) translateAndScaleRect:(CGRect) rect {
+- (CGRect) reverseTranslateAndScaleRect:(CGRect) rect {
     return CGRectMake(self.drawScale * rect.origin.x + self.drawOffset.x,
                       self.drawScale * rect.origin.y + self.drawOffset.y,
                       rect.size.width * self.drawScale, rect.size.height * self.drawScale);
-//    return rect;
+}
+
+#define DEFAULT_FINGER_DIM 6.0
+#define FINGER_X_OFFSET 6.0
+#define FINGER_Y_OFFSET 20.0
+- (CGRect) CGRectMakeFromFingerPoint:(CGPoint) p {
+    return CGRectMake(p.x + FINGER_X_OFFSET,
+                      p.y - FINGER_Y_OFFSET,
+                      DEFAULT_FINGER_DIM,
+                      DEFAULT_FINGER_DIM);
 }
 
 - (void) addMenuItemPoint:(CGPoint) p {
@@ -237,16 +261,6 @@ typedef struct MenuItemTuple{
 
 - (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
     
-//    if(self.drawState == RecieptViewDrawPriceBounds){
-//        if(gesture.numberOfTouches != 2) {
-//            return;
-//        }
-//        
-//        if(gesture.state == UIGestureRecognizerStateBegan ||
-//           gesture.state == UIGestureRecognizerStateChanged){
-//            [self setMenuItemsBoundsPoint1:[gesture locationOfTouch:0 inView:nil].x point2:[gesture locationOfTouch:1 inView:nil].x];
-//        }
-//    } else  {
     if(gesture.state == UIGestureRecognizerStateBegan){
         gesture.scale = self.drawScale;
     } else if(gesture.state == UIGestureRecognizerStateChanged){
@@ -257,17 +271,6 @@ typedef struct MenuItemTuple{
         self.drawOffset = CGPointMake(x,y);
         
     }
-//    }
-}
-
-#define DEFAULT_FINGER_DIM 6.0
-#define FINGER_X_OFFSET 6.0
-#define FINGER_Y_OFFSET 20.0
-- (CGRect) CGRectMakeFromFingerPoint:(CGPoint) p {
-    return CGRectMake(p.x + FINGER_X_OFFSET,
-                      p.y - FINGER_Y_OFFSET,
-                      DEFAULT_FINGER_DIM,
-                      DEFAULT_FINGER_DIM);
 }
 
 - (void)tapGesture:(UITapGestureRecognizer *)gesture {
@@ -276,7 +279,7 @@ typedef struct MenuItemTuple{
 - (void)panGesture:(UIPanGestureRecognizer *)gesture {
     
     
-    if(self.drawState == RecieptViewDrawMenuItems &&
+    if(self.drawState == ReceiptViewDrawMenuItems &&
        gesture.numberOfTouches == 1){
         
         if(gesture.state == UIGestureRecognizerStateBegan ||
@@ -303,7 +306,7 @@ typedef struct MenuItemTuple{
     UITouch *touch = [touches anyObject];
 
 //    DLog(@"point(%g,%g) number[%d]", [touch locationInView:nil].x, [touch locationInView:nil].y, [touches count]);
-    if([touches count] == 1 && self.drawState == RecieptViewDrawMenuItems) {
+    if([touches count] == 1 && self.drawState == ReceiptViewDrawMenuItems) {
         [self addMenuItemPoint:[touch locationInView:nil]];
 //        self.currentTouch = [touch locationInView:nil];
     }
@@ -313,40 +316,14 @@ typedef struct MenuItemTuple{
     [super touchesEnded:touches withEvent:event];
 }
 
-#pragma mark -
-#pragma mark Draw Methods
+
+#pragma mark - Draw Methods
 
 
 - (void) drawReceiptImage:(CGContextRef) context {
     UIGraphicsPushContext(context);
     CGRect rect = CGRectMake(self.drawOffset.x, self.drawOffset.y, self.frame.size.width * self.drawScale, self.frame.size.height * self.drawScale);
     [self.image drawInRect:rect];
-    UIGraphicsPopContext();
-}
-
-- (void) drawMenuItemsBounds:(CGContextRef) context {
-    //check if you need to draw anything else
-    if(self.leftMenuItemsBounds == NIL_FLOAT || self.rightMenuItemsBounds == NIL_FLOAT){
-        return;
-    }
-    
-    UIGraphicsPushContext(context);
-    //set line width/stroke
-    CGContextSetLineWidth(context, BOUNDS_LINE_WIDTH);
-    [[UIColor redColor] setStroke];
-    
-    //draw left bounds
-    CGContextBeginPath(context);
-    CGContextMoveToPoint(context, self.leftMenuItemsBounds - BOUNDS_LINE_WIDTH, self.frame.origin.y);
-    CGContextAddLineToPoint(context, self.leftMenuItemsBounds - BOUNDS_LINE_WIDTH, self.frame.size.height);
-    CGContextStrokePath(context);
-    
-    //draw right bounds
-    CGContextBeginPath(context);
-    CGContextMoveToPoint(context, self.rightMenuItemsBounds, self.frame.origin.y);
-    CGContextAddLineToPoint(context, self.rightMenuItemsBounds, self.frame.size.height);
-    CGContextStrokePath(context);
-
     UIGraphicsPopContext();
 }
 
@@ -365,16 +342,16 @@ typedef struct MenuItemTuple{
     [[UIColor blackColor] setStroke];
     
     if(self.currentMenuItemRect.origin.x != NIL_FLOAT) {
-        CGContextFillRect(context, [self translateAndScaleRect:self.currentMenuItemRect]);
-        CGContextStrokeRect(context, [self translateAndScaleRect:self.currentMenuItemRect]);
+        CGContextFillRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
+        CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
     }
     
     [self.blueTransparent setFill];
     int i=0;
     while(i < [self.menuItemRects count]) {
         CGRect rect = [[self.menuItemRects objectAtIndex:i] CGRectValue];
-        CGContextFillRect(context, [self translateAndScaleRect:rect]);
-        CGContextStrokeRect(context, [self translateAndScaleRect:rect]);
+        CGContextFillRect(context, [self reverseTranslateAndScaleRect:rect]);
+        CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:rect]);
         i++;
     }
 
@@ -393,7 +370,6 @@ typedef struct MenuItemTuple{
     
     //draw various receipt objects
     [self drawReceiptImage:context];
-    [self drawMenuItemsBounds:context];
     [self drawMenuItems:context];    
 }
 

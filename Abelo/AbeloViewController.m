@@ -73,7 +73,7 @@
     
     //testing
     self.creationState = AbeloCreationState2MenuItems;
-    self.receiptView.drawState = RecieptViewDrawMenuItems;
+    self.receiptView.drawState = ReceiptViewDrawMenuItems;
     
     CGRect buttonRect = addGuestButton.frame;
     self.newLabelPoint =  CGPointMake(buttonRect.origin.x, buttonRect.origin.y + buttonRect.size.height);
@@ -190,7 +190,7 @@
             [self initialiseCamera];
             break;
         case AbeloCreationState2MenuItems:
-            self.receiptView.drawState = RecieptViewDrawMenuItems;
+            self.receiptView.drawState = ReceiptViewDrawMenuItems;
             break;
         case AbeloCreationState3Total:
         case AbeloCreationState4PartyMembers:
@@ -203,7 +203,6 @@
 - (IBAction)okButtonAction {
     switch (self.creationState) {
         case AbeloCreationState2MenuItems:
-            [self.receiptView setCurrentMenuItemAndDrawNext];
             break;
         case AbeloCreationState1Image:
         case AbeloCreationState3Total:
