@@ -7,35 +7,31 @@
 //
 
 #import <UIKit/UIKit.h>
-@class ReceiptViewDelegate;
 
 // enum to control the drawing state of the recipet view
 enum AbeloReceiptViewDrawState {
-    ReceiptViewDrawPriceBounds,
-    ReceiptViewDrawTotalBounds,
-    ReceiptViewDrawMenuItems,
-    ReceiptViewDrawNone
-} typedef ReceiptViewDrawState;
+    AbeloReceiptViewDrawStateFinished = 4,
+    AbeloReceiptViewDrawStateMenuItems = 3,
+    AbeloReceiptViewDrawStateTotalBounds = 2,
+    AbeloReceiptViewDrawStateImage = 1,
+    AbeloReceiptViewDrawStateStart = 0
+} typedef AbeloReceiptViewDrawState;
 
 @protocol ReceiptViewDelegate
 
+- (UIImage *) getImage;
 @optional
-- (void) addPartyGuestWithTitle:(NSString *) title atIndex:(int) index;
 - (void) addMenuItemWithIndex:(int) index;
-- (void) setImage:(UIImage *) image;
-
+- (void) clearMenuItemWithIndex:(int) index;
 @end
     
 @interface AbeloReceiptView : UIView
 
 @property (nonatomic) UIImage *image;
-@property (nonatomic) ReceiptViewDrawState drawState;
-@property (nonatomic, weak) ReceiptViewDelegate *delegate;
+@property (nonatomic) AbeloReceiptViewDrawState drawState;
+@property (nonatomic, weak) id<ReceiptViewDelegate> delegate;
 
 - (void) clearView;
-
-//- (void) setCurrentMenuItemAndDrawNext;
-//- (void) resetCurrentMenuItem;
 
 - (void) pinchGesture:(UIPinchGestureRecognizer *) gesture;
 - (void) panGesture:(UIPanGestureRecognizer *) gesture;

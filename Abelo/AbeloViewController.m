@@ -23,26 +23,19 @@
 @property (nonatomic) NSMutableArray *partyMemberViews;
 @property (nonatomic) UIPopoverController *popover;
 
-@property (nonatomic) AbeloCreationState creationState;
-
 @end
 
 @implementation AbeloViewController
 
+#pragma mark - Synthesisers
 
 @synthesize addGuestView;
+
+#pragma mark - Property synthesizers/declarations
 @synthesize addGuestLabel;
 @synthesize addGuestInput;
 @synthesize addGuestButton;
 @synthesize receiptView = _receiptView;
-
-- (void)setReceiptView:(AbeloReceiptView *)receiptView {
-    _receiptView = receiptView;
-    [self.receiptView addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:_receiptView action:@selector(panGesture:)]];
-    [self.receiptView addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:_receiptView action:@selector(pinchGesture:)]];
-
-}
-
 @synthesize partyMemberViews = _partyMemberViews;
 @synthesize bill = _bill;
 @synthesize popover = _popover;
@@ -53,6 +46,8 @@
     }
     return _partyMemberViews;
 }
+
+#pragma mark - Setup
 
 - (UIPopoverController *)popover {
     if(!_popover) {
@@ -70,10 +65,6 @@
 
 - (void) setup {
     [self hideAddGuestView];
-    
-    //testing
-    self.creationState = AbeloCreationState2MenuItems;
-    self.receiptView.drawState = ReceiptViewDrawMenuItems;
     
     CGRect buttonRect = addGuestButton.frame;
     self.newLabelPoint =  CGPointMake(buttonRect.origin.x, buttonRect.origin.y + buttonRect.size.height);
@@ -98,6 +89,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
+#pragma mark - Button Actions
 
 - (IBAction)addGuestButtonPressed {
     [self showAddGuestView];
@@ -120,8 +112,7 @@
     [self.partyMemberViews addObject:label];
 }
 
-# pragma mark -
-# pragma mark Button actions
+#pragma mark - Camera
 
 - (void) initialiseCamera {
 
@@ -154,8 +145,6 @@
         imageToSave = originalImage;
     }
     
-    self.receiptView.image = imageToSave;
-    [self incrementCreationStep];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -163,59 +152,8 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
-- (IBAction)decrementCreationStep {
-    if(self.creationState != AbeloCreationState0Start) {
-        self.creationState--;
-    }
-    
-    switch (self.creationState) {
-        case AbeloCreationState5End:
-        case AbeloCreationState4PartyMembers:
-        case AbeloCreationState3Total:
-        case AbeloCreationState2MenuItems:
-        case AbeloCreationState1Image:
-        case AbeloCreationState0Start:
-        default:
-            break;
-    }
-}
 
-- (IBAction)incrementCreationStep {
-    if(self.creationState != AbeloCreationState5End){
-        self.creationState++;
-    }
-    
-    switch (self.creationState) {
-        case AbeloCreationState1Image:
-            [self initialiseCamera];
-            break;
-        case AbeloCreationState2MenuItems:
-            self.receiptView.drawState = ReceiptViewDrawMenuItems;
-            break;
-        case AbeloCreationState3Total:
-        case AbeloCreationState4PartyMembers:
-        case AbeloCreationState5End:
-        default:
-            break;
-    }
-}
-
-- (IBAction)okButtonAction {
-    switch (self.creationState) {
-        case AbeloCreationState2MenuItems:
-            break;
-        case AbeloCreationState1Image:
-        case AbeloCreationState3Total:
-        case AbeloCreationState4PartyMembers:
-        case AbeloCreationState5End:
-        default:
-            break;
-    }
-}
-
-
-# pragma mark -
-# pragma mark UITextFieldDelegate
+# pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     if(![self.addGuestInput.text isEqualToString:@""]) {
@@ -224,8 +162,14 @@
     return YES;
 }
 
-# pragma mark -
-# pragma mark Private methods
+#pragma mark - ReceiptViewDelegate protocol
+
+- (UIImage *)getImage {
+    return [UIImage imageNamed:@"dimt.jpg"];
+}
+
+
+# pragma mark - Private methods
 
 - (void) setGuestViewVisibility:(BOOL) visibile {
     self.addGuestInput.hidden = !visibile;
