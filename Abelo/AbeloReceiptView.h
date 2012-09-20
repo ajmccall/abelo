@@ -13,7 +13,7 @@ enum AbeloReceiptViewDrawState {
     AbeloReceiptViewDrawStateStart = 0,
     AbeloReceiptViewDrawStateImage = 1,
     AbeloReceiptViewDrawStateMenuItems = 2,
-    AbeloReceiptViewDrawStateTotalBounds = 3,
+    AbeloReceiptViewDrawStateTotal = 3,
     AbeloReceiptViewDrawStateFinished = 4
 } typedef AbeloReceiptViewDrawState;
 
@@ -31,8 +31,5 @@ enum AbeloReceiptViewDrawState {
 @property (nonatomic, weak) id<ReceiptViewDelegate> delegate;
 
 - (void) clearView;
-
-- (void) pinchGesture:(UIPinchGestureRecognizer *) gesture;
-- (void) panGesture:(UIPanGestureRecognizer *) gesture;
 
 @end

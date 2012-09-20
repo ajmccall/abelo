@@ -38,6 +38,9 @@ typedef struct MenuItemTuple{
 @property (nonatomic) UIButton *backButton;
 @property (nonatomic) UIButton *okButton;
 
+@property (nonatomic) UIGestureRecognizer *pinchGesture;
+@property (nonatomic) UIGestureRecognizer *panGesture;
+
 - (CGPoint) translateAndScalePoint:(CGPoint) p;
 - (void) setCurrentMenuItemAndDrawNext;
 - (BOOL) clearLastMenuItem;
@@ -69,41 +72,7 @@ typedef struct MenuItemTuple{
 @synthesize backButton = _backButton;
 @synthesize okButton = _okButton;
 
-- (UIButton *)nextButton {
-    if(!_nextButton){
-        _nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _nextButton.frame = CGRectMake(18, 947, 85, 37);
-        [_nextButton setTitle:@"Next" forState:UIControlStateNormal];
-        [_nextButton addTarget:self action:@selector(nextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_nextButton];
-    }
-    return _nextButton;
-}
-
-- (UIButton *)backButton {
-    if(!_backButton) {
-        _backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _backButton.frame = CGRectMake(470, 947, 85, 37);
-        [_backButton setTitle:@"Back" forState:UIControlStateNormal];
-        [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_backButton];
-    }
-    return _backButton;
-}
-
-- (UIButton *)okButton {
-    if(!_okButton){
-        _okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _okButton.frame = CGRectMake(261, 947, 85, 37);
-        [_okButton setTitle:@"Ok" forState:UIControlStateNormal];
-        [_okButton addTarget:self action:@selector(okButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_okButton];
-    }
-    return _okButton;
-}
-
 //current touch & current rect
-
 @synthesize currentMenuItemRect = _currentMenuItemRect;
 
 - (void)setCurrentMenuItemRect:(CGRect)currentMenuItemRect {
@@ -169,6 +138,24 @@ typedef struct MenuItemTuple{
     _drawScale = scale;
     [self setNeedsDisplay];
     
+}
+
+//uiGestures
+@synthesize panGesture = _panGesture;
+@synthesize pinchGesture = _pinchGesture;
+
+- (UIGestureRecognizer *)panGesture {
+    if(!_panGesture) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    }
+    return _panGesture;
+}
+
+- (UIGestureRecognizer *)pinchGesture {
+    if(!_pinchGesture) {
+        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
+    }
+    return _pinchGesture;
 }
 
 // colors - could be constants
@@ -246,7 +233,7 @@ typedef struct MenuItemTuple{
     if(!foundRectContainingPoint) {
         self.currentMenuItemRect = rect;
     } else {
-        self.currentMenuItemRect = rect;
+//        self.currentMenuItemRect = rect;
 //        rect = CGRectUnion(rect, [[self.menuItemRects objectAtIndex:i] CGRectValue]);
 //        [self.menuItemRects removeObjectAtIndex:i];
 //        [self.menuItemRects insertObject:[NSValue valueWithCGRect:rect] atIndex:i];
@@ -321,10 +308,12 @@ typedef struct MenuItemTuple{
             if([self clearLastMenuItem]) {
                 break;
             }
+            [self removeGestureRecognizer:self.panGesture];
+            [self removeGestureRecognizer:self.pinchGesture];
         case AbeloReceiptViewDrawStateImage:
         case AbeloReceiptViewDrawStateStart:
         case AbeloReceiptViewDrawStateFinished:
-        case AbeloReceiptViewDrawStateTotalBounds:
+        case AbeloReceiptViewDrawStateTotal:
         default:
             self.drawState--;
             break;
@@ -342,9 +331,15 @@ typedef struct MenuItemTuple{
             [self nextButtonAction:sender];
             break;
         case AbeloReceiptViewDrawStateMenuItems:
-        case AbeloReceiptViewDrawStateStart:
+            [self addGestureRecognizer:self.panGesture];
+            [self addGestureRecognizer:self.pinchGesture];
+            break;
         case AbeloReceiptViewDrawStateFinished:
-        case AbeloReceiptViewDrawStateTotalBounds:
+            [self removeGestureRecognizer:self.panGesture];
+            [self removeGestureRecognizer:self.pinchGesture];
+            break;
+        case AbeloReceiptViewDrawStateStart:
+        case AbeloReceiptViewDrawStateTotal:
         default:
             break;
     }
@@ -358,7 +353,7 @@ typedef struct MenuItemTuple{
         case AbeloReceiptViewDrawStateImage:
         case AbeloReceiptViewDrawStateStart:
         case AbeloReceiptViewDrawStateFinished:
-        case AbeloReceiptViewDrawStateTotalBounds:
+        case AbeloReceiptViewDrawStateTotal:
         default:
             break;
     }
@@ -418,15 +413,37 @@ typedef struct MenuItemTuple{
 #pragma mark -
 #pragma mark InitMethods
 
+- (void) setupButtons {
+    
+    if(!_nextButton){
+        _nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _nextButton.frame = CGRectMake(18, 947, 85, 37);
+        [_nextButton setTitle:@"Next" forState:UIControlStateNormal];
+        [_nextButton addTarget:self action:@selector(nextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_nextButton];
+    }
+ 
+    if(!_backButton) {
+        _backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _backButton.frame = CGRectMake(470, 947, 85, 37);
+        [_backButton setTitle:@"Back" forState:UIControlStateNormal];
+        [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_backButton];
+    }
+ 
+    if(!_okButton){
+        _okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _okButton.frame = CGRectMake(261, 947, 85, 37);
+        [_okButton setTitle:@"Ok" forState:UIControlStateNormal];
+        [_okButton addTarget:self action:@selector(okButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:_okButton];
+    }
+}
+
 - (void)setup {
     [self clearView];
-    self.okButton;
-    self.nextButton;
-    self.backButton;
+    [self setupButtons];
     
-    [self addGestureRecognizer:[[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)]];
-    [self addGestureRecognizer:[[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)]];
-
     self.drawState = AbeloReceiptViewDrawStateStart;
     self.multipleTouchEnabled = YES;
 }
