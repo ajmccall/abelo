@@ -12,11 +12,13 @@
 
 @property (nonatomic) CGPoint newLabelPoint;
 @property (nonatomic) int labelIndex;
+@property (nonatomic) NSMutableDictionary *partyMembers;
 @end
 
 @implementation AbeloPartyMembersView
 
 @synthesize labelIndex = _labelIndex;
+@synthesize partyMembers = _partyMembers;
 
 #pragma mark - Method implementations
 
@@ -34,7 +36,9 @@
     } else {
         label.backgroundColor = [UIColor cyanColor];
     }
+    [self.partyMembers setObject:label forKey:[NSNumber numberWithInt:self.labelIndex]];
     self.labelIndex++;
+    
     [self setNeedsDisplay];
     self.newLabelPoint = CGPointMake(self.newLabelPoint.x, self.newLabelPoint.y + 33);
 }
