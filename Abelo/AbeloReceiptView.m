@@ -27,7 +27,8 @@ typedef struct MenuItemTuple{
 
 @property (nonatomic) CGPoint currentTouch;
 @property (nonatomic) CGRect currentMenuItemRect;
-@property (nonatomic) NSMutableArray *menuItems;
+@property (nonatomic) int currentMenuItemKey;
+@property (nonatomic) NSMutableDictionary *menuItems;
 
 @property (nonatomic) CGRect totalRect;
 
@@ -210,7 +211,7 @@ typedef struct MenuItemTuple{
     self.drawState = AbeloReceiptViewDrawStateStart;
     
     _currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
-    self.menuItems = [NSMutableArray array];
+    self.menuItems = [NSMutableDictionary dictionary];
     
     _drawOffset = CGPointMake(0,0);
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
@@ -251,24 +252,26 @@ typedef struct MenuItemTuple{
     }
 
     if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
-        int i = 0;
         bool foundRectContainingPoint = NO;
         
-        while(i < [self.menuItems count] && !foundRectContainingPoint) {
-            CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
+        NSEnumerator *enumerate = [self.menuItems keyEnumerator];
+        NSNumber *key;
+        while((key = [enumerate nextObject]) && !foundRectContainingPoint) {
+            
+            CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
+//            CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
             if(CGRectContainsPoint(rect, fingerPoint)) {
                 foundRectContainingPoint = YES;
-            } else {
-                i++;
             }
         }
         
         if(!foundRectContainingPoint) {
             self.currentMenuItemRect = fingerRect;
         } else {
-            self.currentMenuItemRect = CGRectUnion(fingerRect, [[self.menuItems objectAtIndex:i] CGRectValue]);
-            [self.delegate clearMenuItemWithIndex:i];
-            [self.menuItems removeObjectAtIndex:i];
+            CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
+            self.currentMenuItemRect = CGRectUnion(fingerRect, rect);
+            [self.delegate clearMenuItemWithIndex:[key intValue]];
+            [self.menuItems removeObjectForKey:key];
         }
     } else if(self.drawState == AbeloReceiptViewDrawStateTotal) {
         
@@ -447,12 +450,13 @@ typedef struct MenuItemTuple{
     
     // draw previous rectanlgles
     [self.blueTransparent setFill];
-    int i=0;
-    while(i < [self.menuItems count]) {
-        CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
+
+    NSEnumerator *enumerator = [self.menuItems keyEnumerator];
+    NSNumber *key;
+    while(key = [enumerator nextObject]){
+        CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
         CGContextFillRect(context, [self reverseTranslateAndScaleRect:rect]);
         CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:rect]);
-        i++;
     }
 
     if(self.totalRect.size.width != NIL_FLOAT) {
@@ -534,7 +538,10 @@ typedef struct MenuItemTuple{
 
 - (void)setCurrentMenuItemAndDrawNext {
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    [self.menuItems addObject:[NSValue valueWithCGRect:self.currentMenuItemRect]];
+    [self.menuItems setObject:[NSValue valueWithCGRect:self.currentMenuItemRect] forKey:[NSNumber numberWithInt:self.currentMenuItemKey]];
+    self.currentMenuItemKey++;
+    
+//    [self.menuItems addObject:[NSValue valueWithCGRect:self.currentMenuItemRect]];
     self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
@@ -547,8 +554,8 @@ typedef struct MenuItemTuple{
         if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
             if([self.menuItems count] > 0){
                 //notify the controller that you removed the menu item
-                [self.delegate clearMenuItemWithIndex:[self.menuItems count]];
-                [self.menuItems removeLastObject];
+                [self.delegate clearMenuItemWithIndex:(self.currentMenuItemKey - 1)];
+                [self.menuItems removeObjectForKey:[NSNumber numberWithInt:(self.currentMenuItemKey - 1)]];
                 [self setNeedsDisplay];
                 return YES;
             } else {
