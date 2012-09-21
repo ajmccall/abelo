@@ -26,9 +26,8 @@ typedef struct MenuItemTuple{
 @property (nonatomic) CGPoint drawOffset;
 
 @property (nonatomic) CGPoint currentTouch;
-
 @property (nonatomic) CGRect currentMenuItemRect;
-@property (nonatomic) NSMutableArray *menuItemRects;
+@property (nonatomic) NSMutableArray *menuItems;
 
 @property (nonatomic) CGRect totalRect;
 
@@ -96,7 +95,7 @@ typedef struct MenuItemTuple{
 }
 
 //drawing properties
-@synthesize menuItemRects;
+@synthesize menuItems;
 @synthesize drawState = _drawState;
 @synthesize drawOffset = _drawOffset;
 @synthesize drawScale = _drawScale;
@@ -211,7 +210,7 @@ typedef struct MenuItemTuple{
     self.drawState = AbeloReceiptViewDrawStateStart;
     
     _currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
-    self.menuItemRects = [NSMutableArray array];
+    self.menuItems = [NSMutableArray array];
     
     _drawOffset = CGPointMake(0,0);
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
@@ -254,8 +253,9 @@ typedef struct MenuItemTuple{
     if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
         int i = 0;
         bool foundRectContainingPoint = NO;
-        while(i < [self.menuItemRects count] && !foundRectContainingPoint) {
-            CGRect rect = [[self.menuItemRects objectAtIndex:i] CGRectValue];
+        
+        while(i < [self.menuItems count] && !foundRectContainingPoint) {
+            CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
             if(CGRectContainsPoint(rect, fingerPoint)) {
                 foundRectContainingPoint = YES;
             } else {
@@ -266,9 +266,9 @@ typedef struct MenuItemTuple{
         if(!foundRectContainingPoint) {
             self.currentMenuItemRect = fingerRect;
         } else {
-            self.currentMenuItemRect = CGRectUnion(fingerRect, [[self.menuItemRects objectAtIndex:i] CGRectValue]);
+            self.currentMenuItemRect = CGRectUnion(fingerRect, [[self.menuItems objectAtIndex:i] CGRectValue]);
             [self.delegate clearMenuItemWithIndex:i];
-            [self.menuItemRects removeObjectAtIndex:i];
+            [self.menuItems removeObjectAtIndex:i];
         }
     } else if(self.drawState == AbeloReceiptViewDrawStateTotal) {
         
@@ -448,8 +448,8 @@ typedef struct MenuItemTuple{
     // draw previous rectanlgles
     [self.blueTransparent setFill];
     int i=0;
-    while(i < [self.menuItemRects count]) {
-        CGRect rect = [[self.menuItemRects objectAtIndex:i] CGRectValue];
+    while(i < [self.menuItems count]) {
+        CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
         CGContextFillRect(context, [self reverseTranslateAndScaleRect:rect]);
         CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:rect]);
         i++;
@@ -534,7 +534,7 @@ typedef struct MenuItemTuple{
 
 - (void)setCurrentMenuItemAndDrawNext {
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    [self.menuItemRects addObject:[NSValue valueWithCGRect:self.currentMenuItemRect]];
+    [self.menuItems addObject:[NSValue valueWithCGRect:self.currentMenuItemRect]];
     self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
@@ -545,10 +545,10 @@ typedef struct MenuItemTuple{
     } else {
         
         if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
-            if([self.menuItemRects count] > 0){
+            if([self.menuItems count] > 0){
                 //notify the controller that you removed the menu item
-                [self.delegate clearMenuItemWithIndex:[self.menuItemRects count]];
-                [self.menuItemRects removeLastObject];
+                [self.delegate clearMenuItemWithIndex:[self.menuItems count]];
+                [self.menuItems removeLastObject];
                 [self setNeedsDisplay];
                 return YES;
             } else {

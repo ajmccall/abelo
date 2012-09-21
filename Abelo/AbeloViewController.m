@@ -10,46 +10,37 @@
 #import "AbeloBill.h"
 #import "AbeloUtilities.h"
 #import "AbeloReceiptView.h"
+#import "AbeloPartyMembersView.h"
 
 @interface AbeloViewController ()
 
-- (void) hideAddGuestView;
-- (void) showAddGuestView;
-- (void) addGuestViewWithName:(NSString *) guestName;
++ (NSString *) GenerateRandStringLength:(int) len;
 
 @property (nonatomic) AbeloBill *bill;
-@property (nonatomic) CGPoint newLabelPoint;
-
-@property (nonatomic) NSMutableArray *partyMemberViews;
 @property (nonatomic) UIPopoverController *popover;
 
 @end
 
 @implementation AbeloViewController
 
-#pragma mark - Synthesisers
-
-@synthesize addGuestView;
+@synthesize receiptView = _receiptView;
+@synthesize partyMembersView = _partyMembersView;
 
 #pragma mark - Property synthesizers/declarations
-@synthesize addGuestLabel;
-@synthesize addGuestInput;
-@synthesize addGuestButton;
-@synthesize receiptView = _receiptView;
-@synthesize partyMemberViews = _partyMemberViews;
+@synthesize toolbar = _toolbar;
 @synthesize bill = _bill;
 @synthesize popover = _popover;
-
-- (NSMutableArray *)partyMemberViews {
-    if(!_partyMemberViews) {
-        _partyMemberViews = [[NSMutableArray alloc] init];
-    }
-    return _partyMemberViews;
-}
 
 - (void)setReceiptView:(AbeloReceiptView *)receiptView {
     _receiptView = receiptView;
     _receiptView.delegate = self;
+}
+
+- (AbeloBill *)bill {
+    if(_bill){
+        _bill = [[AbeloBill alloc] init];
+    }
+    return _bill;
 }
 
 #pragma mark - Setup
@@ -61,19 +52,7 @@
     return _popover;
 }
 
-- (AbeloBill *)bill {
-    if(_bill){
-        _bill = [[AbeloBill alloc] init];
-    }
-    return _bill;
-}
-
 - (void) setup {
-    [self hideAddGuestView];
-    
-    CGRect buttonRect = addGuestButton.frame;
-    self.newLabelPoint =  CGPointMake(buttonRect.origin.x, buttonRect.origin.y + buttonRect.size.height);
-    self.addGuestInput.delegate = self;
 }
 
 - (void)viewDidLoad
@@ -85,37 +64,19 @@
 
 - (void)viewDidUnload
 {
-    [self setAddGuestView:nil];
-    [self setAddGuestLabel:nil];
-    [self setAddGuestInput:nil];
-
-    [self setAddGuestButton:nil];
     [self setReceiptView:nil];
+    [self setToolbar:nil];
+    [self setPartyMembersView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
+
 #pragma mark - Button Actions
 
-- (IBAction)addGuestButtonPressed {
-    [self showAddGuestView];
+- (IBAction)addGuestAction:(id)sender {
+    [self.partyMembersView addPartyMemberWithName:[AbeloViewController GenerateRandStringLength:3]];    
 }
 
-- (IBAction)addGuestInputAction:(UITextField *)sender {
-    [self hideAddGuestView];
-    [self addGuestViewWithName:sender.text];
-}
-
-
-- (void) addGuestViewWithName:(NSString *)guestName {
-    [self.bill addPartyEntity:guestName];
-
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.newLabelPoint.x, self.newLabelPoint.y, 87, 33)];
-    label.text = guestName;
-    [self.view addSubview:label];
-    [self.view setNeedsDisplay];
-    self.newLabelPoint = CGPointMake(self.newLabelPoint.x, self.newLabelPoint.y + 33);
-    [self.partyMemberViews addObject:label];
-}
 
 #pragma mark - Camera
 
@@ -158,15 +119,6 @@
 }
 
 
-# pragma mark - UITextFieldDelegate
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if(![self.addGuestInput.text isEqualToString:@""]) {
-        [self.addGuestInput resignFirstResponder];
-    }
-    return YES;
-}
-
 #pragma mark - ReceiptViewDelegate protocol
 
 - (UIImage *)getImage {
@@ -183,20 +135,16 @@
 
 # pragma mark - Private methods
 
-- (void) setGuestViewVisibility:(BOOL) visibile {
-    self.addGuestInput.hidden = !visibile;
-    self.addGuestLabel.hidden = !visibile;
-    self.addGuestView.hidden = !visibile;
+NSString *letters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
++ (NSString *) GenerateRandStringLength:(int) len {
     
-    self.addGuestButton.enabled = !visibile;
-}
-
-- (void)hideAddGuestView {
-    [self setGuestViewVisibility:NO];
-}
-
-- (void)showAddGuestView {
-    [self setGuestViewVisibility:YES];
-    self.addGuestInput.text = @"";
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
+    }
+    
+    return randomString;
 }
 @end

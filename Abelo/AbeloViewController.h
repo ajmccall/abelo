@@ -10,13 +10,11 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "AbeloReceiptView.h"
 
+@class AbeloPartyMembersView;
 
-@interface AbeloViewController : UIViewController<UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, ReceiptViewDelegate>
-
-@property (weak, nonatomic) IBOutlet UIView *addGuestView;
-@property (weak, nonatomic) IBOutlet UILabel *addGuestLabel;
-@property (weak, nonatomic) IBOutlet UITextField *addGuestInput;
-@property (weak, nonatomic) IBOutlet UIButton *addGuestButton;
+@interface AbeloViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate, ReceiptViewDelegate>
 
 @property (weak, nonatomic) IBOutlet AbeloReceiptView *receiptView;
+@property (weak, nonatomic) IBOutlet AbeloPartyMembersView *partyMembersView;
+@property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @end
