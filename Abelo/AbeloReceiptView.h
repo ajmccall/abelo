@@ -20,9 +20,10 @@ enum AbeloReceiptViewDrawState {
 @protocol ReceiptViewDelegate <NSObject>
 
 - (UIImage *) getImage;
-@optional
 - (void) addMenuItemWithIndex:(int) index;
 - (void) clearMenuItemWithIndex:(int) index;
+@optional
+- (void) displayNextStepMessage:(NSString *) message;
 @end
     
 @interface AbeloReceiptView : UIView

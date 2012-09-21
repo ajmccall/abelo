@@ -30,6 +30,8 @@ typedef struct MenuItemTuple{
 @property (nonatomic) CGRect currentMenuItemRect;
 @property (nonatomic) NSMutableArray *menuItemRects;
 
+@property (nonatomic) CGRect totalRect;
+
 @property (nonatomic, readonly) UIColor *redTransparent;
 @property (nonatomic, readonly) UIColor *blueTransparent;
 @property (nonatomic, readonly) UIColor *greenTransparent;
@@ -72,7 +74,7 @@ typedef struct MenuItemTuple{
 @synthesize backButton = _backButton;
 @synthesize okButton = _okButton;
 
-//current touch & current rect
+//current touch, current rect & total rect
 @synthesize currentMenuItemRect = _currentMenuItemRect;
 
 - (void)setCurrentMenuItemRect:(CGRect)currentMenuItemRect {
@@ -86,6 +88,13 @@ typedef struct MenuItemTuple{
     _currentTouch = [self translateAndScalePoint:currentTouch];
 }
 
+@synthesize totalRect = _totalRect;
+
+- (void) setTotalRect:(CGRect)totalRect {
+    _totalRect = totalRect;
+    [self setNeedsDisplay];
+}
+
 //drawing properties
 @synthesize menuItemRects;
 @synthesize drawState = _drawState;
@@ -97,14 +106,14 @@ typedef struct MenuItemTuple{
     //check we're not trying to make hte offset too far outside of the view
     if(drawOffset.x > 0){
         drawOffset.x = 0;
-    } else if(self.frame.origin.x - drawOffset.x + self.frame.size.width > self.drawScale * self.frame.size.width){
-        drawOffset.x = self.frame.origin.x + self.frame.size.width * (1 - self.drawScale);
+    } else if(0 - drawOffset.x + self.frame.size.width > self.drawScale * self.frame.size.width){
+        drawOffset.x = 0 + self.frame.size.width * (1 - self.drawScale);
     }
 
     if(drawOffset.y > 0){
         drawOffset.y = 0;
-    } else if(self.frame.origin.y - drawOffset.y + self.frame.size.height > self.drawScale * self.frame.size.height){
-        drawOffset.y = self.frame.origin.y + self.frame.size.height * (1 - self.drawScale);
+    } else if(0 - drawOffset.y + self.frame.size.height > self.drawScale * self.frame.size.height){
+        drawOffset.y = 0 + self.frame.size.height * (1 - self.drawScale);
     }
 
     //check if you need to set these values and hence redraw the screen
@@ -138,6 +147,30 @@ typedef struct MenuItemTuple{
     _drawScale = scale;
     [self setNeedsDisplay];
     
+}
+
+- (void)setDrawState:(AbeloReceiptViewDrawState)drawState {
+    
+    if([self.delegate respondsToSelector:@selector(displayNextStepMessage:)]){
+        switch (drawState) {
+            case AbeloReceiptViewDrawStateImage:
+                [self.delegate displayNextStepMessage:@"Select an image"];
+                break;
+            case AbeloReceiptViewDrawStateMenuItems:
+                [self.delegate displayNextStepMessage:@"Select menu item prices"];
+                break;
+            case AbeloReceiptViewDrawStateTotal:
+                [self.delegate displayNextStepMessage:@"Select total price"];
+                break;
+            case AbeloReceiptViewDrawStateFinished:
+                [self.delegate displayNextStepMessage:@"Finished"];
+                break;
+            case AbeloReceiptViewDrawStateStart:
+            default:
+                break;
+        }
+    }
+    _drawState = drawState;
 }
 
 //uiGestures
@@ -201,42 +234,50 @@ typedef struct MenuItemTuple{
 #define FINGER_X_OFFSET 6.0
 #define FINGER_Y_OFFSET 20.0
 - (CGRect) CGRectMakeFromFingerPoint:(CGPoint) p {
-    return CGRectMake(p.x + FINGER_X_OFFSET,
-                      p.y - FINGER_Y_OFFSET,
+    return CGRectMake(p.x,
+                      p.y,
                       DEFAULT_FINGER_DIM,
                       DEFAULT_FINGER_DIM);
 }
 
-- (void) addMenuItemPoint:(CGPoint) p {
+- (void) addPointToCurrentRect:(CGPoint) fingerPoint {
     
-    p = [self translateAndScalePoint:p];
+    fingerPoint = [self translateAndScalePoint:fingerPoint];
+    
+    CGRect fingerRect = [self CGRectMakeFromFingerPoint:fingerPoint];
     
     if(self.currentMenuItemRect.size.width != NIL_FLOAT){
-        self.currentMenuItemRect = CGRectUnion(self.currentMenuItemRect, [self CGRectMakeFromFingerPoint:p]);
+        self.currentMenuItemRect = CGRectUnion(self.currentMenuItemRect, fingerRect);
         return;
     }
 
-    int i = 0;
-    bool foundRectContainingPoint = NO;
-    while(i < [self.menuItemRects count] && !foundRectContainingPoint) {
-        CGRect rect = [[self.menuItemRects objectAtIndex:i] CGRectValue];
-        if(CGRectContainsPoint(rect, p)) {
-            foundRectContainingPoint = YES;
-        } else {
-            i++;
+    if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
+        int i = 0;
+        bool foundRectContainingPoint = NO;
+        while(i < [self.menuItemRects count] && !foundRectContainingPoint) {
+            CGRect rect = [[self.menuItemRects objectAtIndex:i] CGRectValue];
+            if(CGRectContainsPoint(rect, fingerPoint)) {
+                foundRectContainingPoint = YES;
+            } else {
+                i++;
+            }
         }
-    }
-    
-//    DLog(@"point p(%g, %g) was %@ in array[%d]", p.x, p.y, foundRectContainingPoint ? @"FOUND" : @"NOTFOUND", [self.menuItemRects count]);
-    
-    CGRect rect = [self CGRectMakeFromFingerPoint:p];
-    if(!foundRectContainingPoint) {
-        self.currentMenuItemRect = rect;
-    } else {
-//        self.currentMenuItemRect = rect;
-//        rect = CGRectUnion(rect, [[self.menuItemRects objectAtIndex:i] CGRectValue]);
-//        [self.menuItemRects removeObjectAtIndex:i];
-//        [self.menuItemRects insertObject:[NSValue valueWithCGRect:rect] atIndex:i];
+        
+        if(!foundRectContainingPoint) {
+            self.currentMenuItemRect = fingerRect;
+        } else {
+            self.currentMenuItemRect = CGRectUnion(fingerRect, [[self.menuItemRects objectAtIndex:i] CGRectValue]);
+            [self.delegate clearMenuItemWithIndex:i];
+            [self.menuItemRects removeObjectAtIndex:i];
+        }
+    } else if(self.drawState == AbeloReceiptViewDrawStateTotal) {
+        
+        if(CGRectContainsPoint(self.totalRect, fingerPoint)) {
+            self.currentMenuItemRect = self.totalRect;
+        } else {
+            self.currentMenuItemRect = fingerRect;
+        }
+        
     }
 
     [self setNeedsDisplay];
@@ -251,7 +292,7 @@ typedef struct MenuItemTuple{
         gesture.scale = self.drawScale;
     } else if(gesture.state == UIGestureRecognizerStateChanged){
         self.drawScale = gesture.scale;
-        CGPoint midPoint = [gesture locationInView:nil];
+        CGPoint midPoint = [gesture locationInView:self];
         CGFloat x = midPoint.x + self.drawScale * (self.frame.origin.x - midPoint.x);
         CGFloat y = midPoint.y + self.drawScale * (self.frame.origin.y - midPoint.y);
         self.drawOffset = CGPointMake(x,y);
@@ -270,7 +311,16 @@ typedef struct MenuItemTuple{
         
         if(gesture.state == UIGestureRecognizerStateBegan ||
            gesture.state == UIGestureRecognizerStateChanged) {
-            [self addMenuItemPoint:[gesture locationInView:nil]];
+            [self addPointToCurrentRect:[gesture locationInView:self]];
+        } else {
+            ULog(@"panGesture.state unknown[%d]", gesture.state);
+        }
+    } if(self.drawState == AbeloReceiptViewDrawStateTotal &&
+         gesture.numberOfTouches == 1){
+        
+        if(gesture.state == UIGestureRecognizerStateBegan ||
+           gesture.state == UIGestureRecognizerStateChanged) {
+            [self addPointToCurrentRect:[gesture locationInView:self]];
         } else {
             ULog(@"panGesture.state unknown[%d]", gesture.state);
         }
@@ -278,10 +328,10 @@ typedef struct MenuItemTuple{
         if(gesture.state == UIGestureRecognizerStateBegan ||
            gesture.state == UIGestureRecognizerStateChanged) {
 
-            self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:nil].x,
-                                          self.drawOffset.y + [gesture translationInView:nil].y);
+            self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
+                                          self.drawOffset.y + [gesture translationInView:self].y);
 
-            [gesture setTranslation:CGPointMake(0,0) inView:nil];
+            [gesture setTranslation:CGPointMake(0,0) inView:self];
         }
     }
 }
@@ -290,9 +340,13 @@ typedef struct MenuItemTuple{
     [super touchesBegan:touches withEvent:event];
     UITouch *touch = [touches anyObject];
 
-    if([touches count] == 1 && self.drawState == AbeloReceiptViewDrawStateMenuItems) {
-        DLog(@"touch[%d] at p(%g, %g)", [touches count], [touch locationInView:nil].x, [touch locationInView:nil].y);
-        [self addMenuItemPoint:[touch locationInView:nil]];
+    // add touch if we are drawing menu itme rectaganles or the total rectangles
+    if([touches count] == 1 &&
+       (self.drawState == AbeloReceiptViewDrawStateMenuItems ||
+        self.drawState == AbeloReceiptViewDrawStateTotal)) {
+           
+        DLog(@"touch[%d] at p(%g, %g)", [touches count], [touch locationInView:self].x, [touch locationInView:self].y);
+        [self addPointToCurrentRect:[touch locationInView:self]];
     }
 }
 
@@ -310,10 +364,13 @@ typedef struct MenuItemTuple{
             }
             [self removeGestureRecognizer:self.panGesture];
             [self removeGestureRecognizer:self.pinchGesture];
+        case AbeloReceiptViewDrawStateTotal:
+            if([self clearLastMenuItem]) {
+                break;
+            }
         case AbeloReceiptViewDrawStateImage:
         case AbeloReceiptViewDrawStateStart:
         case AbeloReceiptViewDrawStateFinished:
-        case AbeloReceiptViewDrawStateTotal:
         default:
             self.drawState--;
             break;
@@ -324,8 +381,9 @@ typedef struct MenuItemTuple{
     if(self.drawState != AbeloReceiptViewDrawStateFinished){
         self.drawState++;
     }
-    
+
     switch (self.drawState) {
+        case AbeloReceiptViewDrawStateStart:
         case AbeloReceiptViewDrawStateImage:
             self.image = [self.delegate getImage];
             [self nextButtonAction:sender];
@@ -334,15 +392,18 @@ typedef struct MenuItemTuple{
             [self addGestureRecognizer:self.panGesture];
             [self addGestureRecognizer:self.pinchGesture];
             break;
+        case AbeloReceiptViewDrawStateTotal:
+            self.totalRect = self.currentMenuItemRect;
+            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+            break;
         case AbeloReceiptViewDrawStateFinished:
             [self removeGestureRecognizer:self.panGesture];
             [self removeGestureRecognizer:self.pinchGesture];
             break;
-        case AbeloReceiptViewDrawStateStart:
-        case AbeloReceiptViewDrawStateTotal:
         default:
             break;
     }
+        
 }
 
 - (IBAction)okButtonAction:(id) sender {
@@ -350,10 +411,13 @@ typedef struct MenuItemTuple{
         case AbeloReceiptViewDrawStateMenuItems:
             [self setCurrentMenuItemAndDrawNext];
             break;
+        case AbeloReceiptViewDrawStateTotal:
+            self.totalRect = self.currentMenuItemRect;
+            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+            break;
         case AbeloReceiptViewDrawStateImage:
         case AbeloReceiptViewDrawStateStart:
         case AbeloReceiptViewDrawStateFinished:
-        case AbeloReceiptViewDrawStateTotal:
         default:
             break;
     }
@@ -374,9 +438,9 @@ typedef struct MenuItemTuple{
     UIGraphicsPushContext(context);
 
     // draw current rectanlgle
-    [self.redTransparent setFill];
     [[UIColor blackColor] setStroke];
     if(self.currentMenuItemRect.size.width != NIL_FLOAT) {
+        [self.greenTransparent setFill];
         CGContextFillRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
         CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
     }
@@ -391,6 +455,12 @@ typedef struct MenuItemTuple{
         i++;
     }
 
+    if(self.totalRect.size.width != NIL_FLOAT) {
+        [self.redTransparent setFill];
+        CGContextFillRect(context, [self reverseTranslateAndScaleRect:self.totalRect]);
+        CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:self.totalRect]);
+    }
+    
     UIGraphicsPopContext();
 }
 
@@ -406,7 +476,7 @@ typedef struct MenuItemTuple{
     
     //draw various receipt objects
     [self drawReceiptImage:context];
-    [self drawMenuItems:context];    
+    [self drawMenuItems:context];
 }
 
 
@@ -417,7 +487,7 @@ typedef struct MenuItemTuple{
     
     if(!_nextButton){
         _nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _nextButton.frame = CGRectMake(18, 947, 85, 37);
+        _nextButton.frame = CGRectMake(18, self.frame.size.height - 57, 85, 37);
         [_nextButton setTitle:@"Next" forState:UIControlStateNormal];
         [_nextButton addTarget:self action:@selector(nextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_nextButton];
@@ -425,7 +495,7 @@ typedef struct MenuItemTuple{
  
     if(!_backButton) {
         _backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _backButton.frame = CGRectMake(470, 947, 85, 37);
+        _backButton.frame = CGRectMake(470, self.frame.size.height - 57, 85, 37);
         [_backButton setTitle:@"Back" forState:UIControlStateNormal];
         [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_backButton];
@@ -433,7 +503,7 @@ typedef struct MenuItemTuple{
  
     if(!_okButton){
         _okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _okButton.frame = CGRectMake(261, 947, 85, 37);
+        _okButton.frame = CGRectMake(261, self.frame.size.height - 57, 85, 37);
         [_okButton setTitle:@"Ok" forState:UIControlStateNormal];
         [_okButton addTarget:self action:@selector(okButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:_okButton];
@@ -469,20 +539,33 @@ typedef struct MenuItemTuple{
 }
 
 - (BOOL)clearLastMenuItem {
-    if(self.currentMenuItemRect.size.width!= -1){
+    if(self.currentMenuItemRect.size.width != NIL_FLOAT){
         self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
         return YES;
-    } else if([self.menuItemRects count] > 0){
-        //notify the controller that you removed the menu item
-        if([self.delegate respondsToSelector:@selector(clearMenuItemWithIndex:)]){
-            [self.delegate clearMenuItemWithIndex:[self.menuItemRects count]];
-        }
-        [self.menuItemRects removeLastObject];
-        [self setNeedsDisplay];
-        return YES;
     } else {
-        return NO;
+        
+        if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
+            if([self.menuItemRects count] > 0){
+                //notify the controller that you removed the menu item
+                [self.delegate clearMenuItemWithIndex:[self.menuItemRects count]];
+                [self.menuItemRects removeLastObject];
+                [self setNeedsDisplay];
+                return YES;
+            } else {
+                return NO;
+            }
+        } else if(self.drawState == AbeloReceiptViewDrawStateTotal){
+            
+            if(self.totalRect.size.width == NIL_FLOAT) {
+                return NO;
+            } else {
+                self.totalRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+                return YES;
+            }
+        }
     }
+    
+    return NO;
 }
 
 @end

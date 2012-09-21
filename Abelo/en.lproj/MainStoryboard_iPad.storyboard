@@ -15,10 +15,22 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="4K0-d8-nAG" customClass="AbeloReceiptView">
-                                <rect key="frame" x="0.0" y="0.0" width="575" height="1004"/>
+                                <rect key="frame" x="0.0" y="44" width="575" height="960"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="y4Z-C2-ee5">
+                                <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="IP9-KD-ord"/>
+                                    <barButtonItem title="Add Guest" id="67z-0W-Aqp">
+                                        <connections>
+                                            <action selector="addGuestButtonPressed" destination="2" id="uln-o3-8tC"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -30,22 +42,6 @@
             <point key="canvasLocation" x="209" y="-133"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="AbeloReceiptView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AbeloReceiptView.h"/>
-        </class>
-        <class className="AbeloViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AbeloViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="addGuestInputAction:" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="addGuestButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="addGuestInput" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="addGuestLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="addGuestView" candidateClass="UIView"/>
-                <relationship kind="outlet" name="receiptView" candidateClass="AbeloReceiptView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

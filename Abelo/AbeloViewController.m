@@ -173,6 +173,13 @@
     return [UIImage imageNamed:@"dimt.jpg"];
 }
 
+- (void) addMenuItemWithIndex:(int) index {
+    
+}
+
+- (void) clearMenuItemWithIndex:(int) index {
+    
+}
 
 # pragma mark - Private methods
 
