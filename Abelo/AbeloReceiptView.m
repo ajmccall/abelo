@@ -7,7 +7,7 @@
 //
 
 #import "AbeloReceiptView.h"
-#import "AbeloUtilities.h"
+#import "MRGLog.h"
 
 typedef struct MenuItemTuple{
     CGPoint topLeft, bottomRight;

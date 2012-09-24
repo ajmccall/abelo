@@ -7,10 +7,12 @@
 //
 
 #import "AbeloPartyMembersView.h"
+#import "AbeloPartyMemberView.h"
+#import "MRGRectMake.h"
 
 @interface AbeloPartyMembersView ()
 
-@property (nonatomic) CGPoint newLabelPoint;
+@property (nonatomic) CGFloat newPartyMemberViewPosition;
 @property (nonatomic) int labelIndex;
 @property (nonatomic) NSMutableDictionary *partyMembers;
 @end
@@ -19,36 +21,36 @@
 
 @synthesize labelIndex = _labelIndex;
 @synthesize partyMembers = _partyMembers;
+@synthesize newPartyMemberViewPosition = _newPartyMemberViewPosition;
 
 #pragma mark - Method implementations
 
 - (void)addPartyMemberWithName:(NSString *)name {
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(self.newLabelPoint.x,
-                                                               self.newLabelPoint.y,
-                                                               self.frame.size.width,
-                                                               33)
-                      ];
-    label.text = name;
-    [self addSubview:label];
-    if(self.labelIndex % 2 == 0) {
-        label.backgroundColor = [UIColor yellowColor];
-    } else {
-        label.backgroundColor = [UIColor cyanColor];
-    }
-    [self.partyMembers setObject:label forKey:[NSNumber numberWithInt:self.labelIndex]];
-    self.labelIndex++;
+    AbeloPartyMemberView *view = [[AbeloPartyMemberView alloc] init];
+    view.frame = MRGRectMakeSetXY(0, self.newPartyMemberViewPosition, view.frame);
+    view.frame = MRGRectMakeSetWidth(self.frame.size.width, view.frame);
+    view.name = name;
+    view.total = 0;
     
-    [self setNeedsDisplay];
-    self.newLabelPoint = CGPointMake(self.newLabelPoint.x, self.newLabelPoint.y + 33);
+    if(self.labelIndex % 2 == 0) {
+        [view setColor:[UIColor yellowColor]];
+    } else {
+        [view setColor:[UIColor cyanColor]];
+    }
+
+    self.labelIndex++;
+    self.newPartyMemberViewPosition = self.newPartyMemberViewPosition + view.frame.size.height;
+
+    [self.partyMembers setObject:view forKey:[NSNumber numberWithInt:self.labelIndex]];
+    [self addSubview:view];
 }
 
 
 #pragma mark - Initialise
 
 - (void) setup {
-    self.newLabelPoint = CGPointMake(0, 0);
-
+    self.newPartyMemberViewPosition = 0;
 }
 
 - (id)initWithFrame:(CGRect)frame {

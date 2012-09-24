@@ -1,5 +1,5 @@
 //
-//  AbeloUtilities.h
+//  MRGLog.h
 //  Abelo
 //
 //  Created by Alasdair McCall on 10/09/2012.
@@ -20,6 +20,6 @@
 #define ULog(...)
 #endif
 
-@interface AbeloUtilities : NSObject
-
-@end
+//@interface MRGLog : NSObject
+//
+//@end

@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D2D5F27515FE4A2A00923EFB /* AbeloUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */; };
+		D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */ = {isa = PBXBuildFile; fileRef = D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */; };
+		D23B77C416108F060033C55C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D23B77C316108F060033C55C /* Localizable.strings */; };
 		D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F27715FF4E2600923EFB /* dimt.jpg */; };
-		D2D5F28F15FF596E00923EFB /* AbeloReceiptViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F28D15FF596E00923EFB /* AbeloReceiptViewController.m */; };
 		D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */; };
 		D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */; };
 		D2E5787715F8A4F9001BA957 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787615F8A4F9001BA957 /* UIKit.framework */; };
@@ -41,11 +41,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D2D5F27315FE4A2A00923EFB /* AbeloUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloUtilities.h; sourceTree = "<group>"; };
-		D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloUtilities.m; sourceTree = "<group>"; };
+		D23B77BC16107BE80033C55C /* AbeloPartyMemberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloPartyMemberView.h; sourceTree = "<group>"; };
+		D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloPartyMemberView.m; sourceTree = "<group>"; };
+		D23B77C21610850A0033C55C /* AbeloStringDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloStringDefines.h; sourceTree = "<group>"; };
+		D23B77C316108F060033C55C /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		D23B77CD1610967A0033C55C /* MRGRectMake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRGRectMake.h; sourceTree = "<group>"; };
+		D2D5F27315FE4A2A00923EFB /* MRGLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRGLog.h; sourceTree = "<group>"; };
 		D2D5F27715FF4E2600923EFB /* dimt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dimt.jpg; sourceTree = "<group>"; };
-		D2D5F28C15FF596E00923EFB /* AbeloReceiptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloReceiptViewController.h; sourceTree = "<group>"; };
-		D2D5F28D15FF596E00923EFB /* AbeloReceiptViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloReceiptViewController.m; sourceTree = "<group>"; };
 		D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AbeloReceiptViewController.xib; sourceTree = "<group>"; };
 		D2D5F29115FF5D1600923EFB /* AbeloReceiptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloReceiptView.h; sourceTree = "<group>"; };
 		D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloReceiptView.m; sourceTree = "<group>"; };
@@ -99,6 +101,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D23B77C516108F110033C55C /* Strings */ = {
+			isa = PBXGroup;
+			children = (
+				D23B77C316108F060033C55C /* Localizable.strings */,
+			);
+			name = Strings;
+			sourceTree = "<group>";
+		};
+		D23B77C616108F1D0033C55C /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				D2D5F27715FF4E2600923EFB /* dimt.jpg */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		D23B77CC161095F60033C55C /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				D2D5F27315FE4A2A00923EFB /* MRGLog.h */,
+				D23B77CD1610967A0033C55C /* MRGRectMake.h */,
+				D23B77C21610850A0033C55C /* AbeloStringDefines.h */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
 		D2D5F27915FF4E5000923EFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +134,8 @@
 				D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */,
 				D2FEC1DA160CCD9000166551 /* AbeloPartyMembersView.h */,
 				D2FEC1DB160CCD9000166551 /* AbeloPartyMembersView.m */,
+				D23B77BC16107BE80033C55C /* AbeloPartyMemberView.h */,
+				D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -144,20 +174,17 @@
 		D2E5787C15F8A4F9001BA957 /* Abelo */ = {
 			isa = PBXGroup;
 			children = (
+				D23B77CC161095F60033C55C /* Utilities */,
 				D2D5F27915FF4E5000923EFB /* Views */,
-				D2E578B615F8D6FF001BA957 /* Models */,
 				D2E5788515F8A4F9001BA957 /* AbeloAppDelegate.h */,
-				D2E5788615F8A4F9001BA957 /* AbeloAppDelegate.m */,
-				D2E5788815F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard */,
-				D2E5788B15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard */,
 				D2E5788E15F8A4F9001BA957 /* AbeloViewController.h */,
+				D2E5788615F8A4F9001BA957 /* AbeloAppDelegate.m */,
 				D2E5788F15F8A4F9001BA957 /* AbeloViewController.m */,
-				D2E5787D15F8A4F9001BA957 /* Supporting Files */,
-				D2D5F27315FE4A2A00923EFB /* AbeloUtilities.h */,
-				D2D5F27415FE4A2A00923EFB /* AbeloUtilities.m */,
-				D2D5F28C15FF596E00923EFB /* AbeloReceiptViewController.h */,
-				D2D5F28D15FF596E00923EFB /* AbeloReceiptViewController.m */,
 				D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */,
+				D2E5788B15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard */,
+				D2E5788815F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard */,
+				D2E578B615F8D6FF001BA957 /* Models */,
+				D2E5787D15F8A4F9001BA957 /* Supporting Files */,
 			);
 			path = Abelo;
 			sourceTree = "<group>";
@@ -195,7 +222,8 @@
 		D2E578B215F8A56F001BA957 /* Reources */ = {
 			isa = PBXGroup;
 			children = (
-				D2D5F27715FF4E2600923EFB /* dimt.jpg */,
+				D23B77C616108F1D0033C55C /* Images */,
+				D23B77C516108F110033C55C /* Strings */,
 			);
 			name = Reources;
 			sourceTree = "<group>";
@@ -286,6 +314,7 @@
 				D2E5788D15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard in Resources */,
 				D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */,
 				D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */,
+				D23B77C416108F060033C55C /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,10 +353,9 @@
 				D2E5788715F8A4F9001BA957 /* AbeloAppDelegate.m in Sources */,
 				D2E5789015F8A4F9001BA957 /* AbeloViewController.m in Sources */,
 				D2E578B515F8BC53001BA957 /* AbeloBill.m in Sources */,
-				D2D5F27515FE4A2A00923EFB /* AbeloUtilities.m in Sources */,
-				D2D5F28F15FF596E00923EFB /* AbeloReceiptViewController.m in Sources */,
 				D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */,
 				D2FEC1DC160CCD9000166551 /* AbeloPartyMembersView.m in Sources */,
+				D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
