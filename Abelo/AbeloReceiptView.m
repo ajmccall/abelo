@@ -20,8 +20,8 @@ typedef struct MenuItemTuple{
 
 @interface AbeloReceiptView ()
 
-@property (nonatomic) CGFloat drawScale;
-@property (nonatomic) CGPoint drawOffset;
+//@property (nonatomic) CGFloat drawScale;
+//@property (nonatomic) CGPoint drawOffset;
 
 @property (nonatomic) CGPoint currentTouch;
 @property (nonatomic) CGRect currentMenuItemRect;
@@ -34,18 +34,17 @@ typedef struct MenuItemTuple{
 @property (nonatomic, readonly) UIColor *blueTransparent;
 @property (nonatomic, readonly) UIColor *greenTransparent;
 
-@property (nonatomic) UIButton *nextButton;
-@property (nonatomic) UIButton *backButton;
-@property (nonatomic) UIButton *okButton;
+//@property (nonatomic) UIButton *nextButton;
+//@property (nonatomic) UIButton *backButton;
+//@property (nonatomic) UIButton *okButton;
 
-@property (nonatomic) UIGestureRecognizer *pinchGesture;
-@property (nonatomic) UIGestureRecognizer *panGesture;
+//@property (nonatomic) UIGestureRecognizer *pinchGesture;
+//@property (nonatomic) UIGestureRecognizer *panGesture;
 
 - (CGPoint) translateAndScalePoint:(CGPoint) p;
-- (void) setCurrentMenuItemAndDrawNext;
 - (BOOL) clearLastMenuItem;
 
-- (IBAction)nextButtonAction:(id) sender;
+//- (IBAction)nextButtonAction:(id) sender;
 
 @end
 
@@ -68,9 +67,9 @@ typedef struct MenuItemTuple{
 }
 
 //buttons
-@synthesize nextButton = _nextButton;
-@synthesize backButton = _backButton;
-@synthesize okButton = _okButton;
+//@synthesize nextButton = _nextButton;
+//@synthesize backButton = _backButton;
+//@synthesize okButton = _okButton;
 
 //current touch, current rect & total rect
 @synthesize currentMenuItemRect = _currentMenuItemRect;
@@ -147,23 +146,23 @@ typedef struct MenuItemTuple{
     
 }
 
-//uiGestures
-@synthesize panGesture = _panGesture;
-@synthesize pinchGesture = _pinchGesture;
-
-- (UIGestureRecognizer *)panGesture {
-    if(!_panGesture) {
-        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-    }
-    return _panGesture;
-}
-
-- (UIGestureRecognizer *)pinchGesture {
-    if(!_pinchGesture) {
-        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
-    }
-    return _pinchGesture;
-}
+////uiGestures
+//@synthesize panGesture = _panGesture;
+//@synthesize pinchGesture = _pinchGesture;
+//
+//- (UIGestureRecognizer *)panGesture {
+//    if(!_panGesture) {
+//        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+//    }
+//    return _panGesture;
+//}
+//
+//- (UIGestureRecognizer *)pinchGesture {
+//    if(!_pinchGesture) {
+//        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
+//    }
+//    return _pinchGesture;
+//}
 
 // colors - could be constants
 - (UIColor *)redTransparent {
@@ -231,7 +230,6 @@ typedef struct MenuItemTuple{
         while((key = [enumerate nextObject]) && !foundRectContainingPoint) {
             
             CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
-//            CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
             if(CGRectContainsPoint(rect, fingerPoint)) {
                 foundRectContainingPoint = YES;
             }
@@ -261,69 +259,66 @@ typedef struct MenuItemTuple{
 #pragma mark -
 #pragma mark Gesture recognizers
 
-- (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
-    
-    if(gesture.state == UIGestureRecognizerStateBegan){
-        gesture.scale = self.drawScale;
-    } else if(gesture.state == UIGestureRecognizerStateChanged){
-        self.drawScale = gesture.scale;
-        CGPoint midPoint = [gesture locationInView:self];
-        CGFloat x = midPoint.x + self.drawScale * (self.frame.origin.x - midPoint.x);
-        CGFloat y = midPoint.y + self.drawScale * (self.frame.origin.y - midPoint.y);
-        self.drawOffset = CGPointMake(x,y);
-        
-    }
-}
+//- (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
+//    
+//    if(gesture.state == UIGestureRecognizerStateBegan){
+//        gesture.scale = self.drawScale;
+//    } else if(gesture.state == UIGestureRecognizerStateChanged){
+//        self.drawScale = gesture.scale;
+//        CGPoint midPoint = [gesture locationInView:self];
+//        CGFloat x = midPoint.x + self.drawScale * (self.frame.origin.x - midPoint.x);
+//        CGFloat y = midPoint.y + self.drawScale * (self.frame.origin.y - midPoint.y);
+//        self.drawOffset = CGPointMake(x,y);
+//        
+//    }
+//}
+//
+//- (void)panGesture:(UIPanGestureRecognizer *)gesture {
+//    
+//    
+//    if(self.drawState == AbeloReceiptViewDrawStateMenuItems &&
+//       gesture.numberOfTouches == 1){
+//        
+//        if(gesture.state == UIGestureRecognizerStateBegan ||
+//           gesture.state == UIGestureRecognizerStateChanged) {
+//            [self addPointToCurrentRect:[gesture locationInView:self]];
+//        } else {
+//            ULog(@"panGesture.state unknown[%d]", gesture.state);
+//        }
+//    } if(self.drawState == AbeloReceiptViewDrawStateTotal &&
+//         gesture.numberOfTouches == 1){
+//        
+//        if(gesture.state == UIGestureRecognizerStateBegan ||
+//           gesture.state == UIGestureRecognizerStateChanged) {
+//            [self addPointToCurrentRect:[gesture locationInView:self]];
+//        } else {
+//            ULog(@"panGesture.state unknown[%d]", gesture.state);
+//        }
+//    } else if(gesture.numberOfTouches == 2){
+//        if(gesture.state == UIGestureRecognizerStateBegan ||
+//           gesture.state == UIGestureRecognizerStateChanged) {
+//
+//            self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
+//                                          self.drawOffset.y + [gesture translationInView:self].y);
+//
+//            [gesture setTranslation:CGPointMake(0,0) inView:self];
+//        }
+//    }
+//}
 
-- (void)tapGesture:(UITapGestureRecognizer *)gesture {
-}
-
-- (void)panGesture:(UIPanGestureRecognizer *)gesture {
-    
-    
-    if(self.drawState == AbeloReceiptViewDrawStateMenuItems &&
-       gesture.numberOfTouches == 1){
-        
-        if(gesture.state == UIGestureRecognizerStateBegan ||
-           gesture.state == UIGestureRecognizerStateChanged) {
-            [self addPointToCurrentRect:[gesture locationInView:self]];
-        } else {
-            ULog(@"panGesture.state unknown[%d]", gesture.state);
-        }
-    } if(self.drawState == AbeloReceiptViewDrawStateTotal &&
-         gesture.numberOfTouches == 1){
-        
-        if(gesture.state == UIGestureRecognizerStateBegan ||
-           gesture.state == UIGestureRecognizerStateChanged) {
-            [self addPointToCurrentRect:[gesture locationInView:self]];
-        } else {
-            ULog(@"panGesture.state unknown[%d]", gesture.state);
-        }
-    } else if(gesture.numberOfTouches == 2){
-        if(gesture.state == UIGestureRecognizerStateBegan ||
-           gesture.state == UIGestureRecognizerStateChanged) {
-
-            self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
-                                          self.drawOffset.y + [gesture translationInView:self].y);
-
-            [gesture setTranslation:CGPointMake(0,0) inView:self];
-        }
-    }
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    UITouch *touch = [touches anyObject];
-
-    // add touch if we are drawing menu itme rectaganles or the total rectangles
-    if([touches count] == 1 &&
-       (self.drawState == AbeloReceiptViewDrawStateMenuItems ||
-        self.drawState == AbeloReceiptViewDrawStateTotal)) {
-           
-        DLog(@"touch[%d] at p(%g, %g)", [touches count], [touch locationInView:self].x, [touch locationInView:self].y);
-        [self addPointToCurrentRect:[touch locationInView:self]];
-    }
-}
+//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [super touchesBegan:touches withEvent:event];
+//    UITouch *touch = [touches anyObject];
+//
+//    // add touch if we are drawing menu itme rectaganles or the total rectangles
+//    if([touches count] == 1 &&
+//       (self.drawState == AbeloReceiptViewDrawStateMenuItems ||
+//        self.drawState == AbeloReceiptViewDrawStateTotal)) {
+//           
+//        DLog(@"touch[%d] at p(%g, %g)", [touches count], [touch locationInView:self].x, [touch locationInView:self].y);
+//        [self addPointToCurrentRect:[touch locationInView:self]];
+//    }
+//}
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesEnded:touches withEvent:event];
@@ -331,75 +326,7 @@ typedef struct MenuItemTuple{
 
 #pragma mark - Button actions
 
-- (IBAction)backButtonAction:(id) sender {
-    switch (self.drawState) {
-        case AbeloReceiptViewDrawStateMenuItems:
-            if([self clearLastMenuItem]) {
-                break;
-            }
-            [self removeGestureRecognizer:self.panGesture];
-            [self removeGestureRecognizer:self.pinchGesture];
-        case AbeloReceiptViewDrawStateTotal:
-            if([self clearLastMenuItem]) {
-                break;
-            }
-        case AbeloReceiptViewDrawStateImage:
-        case AbeloReceiptViewDrawStateStart:
-        case AbeloReceiptViewDrawStateFinished:
-        default:
-            self.drawState--;
-            break;
-    }
-}
-
-- (IBAction)nextButtonAction:(id) sender {
-    if(self.drawState != AbeloReceiptViewDrawStateFinished){
-        self.drawState++;
-    }
-
-    switch (self.drawState) {
-        case AbeloReceiptViewDrawStateStart:
-        case AbeloReceiptViewDrawStateImage:
-            self.image = [self.delegate getImage];
-            [self nextButtonAction:sender];
-            break;
-        case AbeloReceiptViewDrawStateMenuItems:
-            [self addGestureRecognizer:self.panGesture];
-            [self addGestureRecognizer:self.pinchGesture];
-            break;
-        case AbeloReceiptViewDrawStateTotal:
-            self.totalRect = self.currentMenuItemRect;
-            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
-            break;
-        case AbeloReceiptViewDrawStateFinished:
-            [self removeGestureRecognizer:self.panGesture];
-            [self removeGestureRecognizer:self.pinchGesture];
-            break;
-        default:
-            break;
-    }
-        
-}
-
-- (IBAction)okButtonAction:(id) sender {
-    switch (self.drawState) {
-        case AbeloReceiptViewDrawStateMenuItems:
-            [self setCurrentMenuItemAndDrawNext];
-            break;
-        case AbeloReceiptViewDrawStateTotal:
-            self.totalRect = self.currentMenuItemRect;
-            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
-            break;
-        case AbeloReceiptViewDrawStateImage:
-        case AbeloReceiptViewDrawStateStart:
-        case AbeloReceiptViewDrawStateFinished:
-        default:
-            break;
-    }
-}
-
 #pragma mark - Draw Methods
-
 
 - (void) drawReceiptImage:(CGContextRef) context {
     UIGraphicsPushContext(context);
@@ -461,34 +388,33 @@ typedef struct MenuItemTuple{
 
 - (void) setupButtons {
     
-    if(!_nextButton){
-        _nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _nextButton.frame = CGRectMake(18, self.frame.size.height - 57, 85, 37);
-        [_nextButton setTitle:@"Next" forState:UIControlStateNormal];
-        [_nextButton addTarget:self action:@selector(nextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_nextButton];
-    }
- 
-    if(!_backButton) {
-        _backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _backButton.frame = CGRectMake(470, self.frame.size.height - 57, 85, 37);
-        [_backButton setTitle:@"Back" forState:UIControlStateNormal];
-        [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_backButton];
-    }
- 
-    if(!_okButton){
-        _okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        _okButton.frame = CGRectMake(261, self.frame.size.height - 57, 85, 37);
-        [_okButton setTitle:@"Ok" forState:UIControlStateNormal];
-        [_okButton addTarget:self action:@selector(okButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:_okButton];
-    }
+//    if(!_nextButton){
+//        _nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//        _nextButton.frame = CGRectMake(18, self.frame.size.height - 57, 85, 37);
+//        [_nextButton setTitle:@"Next" forState:UIControlStateNormal];
+//        [_nextButton addTarget:self action:@selector(nextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:_nextButton];
+//    }
+// 
+//    if(!_backButton) {
+//        _backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//        _backButton.frame = CGRectMake(470, self.frame.size.height - 57, 85, 37);
+//        [_backButton setTitle:@"Back" forState:UIControlStateNormal];
+//        [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:_backButton];
+//    }
+// 
+//    if(!_okButton){
+//        _okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//        _okButton.frame = CGRectMake(261, self.frame.size.height - 57, 85, 37);
+//        [_okButton setTitle:@"Ok" forState:UIControlStateNormal];
+//        [_okButton addTarget:self action:@selector(okButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//        [self addSubview:_okButton];
+//    }
 }
 
 - (void)setup {
     [self clearView];
-    [self setupButtons];
     
     self.drawState = AbeloReceiptViewDrawStateStart;
     self.multipleTouchEnabled = YES;

@@ -30,8 +30,13 @@ enum AbeloReceiptViewDrawState {
 
 @property (nonatomic) UIImage *image;
 @property (nonatomic) AbeloReceiptViewDrawState drawState;
+@property (nonatomic) CGFloat drawScale;
+@property (nonatomic) CGPoint drawOffset;
+
 @property (nonatomic, weak) id<ReceiptViewDelegate> delegate;
 
 - (void) clearView;
-
+- (void) addPointToCurrentRect:(CGPoint) fingerPoint;
+- (void) setCurrentMenuItemAndDrawNext;
+- (BOOL) clearLastMenuItem;
 @end

@@ -12,24 +12,37 @@
 #import "AbeloReceiptView.h"
 #import "AbeloPartyMembersView.h"
 
+#pragma mark - AbeloViewController PRIVATE interface
+
 @interface AbeloViewController ()
 
 + (NSString *) GenerateRandStringLength:(int) len;
 
 @property (nonatomic) AbeloBill *bill;
 @property (nonatomic) UIPopoverController *popover;
+@property (nonatomic) UIGestureRecognizer *pinchGesture;
+@property (nonatomic) UIGestureRecognizer *panGesture;
 
 @end
 
+#pragma mark - AbeloViewController implementation
+
 @implementation AbeloViewController
 
+@synthesize toolbar = _toolbar;
+@synthesize backButton = _backButton;
+@synthesize okButton = _okButton;
+@synthesize nextButton = _nextButton;
+
+#pragma mark - Property synthesize declarations
 @synthesize receiptView = _receiptView;
 @synthesize partyMembersView = _partyMembersView;
-
-#pragma mark - Property synthesizers/declarations
-@synthesize toolbar = _toolbar;
-@synthesize bill = _bill;
+@synthesize panGesture = _panGesture;
+@synthesize pinchGesture = _pinchGesture;
 @synthesize popover = _popover;
+@synthesize bill = _bill;
+
+#pragma mark - Property synthesize implementations
 
 - (void)setReceiptView:(AbeloReceiptView *)receiptView {
     _receiptView = receiptView;
@@ -43,7 +56,21 @@
     return _bill;
 }
 
-#pragma mark - Setup
+- (UIGestureRecognizer *)panGesture {
+    if(!_panGesture) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    }
+    return _panGesture;
+}
+
+- (UIGestureRecognizer *)pinchGesture {
+    if(!_pinchGesture) {
+        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
+    }
+    return _pinchGesture;
+}
+
+#pragma mark - ViewController initialise
 
 - (UIPopoverController *)popover {
     if(!_popover) {
@@ -53,6 +80,8 @@
 }
 
 - (void) setup {
+    self.backButton.enabled = NO;
+    self.okButton.enabled = NO;
 }
 
 - (void)viewDidLoad
@@ -67,11 +96,14 @@
     [self setReceiptView:nil];
     [self setToolbar:nil];
     [self setPartyMembersView:nil];
+    [self setBackButton:nil];
+    [self setOkButton:nil];
+    [self setNextButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
 
-#pragma mark - Button Actions
+#pragma mark - Outlet Actions
 
 - (IBAction)addGuestAction:(id)sender {
     NSString *name = [AbeloViewController GenerateRandStringLength:3];
@@ -79,6 +111,133 @@
     [self.partyMembersView addPartyMemberWithName:name];
 }
 
+- (IBAction)backButtonAction:(id) sender {
+    switch (self.receiptView.drawState) {
+        case AbeloReceiptViewDrawStateMenuItems:
+            if([self.receiptView clearLastMenuItem]) {
+                return;
+            }
+            [self.view removeGestureRecognizer:self.panGesture];
+            [self.view removeGestureRecognizer:self.pinchGesture];
+            [self.receiptView clearView];
+            self.okButton.enabled = NO;
+            self.backButton.enabled = NO;
+
+            self.receiptView.drawState--;
+            break;
+        case AbeloReceiptViewDrawStateTotal:
+            if([self.receiptView clearLastMenuItem]) {
+                return;
+            }
+            break;
+        case AbeloReceiptViewDrawStateImage:
+        case AbeloReceiptViewDrawStateStart:
+        case AbeloReceiptViewDrawStateFinished:
+        default:
+            break;
+    }
+
+    if(self.receiptView.drawState != AbeloReceiptViewDrawStateStart){
+        self.receiptView.drawState--;
+    }
+}
+
+- (IBAction)nextButtonAction:(id) sender {
+    if(self.receiptView.drawState != AbeloReceiptViewDrawStateFinished){
+        self.receiptView.drawState++;
+    }
+    
+    switch (self.receiptView.drawState) {
+        case AbeloReceiptViewDrawStateStart:
+        case AbeloReceiptViewDrawStateImage:
+            self.receiptView.image = [UIImage imageNamed:@"dimt.jpg"];
+            [self nextButtonAction:sender];
+            break;
+        case AbeloReceiptViewDrawStateMenuItems:
+            [self.view addGestureRecognizer:self.panGesture];
+            [self.view addGestureRecognizer:self.pinchGesture];
+            self.okButton.enabled = YES;
+            self.backButton.enabled = YES;
+            break;
+        case AbeloReceiptViewDrawStateTotal:
+//            self.totalRect = self.currentMenuItemRect;
+//            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+            break;
+        case AbeloReceiptViewDrawStateFinished:
+            self.okButton.enabled = NO;
+            self.nextButton.enabled = NO;
+            [self.view removeGestureRecognizer:self.panGesture];
+            [self.view removeGestureRecognizer:self.pinchGesture];
+            break;
+        default:
+            break;
+    }
+}
+
+- (IBAction)okButtonAction:(id) sender {
+    switch (self.receiptView.drawState) {
+        case AbeloReceiptViewDrawStateMenuItems:
+            [self.receiptView setCurrentMenuItemAndDrawNext];
+            break;
+//        case AbeloReceiptViewDrawStateTotal:
+//            self.totalRect = self.currentMenuItemRect;
+//            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+//            break;
+//        case AbeloReceiptViewDrawStateImage:
+//        case AbeloReceiptViewDrawStateStart:
+//        case AbeloReceiptViewDrawStateFinished:
+        default:
+            break;
+    }
+}
+
+#pragma mark - Gesture recognizers
+
+- (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
+    
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        gesture.scale = self.receiptView.drawScale;
+    } else if(gesture.state == UIGestureRecognizerStateChanged){
+        self.receiptView.drawScale = gesture.scale;
+        CGPoint midPoint = [gesture locationInView:self.receiptView];
+        CGFloat x = midPoint.x + self.receiptView.drawScale * (self.receiptView.frame.origin.x - midPoint.x);
+        CGFloat y = midPoint.y + self.receiptView.drawScale * (self.receiptView.frame.origin.y - midPoint.y);
+        self.receiptView.drawOffset = CGPointMake(x,y);
+        
+    }
+}
+
+- (void)panGesture:(UIPanGestureRecognizer *)gesture {
+    
+    if(self.receiptView.drawState == AbeloReceiptViewDrawStateMenuItems &&
+       gesture.numberOfTouches == 1){
+        
+        if(gesture.state == UIGestureRecognizerStateBegan ||
+           gesture.state == UIGestureRecognizerStateChanged) {
+            [self.receiptView addPointToCurrentRect:[gesture locationInView:self.receiptView]];
+        } else {
+            ULog(@"panGesture.state unknown[%d]", gesture.state);
+        }
+    } if(self.receiptView.drawState == AbeloReceiptViewDrawStateTotal &&
+         gesture.numberOfTouches == 1){
+        
+        if(gesture.state == UIGestureRecognizerStateBegan ||
+           gesture.state == UIGestureRecognizerStateChanged) {
+            [self.receiptView addPointToCurrentRect:[gesture locationInView:self.receiptView]];
+        } else {
+            ULog(@"panGesture.state unknown[%d]", gesture.state);
+        }
+    } else if(gesture.numberOfTouches == 2){
+        if(gesture.state == UIGestureRecognizerStateBegan ||
+           gesture.state == UIGestureRecognizerStateChanged) {
+            
+            self.receiptView.drawOffset = CGPointMake(self.receiptView.drawOffset.x + [gesture translationInView:self.receiptView].x,
+                                          self.receiptView.drawOffset.y + [gesture translationInView:self.receiptView].y);
+            
+            [gesture setTranslation:CGPointMake(0,0) inView:self.receiptView];
+        }
+    }
+}
 
 #pragma mark - Camera
 

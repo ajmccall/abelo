@@ -17,4 +17,8 @@
 @property (weak, nonatomic) IBOutlet AbeloReceiptView *receiptView;
 @property (weak, nonatomic) IBOutlet AbeloPartyMembersView *partyMembersView;
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
+
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *okButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *nextButton;
 @end

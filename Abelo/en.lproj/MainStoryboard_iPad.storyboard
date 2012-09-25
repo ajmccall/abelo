@@ -23,9 +23,21 @@
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem systemItem="rewind" id="v4f-ez-WKm"/>
-                                    <barButtonItem systemItem="done" id="ekE-t9-dVC"/>
-                                    <barButtonItem systemItem="fastForward" id="z3V-Jv-V8U"/>
+                                    <barButtonItem systemItem="rewind" id="v4f-ez-WKm">
+                                        <connections>
+                                            <action selector="backButtonAction:" destination="2" id="TkX-X0-jFN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="done" id="ekE-t9-dVC">
+                                        <connections>
+                                            <action selector="okButtonAction:" destination="2" id="X0d-c8-AOm"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem systemItem="fastForward" id="z3V-Jv-V8U">
+                                        <connections>
+                                            <action selector="nextButtonAction:" destination="2" id="bGt-89-v6w"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="IP9-KD-ord"/>
                                     <barButtonItem title="Add Guest" id="67z-0W-Aqp">
                                         <connections>
@@ -43,6 +55,9 @@
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="v4f-ez-WKm" id="2XL-Vl-3Jb"/>
+                        <outlet property="nextButton" destination="z3V-Jv-V8U" id="m8f-x9-iXh"/>
+                        <outlet property="okButton" destination="ekE-t9-dVC" id="mC1-eK-Gtd"/>
                         <outlet property="partyMembersView" destination="7v9-xd-OMk" id="2yF-33-ozS"/>
                         <outlet property="receiptView" destination="4K0-d8-nAG" id="JDF-KI-IKA"/>
                         <outlet property="toolbar" destination="y4Z-C2-ee5" id="xcv-4R-teV"/>
@@ -52,6 +67,34 @@
             <point key="canvasLocation" x="209" y="-133"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="AbeloPartyMembersView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AbeloPartyMembersView.h"/>
+        </class>
+        <class className="AbeloReceiptView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AbeloReceiptView.h"/>
+            <relationships>
+                <relationship kind="action" name="backButtonAction:"/>
+                <relationship kind="action" name="nextButtonAction:"/>
+                <relationship kind="action" name="okButtonAction:"/>
+            </relationships>
+        </class>
+        <class className="AbeloViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AbeloViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addGuestAction:"/>
+                <relationship kind="action" name="backButtonAction:"/>
+                <relationship kind="action" name="nextButtonAction:"/>
+                <relationship kind="action" name="okButtonAction:"/>
+                <relationship kind="outlet" name="backButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="nextButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="okButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="partyMembersView" candidateClass="AbeloPartyMembersView"/>
+                <relationship kind="outlet" name="receiptView" candidateClass="AbeloReceiptView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
