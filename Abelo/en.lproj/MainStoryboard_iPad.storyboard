@@ -23,6 +23,9 @@
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
+                                    <barButtonItem systemItem="rewind" id="v4f-ez-WKm"/>
+                                    <barButtonItem systemItem="done" id="ekE-t9-dVC"/>
+                                    <barButtonItem systemItem="fastForward" id="z3V-Jv-V8U"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="IP9-KD-ord"/>
                                     <barButtonItem title="Add Guest" id="67z-0W-Aqp">
                                         <connections>

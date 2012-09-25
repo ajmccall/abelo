@@ -29,6 +29,7 @@ enum AbeloReceiptViewDrawState {
 @interface AbeloReceiptView : UIView
 
 @property (nonatomic) UIImage *image;
+@property (nonatomic) AbeloReceiptViewDrawState drawState;
 @property (nonatomic, weak) id<ReceiptViewDelegate> delegate;
 
 - (void) clearView;

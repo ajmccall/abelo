@@ -20,8 +20,6 @@ typedef struct MenuItemTuple{
 
 @interface AbeloReceiptView ()
 
-@property (nonatomic) AbeloReceiptViewDrawState drawState;
-
 @property (nonatomic) CGFloat drawScale;
 @property (nonatomic) CGPoint drawOffset;
 
@@ -149,30 +147,6 @@ typedef struct MenuItemTuple{
     
 }
 
-- (void)setDrawState:(AbeloReceiptViewDrawState)drawState {
-    
-    if([self.delegate respondsToSelector:@selector(displayNextStepMessage:)]){
-        switch (drawState) {
-            case AbeloReceiptViewDrawStateImage:
-                [self.delegate displayNextStepMessage:@"Select an image"];
-                break;
-            case AbeloReceiptViewDrawStateMenuItems:
-                [self.delegate displayNextStepMessage:@"Select menu item prices"];
-                break;
-            case AbeloReceiptViewDrawStateTotal:
-                [self.delegate displayNextStepMessage:@"Select total price"];
-                break;
-            case AbeloReceiptViewDrawStateFinished:
-                [self.delegate displayNextStepMessage:@"Finished"];
-                break;
-            case AbeloReceiptViewDrawStateStart:
-            default:
-                break;
-        }
-    }
-    _drawState = drawState;
-}
-
 //uiGestures
 @synthesize panGesture = _panGesture;
 @synthesize pinchGesture = _pinchGesture;
@@ -207,8 +181,6 @@ typedef struct MenuItemTuple{
 #pragma mark - Methods Implementations
 
 - (void)clearView {
-    
-    self.drawState = AbeloReceiptViewDrawStateStart;
     
     _currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
     self.menuItems = [NSMutableDictionary dictionary];
