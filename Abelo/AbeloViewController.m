@@ -74,7 +74,9 @@
 #pragma mark - Button Actions
 
 - (IBAction)addGuestAction:(id)sender {
-    [self.partyMembersView addPartyMemberWithName:[AbeloViewController GenerateRandStringLength:3]];    
+    NSString *name = [AbeloViewController GenerateRandStringLength:3];
+    [self.bill addPartyMemberWithName:name];
+    [self.partyMembersView addPartyMemberWithName:name];
 }
 
 
@@ -126,7 +128,6 @@
 }
 
 - (void) addMenuItemWithIndex:(int) index {
-    
 }
 
 - (void) clearMenuItemWithIndex:(int) index {

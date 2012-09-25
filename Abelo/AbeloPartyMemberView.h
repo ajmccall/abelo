@@ -13,7 +13,6 @@
 @property (nonatomic) NSString *name;
 @property (nonatomic) float total;
 
-+ (CGFloat) DefaultViewSize;
 - (void) setColor:(UIColor *) color;
 
 @end

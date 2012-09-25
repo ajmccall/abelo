@@ -11,14 +11,16 @@
 @interface AbeloBill : NSObject
 
 @property (nonatomic) double total;
-//@property (nonatomic, readonly) double totalRemaing;
 
-- (int) addPartyEntity:(NSString *) entityName;
+- (int) addPartyMemberWithName:(NSString *) name;
+- (void) removePartyMemberWithKey:(int) key;
+- (float) billTotalForPartyMemberWithKey:(int) key;
+- (void) addBillItemWithKey:(int) billKey toPartyMemberWithKey:(int) partyMemberKey;
+
+- (int) addBillItem:(NSString *) itemName withTotal:(float) total;
 
 /*
 - (id) addBillItem:(NSString *) itemName withTotal:(double) itemTotal andQuantity:(int) quantity;
-
-- (id) addBillItem:(NSString *) itemName withTotal:(double) itemTotal;
 
 - (void) partyEntity:(id) entity paided:(double) amount towardBillItem:(id) billItem;
 
