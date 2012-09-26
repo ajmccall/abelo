@@ -12,6 +12,7 @@
 		D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F27715FF4E2600923EFB /* dimt.jpg */; };
 		D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */; };
 		D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */; };
+		D2DF70FD16136C2200EA8B85 /* AbeloLinkersView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DF70FC16136C2200EA8B85 /* AbeloLinkersView.m */; };
 		D2E5787715F8A4F9001BA957 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787615F8A4F9001BA957 /* UIKit.framework */; };
 		D2E5787915F8A4F9001BA957 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787815F8A4F9001BA957 /* Foundation.framework */; };
 		D2E5787B15F8A4F9001BA957 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2E5787A15F8A4F9001BA957 /* CoreGraphics.framework */; };
@@ -51,6 +52,8 @@
 		D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AbeloReceiptViewController.xib; sourceTree = "<group>"; };
 		D2D5F29115FF5D1600923EFB /* AbeloReceiptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloReceiptView.h; sourceTree = "<group>"; };
 		D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloReceiptView.m; sourceTree = "<group>"; };
+		D2DF70FB16136C2200EA8B85 /* AbeloLinkersView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloLinkersView.h; sourceTree = "<group>"; };
+		D2DF70FC16136C2200EA8B85 /* AbeloLinkersView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloLinkersView.m; sourceTree = "<group>"; };
 		D2E5787215F8A4F9001BA957 /* Abelo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abelo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2E5787615F8A4F9001BA957 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		D2E5787815F8A4F9001BA957 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -130,6 +133,8 @@
 		D2D5F27915FF4E5000923EFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D2DF70FB16136C2200EA8B85 /* AbeloLinkersView.h */,
+				D2DF70FC16136C2200EA8B85 /* AbeloLinkersView.m */,
 				D2D5F29115FF5D1600923EFB /* AbeloReceiptView.h */,
 				D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */,
 				D2FEC1DA160CCD9000166551 /* AbeloPartyMembersView.h */,
@@ -356,6 +361,7 @@
 				D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */,
 				D2FEC1DC160CCD9000166551 /* AbeloPartyMembersView.m in Sources */,
 				D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */,
+				D2DF70FD16136C2200EA8B85 /* AbeloLinkersView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
