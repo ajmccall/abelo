@@ -157,8 +157,7 @@
             self.backButton.enabled = YES;
             break;
         case AbeloReceiptViewDrawStateTotal:
-//            self.totalRect = self.currentMenuItemRect;
-//            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+            [self.receiptView setCurrentRectAsTotal];
             break;
         case AbeloReceiptViewDrawStateFinished:
             self.okButton.enabled = NO;
@@ -175,16 +174,15 @@
     switch (self.receiptView.drawState) {
         case AbeloReceiptViewDrawStateMenuItems: {
             int menuItemId = [self.bill addBillItem:@"fake name" withTotal:5.50];
-            [self.receiptView drawNextMenuItemAndCurrentMenuItemWithID:menuItemId];
+            [self.receiptView setCurrentRectAsMenuItemWithId:menuItemId];
             break;
         }
-//        case AbeloReceiptViewDrawStateTotal:
-//            self.totalRect = self.currentMenuItemRect;
-//            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
-//            break;
-//        case AbeloReceiptViewDrawStateImage:
-//        case AbeloReceiptViewDrawStateStart:
-//        case AbeloReceiptViewDrawStateFinished:
+        case AbeloReceiptViewDrawStateTotal:
+            [self.receiptView setCurrentRectAsTotal];
+            break;
+        case AbeloReceiptViewDrawStateImage:
+        case AbeloReceiptViewDrawStateStart:
+        case AbeloReceiptViewDrawStateFinished:
         default:
             break;
     }
@@ -244,6 +242,7 @@
     
     // add touch if we are drawing menu itme rectaganles or the total rectangles
     if([touches count] == 1 &&
+       CGRectContainsPoint(self.receiptView.frame, [touch locationInView:self.receiptView]) &&
        (self.receiptView.drawState == AbeloReceiptViewDrawStateMenuItems ||
         self.receiptView.drawState == AbeloReceiptViewDrawStateTotal)) {
            

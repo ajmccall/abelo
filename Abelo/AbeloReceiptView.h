@@ -26,9 +26,10 @@ enum AbeloReceiptViewDrawState {
 @property (nonatomic) CGPoint drawOffset;
 
 - (void) clearView;
-- (void) addPointToCurrentRect:(CGPoint) fingerPoint;
 
-- (void) drawNextMenuItemAndCurrentMenuItemWithID:(int) menuItemId;
+- (void) addPointToCurrentRect:(CGPoint) fingerPoint;
+- (void) setCurrentRectAsMenuItemWithId:(int) menuItemId;
+- (void) setCurrentRectAsTotal;
 
 - (BOOL) clearLastMenuItem;
 @end

@@ -285,13 +285,22 @@
     [self setup];
 }
 
-- (void) drawNextMenuItemAndCurrentMenuItemWithID:(int) menuItemId {
-    _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    [self.menuItems setObject:[NSValue valueWithCGRect:self.currentMenuItemRect] forKey:[NSNumber numberWithInt:menuItemId]];
-    self.lastSetMenuItemId = menuItemId;
+- (void) setCurrentRectAsMenuItemWithId:(int) menuItemId {
+    if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
+        [self.menuItems setObject:[NSValue valueWithCGRect:self.currentMenuItemRect] forKey:[NSNumber numberWithInt:menuItemId]];
+        self.lastSetMenuItemId = menuItemId;
+    }
     
+    _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
     self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
+
+- (void)setCurrentRectAsTotal {
+    self.totalRect = self.currentMenuItemRect;
+    _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
+    self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+}
+
 
 - (BOOL)clearLastMenuItem {
     if(self.currentMenuItemRect.size.width != NIL_FLOAT){
