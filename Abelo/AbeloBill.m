@@ -121,7 +121,7 @@
 }
 
 - (int)addBillItem:(NSString *)itemName withTotal:(float)total {
-    int newKey = ++self.nextBillItemKey;
+    int newKey = self.nextBillItemKey++;
     [self.billItems setObject:[NSNumber numberWithFloat:total] forKey:[NSNumber numberWithInt:newKey]];
     
     return newKey;

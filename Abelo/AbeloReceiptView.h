@@ -17,14 +17,6 @@ enum AbeloReceiptViewDrawState {
     AbeloReceiptViewDrawStateFinished = 4
 } typedef AbeloReceiptViewDrawState;
 
-@protocol ReceiptViewDelegate <NSObject>
-
-- (UIImage *) getImage;
-- (void) addMenuItemWithIndex:(int) index;
-- (void) clearMenuItemWithIndex:(int) index;
-@optional
-- (void) displayNextStepMessage:(NSString *) message;
-@end
     
 @interface AbeloReceiptView : UIView
 
@@ -33,10 +25,10 @@ enum AbeloReceiptViewDrawState {
 @property (nonatomic) CGFloat drawScale;
 @property (nonatomic) CGPoint drawOffset;
 
-@property (nonatomic, weak) id<ReceiptViewDelegate> delegate;
-
 - (void) clearView;
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
-- (void) setCurrentMenuItemAndDrawNext;
+
+- (void) drawNextMenuItemAndCurrentMenuItemWithID:(int) menuItemId;
+
 - (BOOL) clearLastMenuItem;
 @end

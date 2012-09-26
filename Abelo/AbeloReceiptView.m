@@ -9,23 +9,15 @@
 #import "AbeloReceiptView.h"
 #import "MRGLog.h"
 
-typedef struct MenuItemTuple{
-    CGPoint topLeft, bottomRight;
-} MenuItemTuple;
-
-#pragma mark - Constants
-
 #define NIL_FLOAT -1
 #define MAX_SCALE 5.0
 
+#pragma mark - AbeloReceiptView PRIVATE interface
 @interface AbeloReceiptView ()
-
-//@property (nonatomic) CGFloat drawScale;
-//@property (nonatomic) CGPoint drawOffset;
 
 @property (nonatomic) CGPoint currentTouch;
 @property (nonatomic) CGRect currentMenuItemRect;
-@property (nonatomic) int currentMenuItemKey;
+@property (nonatomic) int lastSetMenuItemId;
 @property (nonatomic) NSMutableDictionary *menuItems;
 
 @property (nonatomic) CGRect totalRect;
@@ -34,26 +26,25 @@ typedef struct MenuItemTuple{
 @property (nonatomic, readonly) UIColor *blueTransparent;
 @property (nonatomic, readonly) UIColor *greenTransparent;
 
-//@property (nonatomic) UIButton *nextButton;
-//@property (nonatomic) UIButton *backButton;
-//@property (nonatomic) UIButton *okButton;
-
-//@property (nonatomic) UIGestureRecognizer *pinchGesture;
-//@property (nonatomic) UIGestureRecognizer *panGesture;
-
 - (CGPoint) translateAndScalePoint:(CGPoint) p;
-- (BOOL) clearLastMenuItem;
-
-//- (IBAction)nextButtonAction:(id) sender;
 
 @end
 
+#pragma mark - AbeloReceiptView implementation
 @implementation AbeloReceiptView
 
 @synthesize image = _image;
 
-#pragma mark - Property synthesis
+#pragma mark - Property synthesis declarations
+@synthesize currentMenuItemRect = _currentMenuItemRect;
+@synthesize currentTouch = _currentTouch;
+@synthesize totalRect = _totalRect;
+@synthesize menuItems;
+@synthesize drawState = _drawState;
+@synthesize drawOffset = _drawOffset;
+@synthesize drawScale = _drawScale;
 
+#pragma mark - Property synthesis implementation
 - (void)setImage:(UIImage *)image {
     switch ([image imageOrientation]) {
         case UIImageOrientationRight:
@@ -66,37 +57,19 @@ typedef struct MenuItemTuple{
     [self setNeedsDisplay];
 }
 
-//buttons
-//@synthesize nextButton = _nextButton;
-//@synthesize backButton = _backButton;
-//@synthesize okButton = _okButton;
-
-//current touch, current rect & total rect
-@synthesize currentMenuItemRect = _currentMenuItemRect;
-
 - (void)setCurrentMenuItemRect:(CGRect)currentMenuItemRect {
     _currentMenuItemRect = currentMenuItemRect;
     [self setNeedsDisplay];
 }
 
-@synthesize currentTouch = _currentTouch;
-
 - (void)setCurrentTouch:(CGPoint)currentTouch {
     _currentTouch = [self translateAndScalePoint:currentTouch];
 }
-
-@synthesize totalRect = _totalRect;
 
 - (void) setTotalRect:(CGRect)totalRect {
     _totalRect = totalRect;
     [self setNeedsDisplay];
 }
-
-//drawing properties
-@synthesize menuItems;
-@synthesize drawState = _drawState;
-@synthesize drawOffset = _drawOffset;
-@synthesize drawScale = _drawScale;
 
 - (void)setDrawOffset:(CGPoint)drawOffset {
     
@@ -145,24 +118,6 @@ typedef struct MenuItemTuple{
     [self setNeedsDisplay];
     
 }
-
-////uiGestures
-//@synthesize panGesture = _panGesture;
-//@synthesize pinchGesture = _pinchGesture;
-//
-//- (UIGestureRecognizer *)panGesture {
-//    if(!_panGesture) {
-//        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-//    }
-//    return _panGesture;
-//}
-//
-//- (UIGestureRecognizer *)pinchGesture {
-//    if(!_pinchGesture) {
-//        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
-//    }
-//    return _pinchGesture;
-//}
 
 // colors - could be constants
 - (UIColor *)redTransparent {
@@ -227,7 +182,7 @@ typedef struct MenuItemTuple{
         
         NSEnumerator *enumerate = [self.menuItems keyEnumerator];
         NSNumber *key;
-        while((key = [enumerate nextObject]) && !foundRectContainingPoint) {
+        while(!foundRectContainingPoint && (key = [enumerate nextObject])) {
             
             CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
             if(CGRectContainsPoint(rect, fingerPoint)) {
@@ -240,7 +195,6 @@ typedef struct MenuItemTuple{
         } else {
             CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
             self.currentMenuItemRect = CGRectUnion(fingerRect, rect);
-            [self.delegate clearMenuItemWithIndex:[key intValue]];
             [self.menuItems removeObjectForKey:key];
         }
     } else if(self.drawState == AbeloReceiptViewDrawStateTotal) {
@@ -256,78 +210,7 @@ typedef struct MenuItemTuple{
     [self setNeedsDisplay];
 }
 
-#pragma mark -
-#pragma mark Gesture recognizers
-
-//- (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
-//    
-//    if(gesture.state == UIGestureRecognizerStateBegan){
-//        gesture.scale = self.drawScale;
-//    } else if(gesture.state == UIGestureRecognizerStateChanged){
-//        self.drawScale = gesture.scale;
-//        CGPoint midPoint = [gesture locationInView:self];
-//        CGFloat x = midPoint.x + self.drawScale * (self.frame.origin.x - midPoint.x);
-//        CGFloat y = midPoint.y + self.drawScale * (self.frame.origin.y - midPoint.y);
-//        self.drawOffset = CGPointMake(x,y);
-//        
-//    }
-//}
-//
-//- (void)panGesture:(UIPanGestureRecognizer *)gesture {
-//    
-//    
-//    if(self.drawState == AbeloReceiptViewDrawStateMenuItems &&
-//       gesture.numberOfTouches == 1){
-//        
-//        if(gesture.state == UIGestureRecognizerStateBegan ||
-//           gesture.state == UIGestureRecognizerStateChanged) {
-//            [self addPointToCurrentRect:[gesture locationInView:self]];
-//        } else {
-//            ULog(@"panGesture.state unknown[%d]", gesture.state);
-//        }
-//    } if(self.drawState == AbeloReceiptViewDrawStateTotal &&
-//         gesture.numberOfTouches == 1){
-//        
-//        if(gesture.state == UIGestureRecognizerStateBegan ||
-//           gesture.state == UIGestureRecognizerStateChanged) {
-//            [self addPointToCurrentRect:[gesture locationInView:self]];
-//        } else {
-//            ULog(@"panGesture.state unknown[%d]", gesture.state);
-//        }
-//    } else if(gesture.numberOfTouches == 2){
-//        if(gesture.state == UIGestureRecognizerStateBegan ||
-//           gesture.state == UIGestureRecognizerStateChanged) {
-//
-//            self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
-//                                          self.drawOffset.y + [gesture translationInView:self].y);
-//
-//            [gesture setTranslation:CGPointMake(0,0) inView:self];
-//        }
-//    }
-//}
-
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-//    [super touchesBegan:touches withEvent:event];
-//    UITouch *touch = [touches anyObject];
-//
-//    // add touch if we are drawing menu itme rectaganles or the total rectangles
-//    if([touches count] == 1 &&
-//       (self.drawState == AbeloReceiptViewDrawStateMenuItems ||
-//        self.drawState == AbeloReceiptViewDrawStateTotal)) {
-//           
-//        DLog(@"touch[%d] at p(%g, %g)", [touches count], [touch locationInView:self].x, [touch locationInView:self].y);
-//        [self addPointToCurrentRect:[touch locationInView:self]];
-//    }
-//}
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-}
-
-#pragma mark - Button actions
-
 #pragma mark - Draw Methods
-
 - (void) drawReceiptImage:(CGContextRef) context {
     UIGraphicsPushContext(context);
     CGRect rect = CGRectMake(self.drawOffset.x, self.drawOffset.y, self.frame.size.width * self.drawScale, self.frame.size.height * self.drawScale);
@@ -383,36 +266,7 @@ typedef struct MenuItemTuple{
 }
 
 
-#pragma mark -
-#pragma mark InitMethods
-
-- (void) setupButtons {
-    
-//    if(!_nextButton){
-//        _nextButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//        _nextButton.frame = CGRectMake(18, self.frame.size.height - 57, 85, 37);
-//        [_nextButton setTitle:@"Next" forState:UIControlStateNormal];
-//        [_nextButton addTarget:self action:@selector(nextButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-//        [self addSubview:_nextButton];
-//    }
-// 
-//    if(!_backButton) {
-//        _backButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//        _backButton.frame = CGRectMake(470, self.frame.size.height - 57, 85, 37);
-//        [_backButton setTitle:@"Back" forState:UIControlStateNormal];
-//        [_backButton addTarget:self action:@selector(backButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-//        [self addSubview:_backButton];
-//    }
-// 
-//    if(!_okButton){
-//        _okButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-//        _okButton.frame = CGRectMake(261, self.frame.size.height - 57, 85, 37);
-//        [_okButton setTitle:@"Ok" forState:UIControlStateNormal];
-//        [_okButton addTarget:self action:@selector(okButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-//        [self addSubview:_okButton];
-//    }
-}
-
+#pragma mark -View initialisation
 - (void)setup {
     [self clearView];
     
@@ -431,15 +285,11 @@ typedef struct MenuItemTuple{
     [self setup];
 }
 
-#pragma mark -
-#pragma mark PrivateMethods
-
-- (void)setCurrentMenuItemAndDrawNext {
+- (void) drawNextMenuItemAndCurrentMenuItemWithID:(int) menuItemId {
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    [self.menuItems setObject:[NSValue valueWithCGRect:self.currentMenuItemRect] forKey:[NSNumber numberWithInt:self.currentMenuItemKey]];
-    self.currentMenuItemKey++;
+    [self.menuItems setObject:[NSValue valueWithCGRect:self.currentMenuItemRect] forKey:[NSNumber numberWithInt:menuItemId]];
+    self.lastSetMenuItemId = menuItemId;
     
-//    [self.menuItems addObject:[NSValue valueWithCGRect:self.currentMenuItemRect]];
     self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
@@ -451,9 +301,21 @@ typedef struct MenuItemTuple{
         
         if(self.drawState == AbeloReceiptViewDrawStateMenuItems){
             if([self.menuItems count] > 0){
+                
+                if([self.menuItems objectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]]){
+                    [self.menuItems removeObjectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]];
+                } else {
+                    self.lastSetMenuItemId--;
+                    while(self.lastSetMenuItemId > 0){
+                        if([self.menuItems objectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]]){
+                            [self.menuItems removeObjectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]];
+                            break;
+                        }
+                        self.lastSetMenuItemId--;
+                    }
+                }
+                
                 //notify the controller that you removed the menu item
-                [self.delegate clearMenuItemWithIndex:(self.currentMenuItemKey - 1)];
-                [self.menuItems removeObjectForKey:[NSNumber numberWithInt:(self.currentMenuItemKey - 1)]];
                 [self setNeedsDisplay];
                 return YES;
             } else {

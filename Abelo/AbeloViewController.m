@@ -13,7 +13,6 @@
 #import "AbeloPartyMembersView.h"
 
 #pragma mark - AbeloViewController PRIVATE interface
-
 @interface AbeloViewController ()
 
 + (NSString *) GenerateRandStringLength:(int) len;
@@ -26,7 +25,6 @@
 @end
 
 #pragma mark - AbeloViewController implementation
-
 @implementation AbeloViewController
 
 @synthesize toolbar = _toolbar;
@@ -46,11 +44,10 @@
 
 - (void)setReceiptView:(AbeloReceiptView *)receiptView {
     _receiptView = receiptView;
-    _receiptView.delegate = self;
 }
 
 - (AbeloBill *)bill {
-    if(_bill){
+    if(!_bill){
         _bill = [[AbeloBill alloc] init];
     }
     return _bill;
@@ -176,9 +173,11 @@
 
 - (IBAction)okButtonAction:(id) sender {
     switch (self.receiptView.drawState) {
-        case AbeloReceiptViewDrawStateMenuItems:
-            [self.receiptView setCurrentMenuItemAndDrawNext];
+        case AbeloReceiptViewDrawStateMenuItems: {
+            int menuItemId = [self.bill addBillItem:@"fake name" withTotal:5.50];
+            [self.receiptView drawNextMenuItemAndCurrentMenuItemWithID:menuItemId];
             break;
+        }
 //        case AbeloReceiptViewDrawStateTotal:
 //            self.totalRect = self.currentMenuItemRect;
 //            self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
@@ -237,6 +236,20 @@
             [gesture setTranslation:CGPointMake(0,0) inView:self.receiptView];
         }
     }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    UITouch *touch = [touches anyObject];
+    
+    // add touch if we are drawing menu itme rectaganles or the total rectangles
+    if([touches count] == 1 &&
+       (self.receiptView.drawState == AbeloReceiptViewDrawStateMenuItems ||
+        self.receiptView.drawState == AbeloReceiptViewDrawStateTotal)) {
+           
+//           DLog(@"touch[%d] at p(%g, %g)", [touches count], [touch locationInView:self.receiptView].x, [touch locationInView:self.receiptView].y);
+           [self.receiptView addPointToCurrentRect:[touch locationInView:self.receiptView]];
+       }
 }
 
 #pragma mark - Camera

@@ -12,7 +12,7 @@
 
 @class AbeloPartyMembersView;
 
-@interface AbeloViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate, ReceiptViewDelegate>
+@interface AbeloViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet AbeloReceiptView *receiptView;
 @property (weak, nonatomic) IBOutlet AbeloPartyMembersView *partyMembersView;

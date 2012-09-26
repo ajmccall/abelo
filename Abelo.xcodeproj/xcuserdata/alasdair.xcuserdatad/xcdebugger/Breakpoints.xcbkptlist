@@ -7,19 +7,6 @@
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Abelo/AbeloReceiptView.m"
-         timestampString = "370279724.316356"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "454"
-         endingLineNumber = "454"
-         landmarkName = "-clearLastMenuItem"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
          filePath = "Abelo/AbeloPartyMemberView.m"
          timestampString = "370200815.390039"
          startingColumnNumber = "9223372036854775807"
@@ -34,25 +21,25 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Abelo/AbeloViewController.m"
-         timestampString = "370280166.996995"
+         timestampString = "370355373.777837"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "115"
-         endingLineNumber = "115"
-         landmarkName = "-backButtonAction:"
+         startingLineNumber = "177"
+         endingLineNumber = "177"
+         landmarkName = "-okButtonAction:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Abelo/AbeloViewController.m"
-         timestampString = "370280527.963401"
+         filePath = "Abelo/AbeloBill.m"
+         timestampString = "370355457.542974"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "146"
-         endingLineNumber = "146"
-         landmarkName = "-nextButtonAction:"
+         startingLineNumber = "124"
+         endingLineNumber = "124"
+         landmarkName = "-addBillItem:withTotal:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
