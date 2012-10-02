@@ -28,6 +28,7 @@
 		D2E578A215F8A4FA001BA957 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D2E578A015F8A4FA001BA957 /* InfoPlist.strings */; };
 		D2E578A515F8A4FA001BA957 /* AbeloTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E578A415F8A4FA001BA957 /* AbeloTests.m */; };
 		D2E578B515F8BC53001BA957 /* AbeloBill.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E578B415F8BC53001BA957 /* AbeloBill.m */; };
+		D2F4439B161394B800AF9DCF /* AbeloMainView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2F4439A161394B800AF9DCF /* AbeloMainView.m */; };
 		D2FEC1DC160CCD9000166551 /* AbeloPartyMembersView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2FEC1DB160CCD9000166551 /* AbeloPartyMembersView.m */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +77,8 @@
 		D2E578A415F8A4FA001BA957 /* AbeloTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AbeloTests.m; sourceTree = "<group>"; };
 		D2E578B315F8BC53001BA957 /* AbeloBill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloBill.h; sourceTree = "<group>"; };
 		D2E578B415F8BC53001BA957 /* AbeloBill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloBill.m; sourceTree = "<group>"; };
+		D2F44399161394B800AF9DCF /* AbeloMainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloMainView.h; sourceTree = "<group>"; };
+		D2F4439A161394B800AF9DCF /* AbeloMainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloMainView.m; sourceTree = "<group>"; };
 		D2FEC1DA160CCD9000166551 /* AbeloPartyMembersView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloPartyMembersView.h; sourceTree = "<group>"; };
 		D2FEC1DB160CCD9000166551 /* AbeloPartyMembersView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloPartyMembersView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,6 +136,8 @@
 		D2D5F27915FF4E5000923EFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D2F44399161394B800AF9DCF /* AbeloMainView.h */,
+				D2F4439A161394B800AF9DCF /* AbeloMainView.m */,
 				D2DF70FB16136C2200EA8B85 /* AbeloLinkersView.h */,
 				D2DF70FC16136C2200EA8B85 /* AbeloLinkersView.m */,
 				D2D5F29115FF5D1600923EFB /* AbeloReceiptView.h */,
@@ -362,6 +367,7 @@
 				D2FEC1DC160CCD9000166551 /* AbeloPartyMembersView.m in Sources */,
 				D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */,
 				D2DF70FD16136C2200EA8B85 /* AbeloLinkersView.m in Sources */,
+				D2F4439B161394B800AF9DCF /* AbeloMainView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

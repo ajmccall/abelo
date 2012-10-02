@@ -12,6 +12,16 @@
 #import "AbeloReceiptView.h"
 #import "AbeloLinkersView.h"
 #import "AbeloPartyMembersView.h"
+#import "AbeloMainView.h"
+
+// enum to control the drawing state of the recipet view
+enum ViewsDrawState {
+    ViewsDrawStateStart = 0,
+    ViewsDrawStateImage = 1,
+    ViewsDrawStateMenuItems = 2,
+    ViewsDrawStateTotal = 3,
+    ViewsDrawStateLinking = 4
+} typedef ViewsDrawState;
 
 #pragma mark - AbeloViewController PRIVATE interface
 @interface AbeloViewController ()
@@ -20,8 +30,8 @@
 
 @property (nonatomic) AbeloBill *bill;
 @property (nonatomic) UIPopoverController *popover;
-@property (nonatomic) UIGestureRecognizer *pinchGesture;
 @property (nonatomic) UIGestureRecognizer *panGesture;
+@property (nonatomic) ViewsDrawState viewsDrawState;
 
 @end
 
@@ -32,21 +42,14 @@
 @synthesize backButton = _backButton;
 @synthesize okButton = _okButton;
 @synthesize nextButton = _nextButton;
+@synthesize mainView = _mainView;
 
 #pragma mark - Property synthesize declarations
-@synthesize receiptView = _receiptView;
-@synthesize linkersView = _linkersView;
-@synthesize partyMembersView = _partyMembersView;
 @synthesize panGesture = _panGesture;
-@synthesize pinchGesture = _pinchGesture;
 @synthesize popover = _popover;
 @synthesize bill = _bill;
 
 #pragma mark - Property synthesize implementations
-
-- (void)setReceiptView:(AbeloReceiptView *)receiptView {
-    _receiptView = receiptView;
-}
 
 - (AbeloBill *)bill {
     if(!_bill){
@@ -60,13 +63,6 @@
         _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
     }
     return _panGesture;
-}
-
-- (UIGestureRecognizer *)pinchGesture {
-    if(!_pinchGesture) {
-        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
-    }
-    return _pinchGesture;
 }
 
 #pragma mark - ViewController initialise
@@ -92,13 +88,11 @@
 
 - (void)viewDidUnload
 {
-    [self setReceiptView:nil];
     [self setToolbar:nil];
-    [self setPartyMembersView:nil];
     [self setBackButton:nil];
     [self setOkButton:nil];
     [self setNextButton:nil];
-    [self setLinkersView:nil];
+    [self setMainView:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -106,84 +100,83 @@
 #pragma mark - Outlet Actions
 
 - (IBAction)addGuestAction:(id)sender {
-    NSString *name = [AbeloViewController GenerateRandStringLength:3];
-    [self.bill addPartyMemberWithName:name];
-    [self.partyMembersView addPartyMemberWithName:name];
+//    NSString *name = [AbeloViewController GenerateRandStringLength:3];
+//    [self.bill addPartyMemberWithName:name];
+//    [self.partyMembersView addPartyMemberWithName:name];
 }
 
 - (IBAction)backButtonAction:(id) sender {
-    switch (self.receiptView.drawState) {
-        case AbeloReceiptViewDrawStateMenuItems:
-            if([self.receiptView clearLastMenuItem]) {
-                return;
-            }
-            [self.view removeGestureRecognizer:self.panGesture];
-            [self.view removeGestureRecognizer:self.pinchGesture];
-            [self.receiptView clearView];
-            self.okButton.enabled = NO;
-            self.backButton.enabled = NO;
-
-            self.receiptView.drawState--;
-            break;
-        case AbeloReceiptViewDrawStateTotal:
-            if([self.receiptView clearLastMenuItem]) {
-                return;
-            }
-            break;
-        case AbeloReceiptViewDrawStateImage:
-        case AbeloReceiptViewDrawStateStart:
-        case AbeloReceiptViewDrawStateFinished:
-        default:
-            break;
+    switch (self.viewsDrawState) {
+//        case ViewsDrawStateMenuItems:
+//            if([self.mainView clearLastMenuItem]) {
+//                return;
+//            }
+//            [self.view removeGestureRecognizer:self.panGesture];
+//            [self.mainView clearView];
+//            self.okButton.enabled = NO;
+//            self.backButton.enabled = NO;
+//
+//            self.viewsDrawState--;
+//            break;
+//        case ViewsDrawStateTotal:
+//            if([self.mainView clearLastMenuItem]) {
+//                return;
+//            }
+//            break;
+//        case ViewsDrawStateImage:
+//        case ViewsDrawStateStart:
+//        case ViewsDrawStateLinking:
+//        default:
+//            break;
     }
 
-    if(self.receiptView.drawState != AbeloReceiptViewDrawStateStart){
-        self.receiptView.drawState--;
+    if(self.viewsDrawState != ViewsDrawStateStart){
+        self.viewsDrawState--;
     }
 }
 
-- (IBAction)nextButtonAction:(id) sender {
-    if(self.receiptView.drawState != AbeloReceiptViewDrawStateFinished){
-        self.receiptView.drawState++;
+- (IBAction)nextButtonAction:(id) sender{
+    
+    if(self.viewsDrawState != ViewsDrawStateLinking){
+        self.viewsDrawState++;
     }
     
-    switch (self.receiptView.drawState) {
-        case AbeloReceiptViewDrawStateStart:
-        case AbeloReceiptViewDrawStateImage:
-            self.receiptView.image = [UIImage imageNamed:@"dimt.jpg"];
+    switch (self.viewsDrawState) {
+        case ViewsDrawStateStart:
+        case ViewsDrawStateImage:
+            self.mainView.image = [UIImage imageNamed:@"dimt.jpg"];
             [self nextButtonAction:sender];
             break;
-        case AbeloReceiptViewDrawStateMenuItems:
+        case ViewsDrawStateMenuItems:
             [self.view addGestureRecognizer:self.panGesture];
-            [self.view addGestureRecognizer:self.pinchGesture];
             self.okButton.enabled = YES;
             self.backButton.enabled = YES;
             break;
-        case AbeloReceiptViewDrawStateTotal:
-            [self.receiptView setCurrentRectAsTotal];
+        case ViewsDrawStateTotal:
+            [self.mainView setCurrentRectAsTotal];
             break;
-        case AbeloReceiptViewDrawStateFinished:
-            self.okButton.enabled = NO;
-            self.nextButton.enabled = NO;
-            break;
+//        case ViewsDrawStateFinished:
+//            self.okButton.enabled = NO;
+//            self.nextButton.enabled = NO;
+//            break;
         default:
             break;
     }
 }
 
 - (IBAction)okButtonAction:(id) sender {
-    switch (self.receiptView.drawState) {
-        case AbeloReceiptViewDrawStateMenuItems: {
+    switch (self.viewsDrawState) {
+        case ViewsDrawStateMenuItems: {
             int menuItemId = [self.bill addBillItem:@"fake name" withTotal:5.50];
-            [self.receiptView setCurrentRectAsMenuItemWithId:menuItemId];
+            [self.mainView setCurrentRectAsMenuItem];
             break;
         }
-        case AbeloReceiptViewDrawStateTotal:
-            [self.receiptView setCurrentRectAsTotal];
+        case ViewsDrawStateTotal:
+            [self.mainView setCurrentRectAsTotal];
             break;
-        case AbeloReceiptViewDrawStateImage:
-        case AbeloReceiptViewDrawStateStart:
-        case AbeloReceiptViewDrawStateFinished:
+        case ViewsDrawStateImage:
+        case ViewsDrawStateStart:
+        case ViewsDrawStateLinking:
         default:
             break;
     }
@@ -191,109 +184,70 @@
 
 
 - (IBAction)testDummyAction:(id)sender {
-    
-    [self.linkersView startLinkerFromPoint:CGPointMake(50, 400)];
-    [self.linkersView addToCurrentLinkerPoint:CGPointMake(300, 440)];
-
 }
 
 
 #pragma mark - Gesture recognizers
 
-- (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
-    
-    if(gesture.state == UIGestureRecognizerStateBegan){
-        gesture.scale = self.receiptView.drawScale;
-    } else if(gesture.state == UIGestureRecognizerStateChanged){
-        self.receiptView.drawScale = gesture.scale;
-        CGPoint midPoint = [gesture locationInView:self.receiptView];
-        CGFloat x = midPoint.x + self.receiptView.drawScale * (self.receiptView.frame.origin.x - midPoint.x);
-        CGFloat y = midPoint.y + self.receiptView.drawScale * (self.receiptView.frame.origin.y - midPoint.y);
-        self.receiptView.drawOffset = CGPointMake(x,y);
-        
-    }
-}
-
 #define ARC4RANDOM_MAX 0x100000000
 
 - (void)panGesture:(UIPanGestureRecognizer *)gesture {
     
-    if(gesture.numberOfTouches == 0 &&
-       self.receiptView.drawState == AbeloReceiptViewDrawStateFinished &&
-       self.linkersView.isDrawing){
-        [self.linkersView addToCurrentLinkerPoint:[gesture locationInView:self.linkersView]];
-        [self.linkersView finishCurrentLinkerSetId:arc4random() % 100
-                                         withColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                   green:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                    blue:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                   alpha:0.8]
-         ];
-    }
-    
-    if(gesture.numberOfTouches == 1){
-        if(self.receiptView.drawState == AbeloReceiptViewDrawStateMenuItems){
+    if(gesture.numberOfTouches == 0) {
+//       && self.viewsDrawState == ViewsDrawStateLinking &&
+//       self.linkersView.isDrawing){
+//        [self.linkersView addToCurrentLinkerPoint:[gesture locationInView:self.linkersView]];
+//        [self.linkersView finishCurrentLinkerSetId:arc4random() % 100
+//                                         withColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
+//                                                                   green:((double)arc4random() / ARC4RANDOM_MAX)
+//                                                                    blue:((double)arc4random() / ARC4RANDOM_MAX)
+//                                                                   alpha:0.8]
+//         ];
+    } else if(gesture.numberOfTouches == 1){
+        if(self.viewsDrawState == ViewsDrawStateMenuItems){
             
             if(gesture.state == UIGestureRecognizerStateBegan ||
                gesture.state == UIGestureRecognizerStateChanged) {
-                [self.receiptView addPointToCurrentRect:[gesture locationInView:self.receiptView]];
+                [self.mainView addPointToCurrentRect:[gesture locationInView:self.mainView]];
             } else {
                 ULog(@"panGesture.state unknown[%d]", gesture.state);
             }
-        } else if(self.receiptView.drawState == AbeloReceiptViewDrawStateTotal){
-            
-            if(gesture.state == UIGestureRecognizerStateBegan ||
-               gesture.state == UIGestureRecognizerStateChanged) {
-                [self.receiptView addPointToCurrentRect:[gesture locationInView:self.receiptView]];
-            } else {
-                ULog(@"panGesture.state unknown[%d]", gesture.state);
-            }
-        } else if(self.receiptView.drawState == AbeloReceiptViewDrawStateFinished) {
-            
-            if(gesture.state == UIGestureRecognizerStateBegan ||
-               gesture.state == UIGestureRecognizerStateChanged) {
-                [self.linkersView addToCurrentLinkerPoint:[gesture locationInView:self.linkersView]];
-//            } else if(gesture.state == UIGestureRecognizerStateCancelled ||
-//                      gesture.state == UIGestureRecognizerStateEnded){
+//        } else if(self.viewsDrawState == ViewsDrawStateTotal){
+//            
+//            if(gesture.state == UIGestureRecognizerStateBegan ||
+//               gesture.state == UIGestureRecognizerStateChanged) {
+//                [self.receiptView addPointToCurrentRect:[gesture locationInView:self.receiptView]];
+//            } else {
+//                ULog(@"panGesture.state unknown[%d]", gesture.state);
+//            }
+//        } else if(self.viewsDrawState == ViewsDrawStateFinished) {
+//            
+//            if(gesture.state == UIGestureRecognizerStateBegan ||
+//               gesture.state == UIGestureRecognizerStateChanged) {
 //                [self.linkersView addToCurrentLinkerPoint:[gesture locationInView:self.linkersView]];
-//                [self.linkersView finishCurrentLinkerSetId:arc4random() % 100
-//                                                 withColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
-//                                                                           green:((double)arc4random() / ARC4RANDOM_MAX)
-//                                                                            blue:((double)arc4random() / ARC4RANDOM_MAX)
-//                                                                           alpha:0.8]
-//                 ];
-//
-            } else {
-                DLog(@"gesture.state[%d] unknow", gesture.state);
-            }
-        }
-    } else if(gesture.numberOfTouches == 2){
-        if(gesture.state == UIGestureRecognizerStateBegan ||
-           gesture.state == UIGestureRecognizerStateChanged) {
-            
-            self.receiptView.drawOffset = CGPointMake(self.receiptView.drawOffset.x + [gesture translationInView:self.receiptView].x,
-                                          self.receiptView.drawOffset.y + [gesture translationInView:self.receiptView].y);
-            
-            [gesture setTranslation:CGPointMake(0,0) inView:self.receiptView];
+//            } else {
+//                DLog(@"gesture.state[%d] unknow", gesture.state);
+//            }
         }
     }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    UITouch *touch = [touches anyObject];
-    
-    // add touch if we are drawing menu itme rectaganles or the total rectangles
-    if([touches count] == 1){
-        if(CGRectContainsPoint(self.receiptView.frame, [touch locationInView:self.receiptView]) &&
-           (self.receiptView.drawState == AbeloReceiptViewDrawStateMenuItems ||
-            self.receiptView.drawState == AbeloReceiptViewDrawStateTotal)) {
-               [self.receiptView addPointToCurrentRect:[touch locationInView:self.receiptView]];
-           } else if(self.receiptView.drawState == AbeloReceiptViewDrawStateFinished) {
-               
-               [self.linkersView startLinkerFromPoint:[touch locationInView:self.linkersView]];
-               
-           }
-    }
+//    UITouch *touch = [touches anyObject];
+//    
+//    // add touch if we are drawing menu itme rectaganles or the total rectangles
+//    if([touches count] == 1){
+//        if(CGRectContainsPoint(self.receiptView.frame, [touch locationInView:self.receiptView]) &&
+//           (self.viewsDrawState == ViewsDrawStateMenuItems ||
+//            self.viewsDrawState == ViewsDrawStateTotal)) {
+//               [self.receiptView addPointToCurrentRect:[touch locationInView:self.receiptView]];
+//           } else if(self.viewsDrawState == ViewsDrawStateFinished) {
+//               
+//               [self.linkersView startLinkerFromPoint:[touch locationInView:self.linkersView]];
+//               
+//           }
+//    }
 }
 
 #pragma mark - Camera

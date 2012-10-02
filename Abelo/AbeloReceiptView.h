@@ -8,28 +8,27 @@
 
 #import <UIKit/UIKit.h>
 
-// enum to control the drawing state of the recipet view
-enum AbeloReceiptViewDrawState {
-    AbeloReceiptViewDrawStateStart = 0,
-    AbeloReceiptViewDrawStateImage = 1,
-    AbeloReceiptViewDrawStateMenuItems = 2,
-    AbeloReceiptViewDrawStateTotal = 3,
-    AbeloReceiptViewDrawStateFinished = 4
-} typedef AbeloReceiptViewDrawState;
+//// enum to control the drawing state of the recipet view
+//enum ViewsDrawState {
+//    ViewsDrawStateStart = 0,
+//    ViewsDrawStateImage = 1,
+//    ViewsDrawStateMenuItems = 2,
+//    ViewsDrawStateTotal = 3,
+//    ViewsDrawStateFinished = 4
+//} typedef ViewsDrawState;
 
     
 @interface AbeloReceiptView : UIView
 
 @property (nonatomic) UIImage *image;
-@property (nonatomic) AbeloReceiptViewDrawState drawState;
 @property (nonatomic) CGFloat drawScale;
 @property (nonatomic) CGPoint drawOffset;
 
 - (void) clearView;
 
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
-- (void) setCurrentRectAsMenuItemWithId:(int) menuItemId;
+- (void) setCurrentRectAsMenuItem;
 - (void) setCurrentRectAsTotal;
-
 - (BOOL) clearLastMenuItem;
+
 @end

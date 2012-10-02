@@ -7,25 +7,87 @@
 //
 
 #import "AbeloMainView.h"
+#import "AbeloReceiptView.h"
+
+#pragma mark - AbeloMainView PRIVATE interface
+
+@interface AbeloMainView()
+
+@property (nonatomic) AbeloReceiptView *receiptView;
+
+@end
+
+#pragma mark - AbeloMainView implementation
 
 @implementation AbeloMainView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+@synthesize receiptView = _receiptView;
+
+#pragma mark - Property synthesize definitions
+
+@dynamic image;
+
+#pragma mark - Property synthesize implementations
+
+- (void)setImage:(UIImage *)image {
+    self.receiptView.image = image;
+}
+
+- (UIImage *)image {
+    return self.receiptView.image;
+}
+
+
+#pragma mark - MainView methods
+
+
+#pragma mark - ReceiptView methods
+
+- (void)addPointToCurrentRect:(CGPoint)fingerPoint {
+    [self.receiptView addPointToCurrentRect:fingerPoint];
+}
+
+- (void)setCurrentRectAsMenuItem {
+    [self.receiptView setCurrentRectAsMenuItem];
+}
+
+- (void)setCurrentRectAsTotal {
+    [self.receiptView setCurrentRectAsTotal];
+}
+
+#pragma mark - Gesture recognizers
+
+
+
+#pragma mark - Draw methods
+
+//- (void)drawRect:(CGRect)rect {
+//
+//}
+
+#pragma mark - View initialisation
+
+#define PARTY_MEMBERS_VIEW_WIDTH 150.0
+
+- (void) setupView {
+    
+    _receiptView = [[AbeloReceiptView alloc] initWithFrame:CGRectMake(0,
+                                                                      0,
+                                                                      self.frame.size.width - PARTY_MEMBERS_VIEW_WIDTH,
+                                                                      self.frame.size.height)];
+    
+    [self addSubview:self.receiptView];
+}
+
+- (id)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self setupView];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+- (void)awakeFromNib {
+    [self setupView];
 }
-*/
 
 @end
