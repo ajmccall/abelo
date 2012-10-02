@@ -8,13 +8,16 @@
 
 #import "AbeloMainView.h"
 #import "AbeloReceiptView.h"
+#import "AbeloPartyMembersView.h"
+#import "AbeloLinkersView.h"
 
 #pragma mark - AbeloMainView PRIVATE interface
 
 @interface AbeloMainView()
 
 @property (nonatomic) AbeloReceiptView *receiptView;
-
+@property (nonatomic) AbeloPartyMembersView *partyMembersView;
+@property (nonatomic) AbeloLinkersView *linkerView;
 @end
 
 #pragma mark - AbeloMainView implementation
@@ -22,6 +25,8 @@
 @implementation AbeloMainView
 
 @synthesize receiptView = _receiptView;
+@synthesize partyMembersView = _partyMembersView;
+@synthesize linkerView = _linkerView;
 
 #pragma mark - Property synthesize definitions
 
@@ -37,8 +42,11 @@
     return self.receiptView.image;
 }
 
-
 #pragma mark - MainView methods
+
+- (void)clearView {
+    
+}
 
 - (void)panGesture:(UIPanGestureRecognizer *)gesture {
     [self.receiptView panGesture:gesture];
@@ -58,15 +66,37 @@
     [self.receiptView setCurrentRectAsTotal];
 }
 
+#pragma mark - PatyMember methods
+
+- (void)addPartyMemberWithName:(NSString *)name {
+    [self.partyMembersView addPartyMemberWithName:name];
+}
+
+- (void)partyMembersViewDelegate:(id)delegate {
+    self.partyMembersView.delegate = delegate;
+}
+
+#pragma mark - LinkerView methods
+
+- (void)startLinkerFromPoint:(CGPoint)startPoint {
+    [self.linkerView startLinkerFromPoint:startPoint];
+}
+
+- (void)addToCurrentLinkerPoint:(CGPoint)aPoint {
+    [self.linkerView addToCurrentLinkerPoint:aPoint];
+}
+
+- (void)setCurrentLinkerWithColor:(UIColor *)color {
+    [self.linkerView setCurrentLinkerWithColor:color];
+}
+
+- (BOOL)isDrawing {
+    return [self.linkerView isDrawing];
+}
+
 #pragma mark - Gesture recognizers
 
-
-
 #pragma mark - Draw methods
-
-//- (void)drawRect:(CGRect)rect {
-//
-//}
 
 #pragma mark - View initialisation
 
@@ -79,7 +109,13 @@
                                                                       self.frame.size.width - PARTY_MEMBERS_VIEW_WIDTH,
                                                                       self.frame.size.height)];
     
+    _partyMembersView = [[AbeloPartyMembersView alloc] initWithFrame:CGRectMake(self.frame.size.width - PARTY_MEMBERS_VIEW_WIDTH, 0, PARTY_MEMBERS_VIEW_WIDTH, self.frame.size.height)];
+    
+    _linkerView = [[AbeloLinkersView alloc] initWithFrame:self.frame];
+    
     [self addSubview:self.receiptView];
+    [self addSubview:self.partyMembersView];
+    [self addSubview:self.linkerView];
 }
 
 - (id)initWithFrame:(CGRect)frame {

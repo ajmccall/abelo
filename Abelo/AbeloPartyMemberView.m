@@ -67,6 +67,10 @@
 
 #pragma mark - Interface methods
 
++ (CGFloat) defaultViewHeight {
+    return NAME_LABEL_HEIGHT + TOTAL_LABEL_HEIGHT;
+}
+
 #pragma mark - Initialise
 
 - (void) setup {

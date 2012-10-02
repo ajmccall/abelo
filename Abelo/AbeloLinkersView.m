@@ -23,7 +23,7 @@ typedef struct Linker {
 
 @property (nonatomic) CGPoint currentLinkerStartPoint;
 @property (nonatomic) CGPoint currentLinkerEndPoint;
-@property (nonatomic) NSMutableDictionary *linkers;
+@property (nonatomic) NSMutableArray *linkers;
 
 - (void) clearCurrentLinkerPoints;
 
@@ -50,9 +50,9 @@ typedef struct Linker {
     [self setNeedsDisplay];
 }
 
-- (NSMutableDictionary *)linkers {
+- (NSMutableArray *)linkers {
     if(!_linkers){
-        _linkers = [NSMutableDictionary dictionary];
+        _linkers = [NSMutableArray array];
     }
     return _linkers;
 }
@@ -67,7 +67,7 @@ typedef struct Linker {
     self.currentLinkerEndPoint = aPoint;
 }
 
-- (void)finishCurrentLinkerSetId:(int) linkerId withColor:(UIColor *)color {
+- (void)setCurrentLinkerWithColor:(UIColor *)color {
     // from
     // http://stackoverflow.com/a/11599453/179843
     
@@ -88,7 +88,7 @@ typedef struct Linker {
         red, green, blue, alpha, self.currentLinkerStartPoint, self.currentLinkerEndPoint
     };
 
-    [self.linkers setObject:[NSValue value:&linker withObjCType:@encode(Linker)] forKey:[NSNumber numberWithInt:linkerId]];
+    [self.linkers addObject:[NSValue value:&linker withObjCType:@encode(Linker)]];
     [self clearCurrentLinkerPoints];
 }
 
@@ -125,13 +125,10 @@ typedef struct Linker {
         }
     }
     
-    NSEnumerator *keyEnumerator = [self.linkers keyEnumerator];
-    NSNumber *key;
-    while((key = [keyEnumerator nextObject])){
+    int i=0;
+    while(i<[self.linkers count]) {
         struct Linker linker;
-        [[self.linkers objectForKey:key] getValue:&linker];
-//        NSData *data = [self.linkers objectForKey:key];
-//        [data getBytes:&linker];
+        [[self.linkers objectAtIndex:i] getValue:&linker];
         
         [[UIColor colorWithRed:linker.red green:linker.green blue:linker.blue alpha:linker.alpha] setFill];
         CGContextStrokeEllipseInRect(context, [self makeRectForPoint:linker.startPoint]);
@@ -142,21 +139,10 @@ typedef struct Linker {
         CGContextStrokePath(context);
         CGContextStrokeEllipseInRect(context, [self makeRectForPoint:linker.endPoint]);
         CGContextFillEllipseInRect(context, [self makeRectForPoint:linker.endPoint]);
+        i++;
     }
     
 }
-
-/*
- NSEnumerator *enumerate = [self.menuItems keyEnumerator];
- NSNumber *key;
- while(!foundRectContainingPoint && (key = [enumerate nextObject])) {
- 
- CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
- if(CGRectContainsPoint(rect, fingerPoint)) {
- foundRectContainingPoint = YES;
- }
- }
-*/
 
 #pragma mark - Private methods
 
@@ -166,6 +152,8 @@ typedef struct Linker {
 
 #pragma mark - View initialisation
 -(void) setupView {
+    _currentLinkerStartPoint = CGPointMake(-1, -1);
+    _currentLinkerEndPoint = CGPointMake(-1, -1);
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.0];
 }
 

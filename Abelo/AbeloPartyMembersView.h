@@ -8,8 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol AbeloPartyMembersViewProtocol
+
+- (void) addPartyMember:(id) sender;
+
+@end
+
+
 @interface AbeloPartyMembersView : UIView
+
+@property (nonatomic, weak) id<AbeloPartyMembersViewProtocol> delegate;
 
 -(void) addPartyMemberWithName:(NSString *)name;
 
 @end
+

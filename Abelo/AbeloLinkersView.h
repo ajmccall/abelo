@@ -12,6 +12,6 @@
 
 - (void) startLinkerFromPoint:(CGPoint) startPoint;
 - (void) addToCurrentLinkerPoint:(CGPoint) aPoint;
-- (void) finishCurrentLinkerSetId:(int) linkerId withColor:(UIColor *) color;
+- (void) setCurrentLinkerWithColor:(UIColor *) color;
 - (BOOL) isDrawing;
 @end

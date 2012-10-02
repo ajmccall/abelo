@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AbeloPartyMembersView.h"
 
 @interface AbeloMainView : UIView
 
@@ -21,17 +22,18 @@
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
 - (void) setCurrentRectAsMenuItem;
 - (void) setCurrentRectAsTotal;
-- (BOOL) clearLastMenuItem;
 
 #pragma mark - PartyMembers view
 
+-(void) partyMembersViewDelegate:(id<AbeloPartyMembersViewProtocol>) delegate;
 -(void) addPartyMemberWithName:(NSString *)name;
+
 
 #pragma mark - LinkerView methods
 
 - (void) startLinkerFromPoint:(CGPoint) startPoint;
 - (void) addToCurrentLinkerPoint:(CGPoint) aPoint;
-- (void) finishCurrentLinkerSetId:(int) linkerId withColor:(UIColor *) color;
+- (void) setCurrentLinkerWithColor:(UIColor *) color;
 - (BOOL) isDrawing;
 
 @end

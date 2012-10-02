@@ -14,5 +14,5 @@
 @property (nonatomic) float total;
 
 - (void) setColor:(UIColor *) color;
-
++ (CGFloat) defaultViewHeight;
 @end

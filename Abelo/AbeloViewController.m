@@ -77,6 +77,7 @@ enum ViewsDrawState {
 - (void) setup {
     self.backButton.enabled = NO;
     self.okButton.enabled = NO;
+    [self.mainView partyMembersViewDelegate:self];
     [self.view addGestureRecognizer:self.panGesture];
 
 }
@@ -102,9 +103,9 @@ enum ViewsDrawState {
 #pragma mark - Outlet Actions
 
 - (IBAction)addGuestAction:(id)sender {
-//    NSString *name = [AbeloViewController GenerateRandStringLength:3];
-//    [self.bill addPartyMemberWithName:name];
-//    [self.partyMembersView addPartyMemberWithName:name];
+    NSString *name = [AbeloViewController GenerateRandStringLength:3];
+    [self.bill addPartyMemberWithName:name];
+    [self.mainView addPartyMemberWithName:name];
 }
 
 - (IBAction)backButtonAction:(id) sender {
@@ -128,8 +129,8 @@ enum ViewsDrawState {
 //        case ViewsDrawStateImage:
 //        case ViewsDrawStateStart:
 //        case ViewsDrawStateLinking:
-//        default:
-//            break;
+        default:
+            break;
     }
 
     if(self.viewsDrawState != ViewsDrawStateStart){
@@ -150,17 +151,16 @@ enum ViewsDrawState {
             [self nextButtonAction:sender];
             break;
         case ViewsDrawStateMenuItems:
-//            [self.view addGestureRecognizer:self.panGesture];
             self.okButton.enabled = YES;
             self.backButton.enabled = YES;
             break;
         case ViewsDrawStateTotal:
             [self.mainView setCurrentRectAsTotal];
             break;
-//        case ViewsDrawStateFinished:
-//            self.okButton.enabled = NO;
-//            self.nextButton.enabled = NO;
-//            break;
+        case ViewsDrawStateLinking:
+            self.okButton.enabled = NO;
+            self.nextButton.enabled = NO;
+            break;
         default:
             break;
     }
@@ -195,16 +195,15 @@ enum ViewsDrawState {
 
 - (void)panGesture:(UIPanGestureRecognizer *)gesture {
     
-    if(gesture.numberOfTouches == 0) {
-//       && self.viewsDrawState == ViewsDrawStateLinking &&
-//       self.linkersView.isDrawing){
-//        [self.linkersView addToCurrentLinkerPoint:[gesture locationInView:self.linkersView]];
-//        [self.linkersView finishCurrentLinkerSetId:arc4random() % 100
-//                                         withColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
-//                                                                   green:((double)arc4random() / ARC4RANDOM_MAX)
-//                                                                    blue:((double)arc4random() / ARC4RANDOM_MAX)
-//                                                                   alpha:0.8]
-//         ];
+    if(gesture.numberOfTouches == 0
+       && self.viewsDrawState == ViewsDrawStateLinking &&
+       self.mainView.isDrawing){
+        [self.mainView addToCurrentLinkerPoint:[gesture locationInView:self.mainView]];
+        [self.mainView setCurrentLinkerWithColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
+                                                                 green:((double)arc4random() / ARC4RANDOM_MAX)
+                                                                  blue:((double)arc4random() / ARC4RANDOM_MAX)
+                                                                 alpha:0.8]
+         ];
     } else if(gesture.numberOfTouches == 1){
         if(self.viewsDrawState == ViewsDrawStateMenuItems){
             
@@ -222,37 +221,37 @@ enum ViewsDrawState {
             } else {
                 ULog(@"panGesture.state unknown[%d]", gesture.state);
             }
-//        } else if(self.viewsDrawState == ViewsDrawStateFinished) {
-//            
-//            if(gesture.state == UIGestureRecognizerStateBegan ||
-//               gesture.state == UIGestureRecognizerStateChanged) {
-//                [self.linkersView addToCurrentLinkerPoint:[gesture locationInView:self.linkersView]];
-//            } else {
-//                DLog(@"gesture.state[%d] unknow", gesture.state);
-//            }
+        } else if(self.viewsDrawState == ViewsDrawStateLinking) {
+            
+            if(gesture.state == UIGestureRecognizerStateBegan ||
+               gesture.state == UIGestureRecognizerStateChanged) {
+                [self.mainView addToCurrentLinkerPoint:[gesture locationInView:self.mainView]];
+            } else {
+                DLog(@"gesture.state[%d] unknow", gesture.state);
+            }
         }
+    } else if(gesture.numberOfTouches == 2){
+        [self.mainView panGesture:gesture];
     }
-    
-    [self.mainView panGesture:gesture];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-//    UITouch *touch = [touches anyObject];
-//    
-//    // add touch if we are drawing menu itme rectaganles or the total rectangles
-//    if([touches count] == 1){
-//        if(CGRectContainsPoint(self.receiptView.frame, [touch locationInView:self.receiptView]) &&
-//           (self.viewsDrawState == ViewsDrawStateMenuItems ||
-//            self.viewsDrawState == ViewsDrawStateTotal)) {
-//               [self.receiptView addPointToCurrentRect:[touch locationInView:self.receiptView]];
-//           } else if(self.viewsDrawState == ViewsDrawStateFinished) {
-//               
-//               [self.linkersView startLinkerFromPoint:[touch locationInView:self.linkersView]];
-//               
-//           }
-//    }
+    UITouch *touch = [touches anyObject];
+    
+    // add touch if we are drawing menu itme rectaganles or the total rectangles
+    if([touches count] == 1){
+        if(self.viewsDrawState == ViewsDrawStateMenuItems ||
+           self.viewsDrawState == ViewsDrawStateTotal) {
+            [self.mainView addPointToCurrentRect:[touch locationInView:self.mainView]];
+        } else if(self.viewsDrawState == ViewsDrawStateLinking){
+           [self.mainView startLinkerFromPoint:[touch locationInView:self.mainView]];
+       }
+    }
 }
+
+
+
 
 #pragma mark - Camera
 
@@ -307,6 +306,14 @@ enum ViewsDrawState {
 - (void) clearMenuItemWithIndex:(int) index {
     
 }
+
+#pragma mark - PartyMembersViewDelegate protocol
+
+- (void)addPartyMember:(id)sender {
+    [self addGuestAction:sender];
+}
+
+
 
 # pragma mark - Private methods
 
