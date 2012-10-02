@@ -40,6 +40,9 @@
 
 #pragma mark - MainView methods
 
+- (void)panGesture:(UIPanGestureRecognizer *)gesture {
+    [self.receiptView panGesture:gesture];
+}
 
 #pragma mark - ReceiptView methods
 

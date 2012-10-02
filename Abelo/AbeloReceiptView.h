@@ -29,6 +29,9 @@
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
 - (void) setCurrentRectAsMenuItem;
 - (void) setCurrentRectAsTotal;
-- (BOOL) clearLastMenuItem;
+- (BOOL) clearLastMenuItemAndReturnSuccess;
+- (BOOL) clearTotalAndReturnSuccess;
+
+- (void)panGesture:(UIPanGestureRecognizer *)gesture;
 
 @end

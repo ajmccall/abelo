@@ -77,6 +77,8 @@ enum ViewsDrawState {
 - (void) setup {
     self.backButton.enabled = NO;
     self.okButton.enabled = NO;
+    [self.view addGestureRecognizer:self.panGesture];
+
 }
 
 - (void)viewDidLoad
@@ -148,7 +150,7 @@ enum ViewsDrawState {
             [self nextButtonAction:sender];
             break;
         case ViewsDrawStateMenuItems:
-            [self.view addGestureRecognizer:self.panGesture];
+//            [self.view addGestureRecognizer:self.panGesture];
             self.okButton.enabled = YES;
             self.backButton.enabled = YES;
             break;
@@ -167,7 +169,7 @@ enum ViewsDrawState {
 - (IBAction)okButtonAction:(id) sender {
     switch (self.viewsDrawState) {
         case ViewsDrawStateMenuItems: {
-            int menuItemId = [self.bill addBillItem:@"fake name" withTotal:5.50];
+            [self.bill addBillItem:@"fake name" withTotal:5.50];
             [self.mainView setCurrentRectAsMenuItem];
             break;
         }
@@ -212,14 +214,14 @@ enum ViewsDrawState {
             } else {
                 ULog(@"panGesture.state unknown[%d]", gesture.state);
             }
-//        } else if(self.viewsDrawState == ViewsDrawStateTotal){
-//            
-//            if(gesture.state == UIGestureRecognizerStateBegan ||
-//               gesture.state == UIGestureRecognizerStateChanged) {
-//                [self.receiptView addPointToCurrentRect:[gesture locationInView:self.receiptView]];
-//            } else {
-//                ULog(@"panGesture.state unknown[%d]", gesture.state);
-//            }
+        } else if(self.viewsDrawState == ViewsDrawStateTotal){
+            
+            if(gesture.state == UIGestureRecognizerStateBegan ||
+               gesture.state == UIGestureRecognizerStateChanged) {
+                [self.mainView addPointToCurrentRect:[gesture locationInView:self.mainView]];
+            } else {
+                ULog(@"panGesture.state unknown[%d]", gesture.state);
+            }
 //        } else if(self.viewsDrawState == ViewsDrawStateFinished) {
 //            
 //            if(gesture.state == UIGestureRecognizerStateBegan ||
@@ -230,6 +232,8 @@ enum ViewsDrawState {
 //            }
         }
     }
+    
+    [self.mainView panGesture:gesture];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

@@ -17,14 +17,12 @@
 
 @property (nonatomic) CGPoint currentTouch;
 @property (nonatomic) CGRect currentMenuItemRect;
-@property (nonatomic) int lastSetMenuItemId;
-@property (nonatomic) NSMutableDictionary *menuItems;
+@property (nonatomic) NSMutableArray *menuItems;
 @property (nonatomic) CGRect totalRect;
 @property (nonatomic, readonly) UIColor *redTransparent;
 @property (nonatomic, readonly) UIColor *blueTransparent;
 @property (nonatomic, readonly) UIColor *greenTransparent;
 @property (nonatomic) UIGestureRecognizer *pinchGesture;
-@property (nonatomic) UIGestureRecognizer *panGesture;
 
 - (CGPoint) translateAndScalePoint:(CGPoint) p;
 
@@ -43,17 +41,14 @@
 @synthesize drawOffset = _drawOffset;
 @synthesize drawScale = _drawScale;
 @synthesize pinchGesture = _pinchGesture;
-@synthesize panGesture = _panGesture;
 
 #pragma mark - Property synthesis implementation
 - (void)setImage:(UIImage *)image {
     
     if(image){
         [self addGestureRecognizer:self.pinchGesture];
-        [self addGestureRecognizer:self.panGesture];
     } else {
         [self removeGestureRecognizer:self.pinchGesture];
-        [self removeGestureRecognizer:self.panGesture];
     }
     
     switch ([image imageOrientation]) {
@@ -149,19 +144,12 @@
     return _pinchGesture;
 }
 
-- (UIGestureRecognizer *)panGesture {
-    if(!_panGesture) {
-        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-    }
-    return _panGesture;
-}
-
 #pragma mark - Methods Implementations
 
 - (void)clearView {
     
     _currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
-    self.menuItems = [NSMutableDictionary dictionary];
+    self.menuItems = [NSMutableArray array];
     
     _drawOffset = CGPointMake(0,0);
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
@@ -203,22 +191,22 @@
 
     bool foundRectContainingPoint = NO;
     
-    NSEnumerator *enumerate = [self.menuItems keyEnumerator];
-    NSNumber *key;
-    while(!foundRectContainingPoint && (key = [enumerate nextObject])) {
-        
-        CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
+    int i = 0;
+    while(!foundRectContainingPoint && i < [menuItems count]) {
+        CGRect rect = [[menuItems objectAtIndex:i] CGRectValue];
         if(CGRectContainsPoint(rect, fingerPoint)) {
             foundRectContainingPoint = YES;
+        } else {
+            i++;
         }
     }
     
     if(!foundRectContainingPoint) {
         self.currentMenuItemRect = fingerRect;
     } else {
-        CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
+        CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
         self.currentMenuItemRect = CGRectUnion(fingerRect, rect);
-        [self.menuItems removeObjectForKey:key];
+        [self.menuItems removeObjectAtIndex:i];
     }
 
     [self setNeedsDisplay];
@@ -266,12 +254,12 @@
     // draw previous rectanlgles
     [self.blueTransparent setFill];
 
-    NSEnumerator *enumerator = [self.menuItems keyEnumerator];
-    NSNumber *key;
-    while(key = [enumerator nextObject]){
-        CGRect rect = [[self.menuItems objectForKey:key] CGRectValue];
+    int i=0;
+    while(i < [menuItems count]){
+        CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
         CGContextFillRect(context, [self reverseTranslateAndScaleRect:rect]);
         CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:rect]);
+        i++;
     }
 
     if(self.totalRect.size.width != NIL_FLOAT) {
@@ -328,9 +316,6 @@
 
 #pragma mark - View initialisation
 - (void)setup {
-    _drawScale = 1.0;
-    _drawOffset = CGPointMake(0, 0);
-    
     [self clearView];
 }
 
@@ -346,9 +331,8 @@
     [self setup];
 }
 
-- (void) setCurrentRectAsMenuItemWithId:(int) menuItemId {
-    [self.menuItems setObject:[NSValue valueWithCGRect:self.currentMenuItemRect] forKey:[NSNumber numberWithInt:menuItemId]];
-    self.lastSetMenuItemId = menuItemId;
+- (void) setCurrentRectAsMenuItem {
+    [self.menuItems addObject:[NSValue valueWithCGRect:self.currentMenuItemRect]];
     
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
     self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
@@ -366,7 +350,7 @@
 }
 
 
-- (BOOL) ifPossibleClearLastMenuItem {
+- (BOOL) clearLastMenuItemAndReturnSuccess {
     if(self.currentMenuItemRect.size.width != NIL_FLOAT){
         self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
         return YES;
@@ -374,18 +358,7 @@
         
         if([self.menuItems count] > 0){
             
-            if([self.menuItems objectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]]){
-                [self.menuItems removeObjectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]];
-            } else {
-                self.lastSetMenuItemId--;
-                while(self.lastSetMenuItemId > 0){
-                    if([self.menuItems objectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]]){
-                        [self.menuItems removeObjectForKey:[NSNumber numberWithInt:self.lastSetMenuItemId]];
-                        break;
-                    }
-                    self.lastSetMenuItemId--;
-                }
-            }
+            [self.menuItems removeLastObject];
             
             //notify the controller that you removed the menu item
             [self setNeedsDisplay];
@@ -398,7 +371,7 @@
     return NO;
 }
 
--(BOOL) ifPossibleClearTotal {
+-(BOOL) clearTotalAndReturnSuccess {
     if(self.currentMenuItemRect.size.width != NIL_FLOAT){
         self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
         return YES;
