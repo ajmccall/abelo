@@ -12,12 +12,18 @@
 
 @property (nonatomic) double total;
 
+#pragma mark - PartyMember methods
+
 - (int) addPartyMemberWithName:(NSString *) name;
 - (void) removePartyMemberWithKey:(int) key;
 - (float) billTotalForPartyMemberWithKey:(int) key;
 - (void) addBillItemWithKey:(int) billKey toPartyMemberWithKey:(int) partyMemberKey;
 
+#pragma mark - BillItem methods
+
 - (int) addBillItem:(NSString *) itemName withTotal:(float) total;
+
+#pragma mark - Linker methods
 
 /*
 - (id) addBillItem:(NSString *) itemName withTotal:(double) itemTotal andQuantity:(int) quantity;

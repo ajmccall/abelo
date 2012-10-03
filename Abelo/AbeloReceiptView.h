@@ -16,9 +16,9 @@
 - (void) clearView;
 
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
-- (void) setCurrentRectAsMenuItem;
+- (void) setCurrentRectAsBillItem;
 - (void) setCurrentRectAsTotal;
-- (BOOL) clearLastMenuItemAndReturnSuccess;
+- (BOOL) clearLastBillItemAndReturnSuccess;
 - (BOOL) clearTotalAndReturnSuccess;
 
 - (void) clearCurrentRect;

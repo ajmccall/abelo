@@ -18,7 +18,7 @@
 enum ViewsDrawState {
     ViewsDrawStateStart = 0,
     ViewsDrawStateImage = 1,
-    ViewsDrawStateMenuItems = 2,
+    ViewsDrawStateBillItems = 2,
     ViewsDrawStateTotal = 3,
     ViewsDrawStateLinking = 4
 } typedef ViewsDrawState;
@@ -110,8 +110,8 @@ enum ViewsDrawState {
 
 - (IBAction)backButtonAction:(id) sender {
     switch (self.viewsDrawState) {
-//        case ViewsDrawStateMenuItems:
-//            if([self.mainView clearLastMenuItem]) {
+//        case ViewsDrawStateBillItems:
+//            if([self.mainView clearLastBillItem]) {
 //                return;
 //            }
 //            [self.view removeGestureRecognizer:self.panGesture];
@@ -122,7 +122,7 @@ enum ViewsDrawState {
 //            self.viewsDrawState--;
 //            break;
 //        case ViewsDrawStateTotal:
-//            if([self.mainView clearLastMenuItem]) {
+//            if([self.mainView clearLastBillItem]) {
 //                return;
 //            }
 //            break;
@@ -150,7 +150,7 @@ enum ViewsDrawState {
             self.mainView.image = [UIImage imageNamed:@"dimt.jpg"];
             [self nextButtonAction:sender];
             break;
-        case ViewsDrawStateMenuItems:
+        case ViewsDrawStateBillItems:
             self.okButton.enabled = YES;
             self.backButton.enabled = YES;
             break;
@@ -168,9 +168,9 @@ enum ViewsDrawState {
 
 - (IBAction)okButtonAction:(id) sender {
     switch (self.viewsDrawState) {
-        case ViewsDrawStateMenuItems: {
+        case ViewsDrawStateBillItems: {
             [self.bill addBillItem:@"fake name" withTotal:5.50];
-            [self.mainView setCurrentRectAsMenuItem];
+            [self.mainView setCurrentRectAsBillItem];
             break;
         }
         case ViewsDrawStateTotal:
@@ -205,7 +205,7 @@ enum ViewsDrawState {
                                                                  alpha:0.8]
          ];
     } else if(gesture.numberOfTouches == 1){
-        if(self.viewsDrawState == ViewsDrawStateMenuItems){
+        if(self.viewsDrawState == ViewsDrawStateBillItems){
             
             if(gesture.state == UIGestureRecognizerStateBegan ||
                gesture.state == UIGestureRecognizerStateChanged) {
@@ -241,7 +241,7 @@ enum ViewsDrawState {
     
     // add touch if we are drawing menu itme rectaganles or the total rectangles
     if([touches count] == 1){
-        if(self.viewsDrawState == ViewsDrawStateMenuItems ||
+        if(self.viewsDrawState == ViewsDrawStateBillItems ||
            self.viewsDrawState == ViewsDrawStateTotal) {
             [self.mainView addPointToCurrentRect:[touch locationInView:self.mainView]];
         } else if(self.viewsDrawState == ViewsDrawStateLinking){
@@ -300,10 +300,10 @@ enum ViewsDrawState {
     return [UIImage imageNamed:@"dimt.jpg"];
 }
 
-- (void) addMenuItemWithIndex:(int) index {
+- (void) addBillItemWithIndex:(int) index {
 }
 
-- (void) clearMenuItemWithIndex:(int) index {
+- (void) clearBillItemWithIndex:(int) index {
     
 }
 

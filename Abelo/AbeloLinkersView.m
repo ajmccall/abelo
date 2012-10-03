@@ -79,10 +79,6 @@ typedef struct Linker {
 }
 
 - (void)setCurrentLinkerWithColor:(UIColor *)color {
-    if([self.linkers count] > 0) {
-        return;
-    }
-
     
     // from
     // http://stackoverflow.com/a/11599453/179843

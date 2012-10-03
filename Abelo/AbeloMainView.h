@@ -20,7 +20,7 @@
 
 @property (nonatomic) UIImage *image;
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
-- (void) setCurrentRectAsMenuItem;
+- (void) setCurrentRectAsBillItem;
 - (void) setCurrentRectAsTotal;
 
 #pragma mark - PartyMembers view

@@ -88,8 +88,8 @@
     [self.receiptView addPointToCurrentRect:fingerPoint];
 }
 
-- (void)setCurrentRectAsMenuItem {
-    [self.receiptView setCurrentRectAsMenuItem];
+- (void)setCurrentRectAsBillItem {
+    [self.receiptView setCurrentRectAsBillItem];
 }
 
 - (void)setCurrentRectAsTotal {

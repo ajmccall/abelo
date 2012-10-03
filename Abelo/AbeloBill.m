@@ -30,11 +30,12 @@
 
 @interface AbeloBill()
 
-@property (nonatomic) NSMutableDictionary *partyMembers;
 @property (nonatomic) int nextPartyMemberKey;
-@property (nonatomic) NSMutableDictionary *billItems;
 @property (nonatomic) int nextBillItemKey;
-@property (nonatomic) NSMutableArray *menuItemsLinked;
+
+@property (nonatomic) NSMutableDictionary *partyMembers;
+@property (nonatomic) NSMutableDictionary *billItems;
+@property (nonatomic) NSMutableArray *billItemsLinked;
 
 @end
 
@@ -47,10 +48,10 @@
 #pragma mark - Synthesize
 
 @synthesize nextPartyMemberKey = _nextPartyMemberKey;
-@synthesize billItems = _billItems;
 @synthesize nextBillItemKey = _nextBillItemKey;
+@synthesize billItems = _billItems;
 @synthesize total = _total;
-@synthesize menuItemsLinked = _menuItemsLinked;
+@synthesize billItemsLinked = _billItemsLinked;
 
 - (NSMutableDictionary *)partyMembers {
     if(_partyMembers){
@@ -67,11 +68,11 @@
     return _billItems;
 }
 
-- (NSMutableArray *)menuItemsLinked {
-    if(!_menuItemsLinked){
-        _menuItemsLinked = [[NSMutableArray alloc] init];
+- (NSMutableArray *)billItemsLinked {
+    if(!_billItemsLinked){
+        _billItemsLinked = [[NSMutableArray alloc] init];
     }
-    return _menuItemsLinked;
+    return _billItemsLinked;
 }
 
 #pragma mark - Method implementations
@@ -94,7 +95,7 @@
         return ret;
     }
     
-    for (PartyMemberBillItem *partyMemberBillItem in self.menuItemsLinked) {
+    for (PartyMemberBillItem *partyMemberBillItem in self.billItemsLinked) {
         if([partyMemberBillItem.partyMember isEqualToNumber:pKey]){
             float billItemValue = [(NSNumber *)[self.billItems objectForKey:partyMemberBillItem.billItem] floatValue];
             ret += billItemValue * partyMemberBillItem.percentageShared;
@@ -117,7 +118,7 @@
     partyMemberBillItem.billItem = bKey;
     partyMemberBillItem.percentageShared = 1.0;
 
-    [self.menuItemsLinked addObject:partyMemberBillItem];
+    [self.billItemsLinked addObject:partyMemberBillItem];
 }
 
 - (int)addBillItem:(NSString *)itemName withTotal:(float)total {

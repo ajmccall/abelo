@@ -16,8 +16,8 @@
 @interface AbeloReceiptView ()
 
 @property (nonatomic) CGPoint currentTouch;
-@property (nonatomic) CGRect currentMenuItemRect;
-@property (nonatomic) NSMutableArray *menuItems;
+@property (nonatomic) CGRect currentBillItemRect;
+@property (nonatomic) NSMutableArray *billItems;
 @property (nonatomic) CGRect totalRect;
 @property (nonatomic, readonly) UIColor *redTransparent;
 @property (nonatomic, readonly) UIColor *blueTransparent;
@@ -33,10 +33,10 @@
 @synthesize image = _image;
 
 #pragma mark - Property synthesis declarations
-@synthesize currentMenuItemRect = _currentMenuItemRect;
+@synthesize currentBillItemRect = _currentBillItemRect;
 @synthesize currentTouch = _currentTouch;
 @synthesize totalRect = _totalRect;
-@synthesize menuItems;
+@synthesize billItems;
 
 #pragma mark - Property synthesis implementation
 - (void)setImage:(UIImage *)image {
@@ -52,8 +52,8 @@
     [self setNeedsDisplay];
 }
 
-- (void)setCurrentMenuItemRect:(CGRect)currentMenuItemRect {
-    _currentMenuItemRect = currentMenuItemRect;
+- (void)setCurrentBillItemRect:(CGRect)currentBillItemRect {
+    _currentBillItemRect = currentBillItemRect;
     [self setNeedsDisplay];
 }
 
@@ -84,8 +84,8 @@
 
 - (void)clearView {
     
-    _currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
-    self.menuItems = [NSMutableArray array];
+    _currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+    self.billItems = [NSMutableArray array];
     
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
     self.drawOffset = CGPointMake(0,0);
@@ -100,16 +100,16 @@
     
     CGRect fingerRect = [self CGRectMakeFromFingerPoint:fingerPoint];
     
-    if(self.currentMenuItemRect.size.width != NIL_FLOAT){
-        self.currentMenuItemRect = CGRectUnion(self.currentMenuItemRect, fingerRect);
+    if(self.currentBillItemRect.size.width != NIL_FLOAT){
+        self.currentBillItemRect = CGRectUnion(self.currentBillItemRect, fingerRect);
         return;
     }
 
     bool foundRectContainingPoint = NO;
     
     int i = 0;
-    while(!foundRectContainingPoint && i < [menuItems count]) {
-        CGRect rect = [[menuItems objectAtIndex:i] CGRectValue];
+    while(!foundRectContainingPoint && i < [billItems count]) {
+        CGRect rect = [[billItems objectAtIndex:i] CGRectValue];
         if(CGRectContainsPoint(rect, fingerPoint)) {
             foundRectContainingPoint = YES;
         } else {
@@ -118,11 +118,11 @@
     }
     
     if(!foundRectContainingPoint) {
-        self.currentMenuItemRect = fingerRect;
+        self.currentBillItemRect = fingerRect;
     } else {
-        CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
-        self.currentMenuItemRect = CGRectUnion(fingerRect, rect);
-        [self.menuItems removeObjectAtIndex:i];
+        CGRect rect = [[self.billItems objectAtIndex:i] CGRectValue];
+        self.currentBillItemRect = CGRectUnion(fingerRect, rect);
+        [self.billItems removeObjectAtIndex:i];
     }
 
     [self setNeedsDisplay];
@@ -133,22 +133,22 @@
     
     CGRect fingerRect = [self CGRectMakeFromFingerPoint:fingerPoint];
     
-    if(self.currentMenuItemRect.size.width != NIL_FLOAT){
-        self.currentMenuItemRect = CGRectUnion(self.currentMenuItemRect, fingerRect);
+    if(self.currentBillItemRect.size.width != NIL_FLOAT){
+        self.currentBillItemRect = CGRectUnion(self.currentBillItemRect, fingerRect);
         return;
     }
 
     if(CGRectContainsPoint(self.totalRect, fingerPoint)) {
-        self.currentMenuItemRect = self.totalRect;
+        self.currentBillItemRect = self.totalRect;
     } else {
-        self.currentMenuItemRect = fingerRect;
+        self.currentBillItemRect = fingerRect;
     }
 
     [self setNeedsDisplay];
 }
 
 - (void)clearCurrentRect {
-    self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+    self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
 #pragma mark - Draw Metho¢ds
@@ -159,24 +159,24 @@
     UIGraphicsPopContext();
 }
 
-- (void) drawMenuItems:(CGContextRef) context {
+- (void) drawBillItems:(CGContextRef) context {
     
     UIGraphicsPushContext(context);
 
     // draw current rectanlgle
     [[UIColor blackColor] setStroke];
-    if(self.currentMenuItemRect.size.width != NIL_FLOAT) {
+    if(self.currentBillItemRect.size.width != NIL_FLOAT) {
         [self.greenTransparent setFill];
-        CGContextFillRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
-        CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:self.currentMenuItemRect]);
+        CGContextFillRect(context, [self reverseTranslateAndScaleRect:self.currentBillItemRect]);
+        CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:self.currentBillItemRect]);
     }
     
     // draw previous rectanlgles
     [self.blueTransparent setFill];
 
     int i=0;
-    while(i < [menuItems count]){
-        CGRect rect = [[self.menuItems objectAtIndex:i] CGRectValue];
+    while(i < [billItems count]){
+        CGRect rect = [[self.billItems objectAtIndex:i] CGRectValue];
         CGContextFillRect(context, [self reverseTranslateAndScaleRect:rect]);
         CGContextStrokeRect(context, [self reverseTranslateAndScaleRect:rect]);
         i++;
@@ -203,7 +203,7 @@
     
     //draw various receipt objects
     [self drawReceiptImage:context];
-    [self drawMenuItems:context];
+    [self drawBillItems:context];
 }
 
 
@@ -225,34 +225,34 @@
     [self setup];
 }
 
-- (void) setCurrentRectAsMenuItem {
-    [self.menuItems addObject:[NSValue valueWithCGRect:self.currentMenuItemRect]];
+- (void) setCurrentRectAsBillItem {
+    [self.billItems addObject:[NSValue valueWithCGRect:self.currentBillItemRect]];
     
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+    self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
 - (void) setTotalRect {
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+    self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
 - (void)setCurrentRectAsTotal {
-    self.totalRect = self.currentMenuItemRect;
+    self.totalRect = self.currentBillItemRect;
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+    self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
 
-- (BOOL) clearLastMenuItemAndReturnSuccess {
-    if(self.currentMenuItemRect.size.width != NIL_FLOAT){
-        self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+- (BOOL) clearLastBillItemAndReturnSuccess {
+    if(self.currentBillItemRect.size.width != NIL_FLOAT){
+        self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
         return YES;
     } else {
         
-        if([self.menuItems count] > 0){
+        if([self.billItems count] > 0){
             
-            [self.menuItems removeLastObject];
+            [self.billItems removeLastObject];
             
             //notify the controller that you removed the menu item
             [self setNeedsDisplay];
@@ -266,8 +266,8 @@
 }
 
 -(BOOL) clearTotalAndReturnSuccess {
-    if(self.currentMenuItemRect.size.width != NIL_FLOAT){
-        self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+    if(self.currentBillItemRect.size.width != NIL_FLOAT){
+        self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
         return YES;
     } else {
         if(self.totalRect.size.width == NIL_FLOAT) {
