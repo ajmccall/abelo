@@ -10,6 +10,7 @@
 #import "AbeloReceiptView.h"
 #import "AbeloPartyMembersView.h"
 #import "AbeloLinkersView.h"
+#import "MRGRectMake.h"
 
 #pragma mark - AbeloMainView PRIVATE interface
 
@@ -18,6 +19,11 @@
 @property (nonatomic) AbeloReceiptView *receiptView;
 @property (nonatomic) AbeloPartyMembersView *partyMembersView;
 @property (nonatomic) AbeloLinkersView *linkerView;
+@property (nonatomic) UIGestureRecognizer *pinchGesture;
+
+@property (nonatomic) CGFloat drawScale;
+@property (nonatomic) CGPoint drawOffset;
+
 @end
 
 #pragma mark - AbeloMainView implementation
@@ -30,11 +36,20 @@
 
 #pragma mark - Property synthesize definitions
 
+@synthesize pinchGesture = _pinchGesture;
 @dynamic image;
+@synthesize drawOffset = _drawOffset;
+@synthesize drawScale = _drawScale;
 
 #pragma mark - Property synthesize implementations
 
 - (void)setImage:(UIImage *)image {
+    if(image){
+        [self addGestureRecognizer:self.pinchGesture];
+    } else {
+        [self removeGestureRecognizer:self.pinchGesture];
+    }
+    
     self.receiptView.image = image;
 }
 
@@ -42,14 +57,29 @@
     return self.receiptView.image;
 }
 
+- (UIGestureRecognizer *)pinchGesture {
+    if(!_pinchGesture) {
+        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
+    }
+    return _pinchGesture;
+}
+
+- (void)setDrawOffset:(CGPoint)drawOffset {
+    _drawOffset = drawOffset;
+    self.receiptView.drawOffset = drawOffset;
+    self.linkerView.drawOffset = drawOffset;
+}
+
+- (void)setDrawScale:(CGFloat)drawScale {
+    _drawScale = drawScale;
+    self.receiptView.drawScale = drawScale;
+    self.linkerView.drawScale = drawScale;
+}
+
 #pragma mark - MainView methods
 
 - (void)clearView {
     
-}
-
-- (void)panGesture:(UIPanGestureRecognizer *)gesture {
-    [self.receiptView panGesture:gesture];
 }
 
 #pragma mark - ReceiptView methods
@@ -94,7 +124,40 @@
     return [self.linkerView isDrawing];
 }
 
-#pragma mark - Gesture recognizers
+
+#pragma mark - Gesture recognizer
+
+- (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
+    
+    [self.linkerView clearCurrentLinkers];
+    [self.receiptView clearCurrentRect];
+    
+    //scale the receipt view
+    if(gesture.state == UIGestureRecognizerStateBegan){
+        gesture.scale = self.drawScale;
+    } else if(gesture.state == UIGestureRecognizerStateChanged){
+        self.drawScale = gesture.scale;
+        CGPoint midPoint = [gesture locationInView:self];
+        CGFloat x = midPoint.x + self.drawScale * (self.frame.origin.x - midPoint.x);
+        CGFloat y = midPoint.y + self.drawScale * (self.frame.origin.y - midPoint.y);
+        self.drawOffset = CGPointMake(x,y);
+    }
+}
+
+- (void)panGesture:(UIPanGestureRecognizer *)gesture {
+    
+    // if two-finger pan gesture inside the receiptView
+    if(gesture.numberOfTouches == 2 &&
+       (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged)) {
+        
+        [self.linkerView clearCurrentLinkers];
+        [self.receiptView clearCurrentRect];
+
+        self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
+                                      self.drawOffset.y + [gesture translationInView:self].y);
+        [gesture setTranslation:CGPointMake(0,0) inView:self];
+    }
+}
 
 #pragma mark - Draw methods
 
@@ -104,6 +167,9 @@
 
 - (void) setupView {
     
+    self.drawOffset = CGPointMake(0,0);
+    self.drawScale = 1.0;
+    
     _receiptView = [[AbeloReceiptView alloc] initWithFrame:CGRectMake(0,
                                                                       0,
                                                                       self.frame.size.width - PARTY_MEMBERS_VIEW_WIDTH,
@@ -111,7 +177,10 @@
     
     _partyMembersView = [[AbeloPartyMembersView alloc] initWithFrame:CGRectMake(self.frame.size.width - PARTY_MEMBERS_VIEW_WIDTH, 0, PARTY_MEMBERS_VIEW_WIDTH, self.frame.size.height)];
     
-    _linkerView = [[AbeloLinkersView alloc] initWithFrame:self.frame];
+    _linkerView = [[AbeloLinkersView alloc] initWithFrame:MRGRectMakeSetXY(0, 0, self.frame)];
+    
+    _linkerView.receiptViewRect = _receiptView.frame;
+    _linkerView.partyMembersViewRect = _partyMembersView.frame;
     
     [self addSubview:self.receiptView];
     [self addSubview:self.partyMembersView];

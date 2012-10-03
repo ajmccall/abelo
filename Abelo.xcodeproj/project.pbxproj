@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */ = {isa = PBXBuildFile; fileRef = D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */; };
 		D23B77C416108F060033C55C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D23B77C316108F060033C55C /* Localizable.strings */; };
+		D2C6FDCC161C561100837E52 /* AbeloScaleOffsetView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C6FDCB161C561100837E52 /* AbeloScaleOffsetView.m */; };
 		D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F27715FF4E2600923EFB /* dimt.jpg */; };
 		D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */; };
 		D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */; };
@@ -48,6 +49,8 @@
 		D23B77C21610850A0033C55C /* AbeloStringDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloStringDefines.h; sourceTree = "<group>"; };
 		D23B77C316108F060033C55C /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		D23B77CD1610967A0033C55C /* MRGRectMake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRGRectMake.h; sourceTree = "<group>"; };
+		D2C6FDCA161C561100837E52 /* AbeloScaleOffsetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloScaleOffsetView.h; sourceTree = "<group>"; };
+		D2C6FDCB161C561100837E52 /* AbeloScaleOffsetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloScaleOffsetView.m; sourceTree = "<group>"; };
 		D2D5F27315FE4A2A00923EFB /* MRGLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRGLog.h; sourceTree = "<group>"; };
 		D2D5F27715FF4E2600923EFB /* dimt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dimt.jpg; sourceTree = "<group>"; };
 		D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AbeloReceiptViewController.xib; sourceTree = "<group>"; };
@@ -146,6 +149,8 @@
 				D2FEC1DB160CCD9000166551 /* AbeloPartyMembersView.m */,
 				D23B77BC16107BE80033C55C /* AbeloPartyMemberView.h */,
 				D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */,
+				D2C6FDCA161C561100837E52 /* AbeloScaleOffsetView.h */,
+				D2C6FDCB161C561100837E52 /* AbeloScaleOffsetView.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -368,6 +373,7 @@
 				D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */,
 				D2DF70FD16136C2200EA8B85 /* AbeloLinkersView.m in Sources */,
 				D2F4439B161394B800AF9DCF /* AbeloMainView.m in Sources */,
+				D2C6FDCC161C561100837E52 /* AbeloScaleOffsetView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

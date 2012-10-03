@@ -7,22 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AbeloScaleOffsetView.h"
 
-//// enum to control the drawing state of the recipet view
-//enum ViewsDrawState {
-//    ViewsDrawStateStart = 0,
-//    ViewsDrawStateImage = 1,
-//    ViewsDrawStateMenuItems = 2,
-//    ViewsDrawStateTotal = 3,
-//    ViewsDrawStateFinished = 4
-//} typedef ViewsDrawState;
-
-    
-@interface AbeloReceiptView : UIView
+@interface AbeloReceiptView : AbeloScaleOffsetView
 
 @property (nonatomic) UIImage *image;
-@property (nonatomic) CGFloat drawScale;
-@property (nonatomic) CGPoint drawOffset;
 
 - (void) clearView;
 
@@ -32,6 +21,6 @@
 - (BOOL) clearLastMenuItemAndReturnSuccess;
 - (BOOL) clearTotalAndReturnSuccess;
 
-- (void)panGesture:(UIPanGestureRecognizer *)gesture;
+- (void) clearCurrentRect;
 
 @end

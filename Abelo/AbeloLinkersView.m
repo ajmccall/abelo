@@ -13,17 +13,18 @@ typedef struct Linker {
     CGFloat green;
     CGFloat blue;
     CGFloat alpha;
-    CGPoint startPoint;
-    CGPoint endPoint;
+    CGPoint receiptPoint;
+    CGPoint partyMemberPoint;
 } Linker;
 
 
 #pragma mark - AbeloLinkerView PRIVATE interface
 @interface AbeloLinkersView()
 
-@property (nonatomic) CGPoint currentLinkerStartPoint;
-@property (nonatomic) CGPoint currentLinkerEndPoint;
+@property (nonatomic) CGPoint currentLinkerPointStart;
+@property (nonatomic) CGPoint currentLinkerPointEnd;
 @property (nonatomic) NSMutableArray *linkers;
+@property (nonatomic) BOOL startLinkerPointInReceipt;
 
 - (void) clearCurrentLinkerPoints;
 
@@ -35,18 +36,21 @@ typedef struct Linker {
 @synthesize linkers = _linkers;
 
 #pragma mark - Property synthesis declatations
-@synthesize currentLinkerStartPoint = _currentLinkerStartPoint;
-@synthesize currentLinkerEndPoint = _currentLinkerEndPoint;
+@synthesize currentLinkerPointStart = _currentLinkerPointStart;
+@synthesize currentLinkerPointEnd = _currentLinkerPointEnd;
+@synthesize receiptViewRect = _receiptViewRect;
+@synthesize partyMembersViewRect = _partyMembersViewRect;
+@synthesize startLinkerPointInReceipt;
 
 #pragma mark - Property synthesis implementations
 
-- (void)setCurrentLinkerStartPoint:(CGPoint)currentLinkerStartPoint {
-    _currentLinkerStartPoint = currentLinkerStartPoint;
+- (void)setCurrentLinkerPointStart:(CGPoint)currentLinkerPointStart {
+    _currentLinkerPointStart = currentLinkerPointStart;
     [self setNeedsDisplay];
 }
 
-- (void)setCurrentLinkerEndPoint:(CGPoint)currentLinkerEndPoint {
-    _currentLinkerEndPoint = currentLinkerEndPoint;
+- (void)setCurrentLinkerPointEnd:(CGPoint)currentLinkerPointEnd {
+    _currentLinkerPointEnd = currentLinkerPointEnd;
     [self setNeedsDisplay];
 }
 
@@ -60,14 +64,26 @@ typedef struct Linker {
 #pragma mark - Public methods
 
 - (void)startLinkerFromPoint:(CGPoint)startPoint {
-    self.currentLinkerStartPoint = startPoint;
+    if(CGRectContainsPoint(self.receiptViewRect, startPoint)){
+        self.startLinkerPointInReceipt = YES;
+        startPoint = [self translateAndScalePoint:startPoint];
+    } else{
+        self.startLinkerPointInReceipt = NO;
+    }
+    
+    self.currentLinkerPointStart = startPoint;
 }
 
 - (void)addToCurrentLinkerPoint:(CGPoint)aPoint {
-    self.currentLinkerEndPoint = aPoint;
+    self.currentLinkerPointEnd = aPoint;
 }
 
 - (void)setCurrentLinkerWithColor:(UIColor *)color {
+    if([self.linkers count] > 0) {
+        return;
+    }
+
+    
     // from
     // http://stackoverflow.com/a/11599453/179843
     
@@ -85,15 +101,26 @@ typedef struct Linker {
     }
     
     Linker linker = {
-        red, green, blue, alpha, self.currentLinkerStartPoint, self.currentLinkerEndPoint
+        red, green, blue, alpha, self.currentLinkerPointStart, self.currentLinkerPointEnd
     };
+    
+    //need to switch them around for the scale/offset transform
+    if(!startLinkerPointInReceipt){
+        linker.receiptPoint = self.currentLinkerPointEnd;
+        linker.partyMemberPoint = self.currentLinkerPointStart;
+    }
 
     [self.linkers addObject:[NSValue value:&linker withObjCType:@encode(Linker)]];
     [self clearCurrentLinkerPoints];
 }
 
 -(BOOL) isDrawing {
-    return self.currentLinkerStartPoint.x != -1;
+    return self.currentLinkerPointStart.x != -1;
+}
+
+- (void)clearCurrentLinkers {
+    self.currentLinkerPointStart = CGPointMake(-1, -1);
+    self.currentLinkerPointEnd = CGPointMake(-1, -1);
 }
 
 #pragma mark - Draw methods
@@ -110,50 +137,55 @@ typedef struct Linker {
     [[UIColor redColor] setFill];
     [[UIColor blackColor] setStroke];
     
-    if(self.currentLinkerStartPoint.x != -1){
-        CGContextMoveToPoint(context, self.currentLinkerStartPoint.x, self.currentLinkerStartPoint.y);
-        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:self.currentLinkerStartPoint]);
-        CGContextFillEllipseInRect(context, [self makeRectForPoint:self.currentLinkerStartPoint]);
+    if(self.currentLinkerPointStart.x != -1){
+        CGContextMoveToPoint(context, self.currentLinkerPointStart.x, self.currentLinkerPointStart.y);
+        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:self.currentLinkerPointStart]);
+        CGContextFillEllipseInRect(context, [self makeRectForPoint:self.currentLinkerPointStart]);
         
-        if(self.currentLinkerEndPoint.x != -1){
+        if(self.currentLinkerPointEnd.x != -1){
             CGContextBeginPath(context);
-            CGContextMoveToPoint(context, self.currentLinkerStartPoint.x, self.currentLinkerStartPoint.y);
-            CGContextAddLineToPoint(context, self.currentLinkerEndPoint.x, self.currentLinkerEndPoint.y);
+            CGContextMoveToPoint(context, self.currentLinkerPointStart.x, self.currentLinkerPointStart.y);
+            CGContextAddLineToPoint(context, self.currentLinkerPointEnd.x, self.currentLinkerPointEnd.y);
             CGContextStrokePath(context);
-            CGContextStrokeEllipseInRect(context, [self makeRectForPoint:self.currentLinkerEndPoint]);
-            CGContextFillEllipseInRect(context, [self makeRectForPoint:self.currentLinkerEndPoint]);
+            CGContextStrokeEllipseInRect(context, [self makeRectForPoint:self.currentLinkerPointEnd]);
+            CGContextFillEllipseInRect(context, [self makeRectForPoint:self.currentLinkerPointEnd]);
         }
     }
     
     int i=0;
-    while(i<[self.linkers count]) {
+    while(i < [self.linkers count]) {
         struct Linker linker;
         [[self.linkers objectAtIndex:i] getValue:&linker];
         
+        CGPoint receiptPoint = [self reverseTranslateAndScalePoint:linker.receiptPoint];
+        CGPoint partyMemberPoint = linker.partyMemberPoint;
+        
         [[UIColor colorWithRed:linker.red green:linker.green blue:linker.blue alpha:linker.alpha] setFill];
-        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:linker.startPoint]);
-        CGContextFillEllipseInRect(context, [self makeRectForPoint:linker.startPoint]);
+        
+        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:receiptPoint]);
+        CGContextFillEllipseInRect(context, [self makeRectForPoint:receiptPoint]);
         CGContextBeginPath(context);
-        CGContextMoveToPoint(context, linker.startPoint.x, linker.startPoint.y);
-        CGContextAddLineToPoint(context, linker.endPoint.x, linker.endPoint.y);
+        CGContextMoveToPoint(context, receiptPoint.x, receiptPoint.y);
+        CGContextAddLineToPoint(context, partyMemberPoint.x, partyMemberPoint.y);
         CGContextStrokePath(context);
-        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:linker.endPoint]);
-        CGContextFillEllipseInRect(context, [self makeRectForPoint:linker.endPoint]);
+        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:partyMemberPoint]);
+        CGContextFillEllipseInRect(context, [self makeRectForPoint:partyMemberPoint]);
         i++;
     }
     
 }
 
+
 #pragma mark - Private methods
 
 - (void)clearCurrentLinkerPoints{
-    self.currentLinkerStartPoint = CGPointMake(-1, -1);
+    self.currentLinkerPointStart = CGPointMake(-1, -1);
 }
 
 #pragma mark - View initialisation
 -(void) setupView {
-    _currentLinkerStartPoint = CGPointMake(-1, -1);
-    _currentLinkerEndPoint = CGPointMake(-1, -1);
+    _currentLinkerPointStart = CGPointMake(-1, -1);
+    _currentLinkerPointEnd = CGPointMake(-1, -1);
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.0];
 }
 

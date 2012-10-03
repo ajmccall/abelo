@@ -14,7 +14,7 @@
 #pragma mark - MainView methods
 
 - (void) clearView;
-- (void)panGesture:(UIPanGestureRecognizer *)gesture;
+- (void) panGesture:(UIPanGestureRecognizer *)gesture;
 
 #pragma mark - ReceiptView methods
 

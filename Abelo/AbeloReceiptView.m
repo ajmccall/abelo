@@ -22,9 +22,8 @@
 @property (nonatomic, readonly) UIColor *redTransparent;
 @property (nonatomic, readonly) UIColor *blueTransparent;
 @property (nonatomic, readonly) UIColor *greenTransparent;
-@property (nonatomic) UIGestureRecognizer *pinchGesture;
 
-- (CGPoint) translateAndScalePoint:(CGPoint) p;
+//- (CGPoint) translateAndScalePoint:(CGPoint) p;
 
 @end
 
@@ -38,18 +37,9 @@
 @synthesize currentTouch = _currentTouch;
 @synthesize totalRect = _totalRect;
 @synthesize menuItems;
-@synthesize drawOffset = _drawOffset;
-@synthesize drawScale = _drawScale;
-@synthesize pinchGesture = _pinchGesture;
 
 #pragma mark - Property synthesis implementation
 - (void)setImage:(UIImage *)image {
-    
-    if(image){
-        [self addGestureRecognizer:self.pinchGesture];
-    } else {
-        [self removeGestureRecognizer:self.pinchGesture];
-    }
     
     switch ([image imageOrientation]) {
         case UIImageOrientationRight:
@@ -76,54 +66,6 @@
     [self setNeedsDisplay];
 }
 
-- (void)setDrawOffset:(CGPoint)drawOffset {
-    
-    //check we're not trying to make hte offset too far outside of the view
-    if(drawOffset.x > 0){
-        drawOffset.x = 0;
-    } else if(0 - drawOffset.x + self.frame.size.width > self.drawScale * self.frame.size.width){
-        drawOffset.x = 0 + self.frame.size.width * (1 - self.drawScale);
-    }
-
-    if(drawOffset.y > 0){
-        drawOffset.y = 0;
-    } else if(0 - drawOffset.y + self.frame.size.height > self.drawScale * self.frame.size.height){
-        drawOffset.y = 0 + self.frame.size.height * (1 - self.drawScale);
-    }
-
-    //check if you need to set these values and hence redraw the screen
-    if(drawOffset.x == _drawOffset.x &&
-       drawOffset.y == _drawOffset.y){
-        return;
-    }
-
-    _drawOffset = drawOffset;
-    [self setNeedsDisplay];
-}
-
-- (CGFloat)drawScale{
-    if(!_drawScale){
-        return 1.0;
-    } else {
-        return _drawScale;
-    }
-}
-
-- (void)setDrawScale:(CGFloat)scale {
-    if(_drawScale == scale){
-        return;
-    }
-    
-    if(scale < 1.0) {
-        scale = 1.0;
-    } else if(scale > MAX_SCALE) {
-        scale = MAX_SCALE;
-    }
-    _drawScale = scale;
-    [self setNeedsDisplay];
-    
-}
-
 // colors - could be constants
 - (UIColor *)redTransparent {
     return [UIColor colorWithRed:255 green:0 blue:0 alpha:0.3];
@@ -137,12 +79,6 @@
     return [UIColor colorWithRed:0 green:0 blue:255 alpha:0.3];
 }
 
-- (UIGestureRecognizer *)pinchGesture {
-    if(!_pinchGesture) {
-        _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
-    }
-    return _pinchGesture;
-}
 
 #pragma mark - Methods Implementations
 
@@ -151,31 +87,11 @@
     _currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
     self.menuItems = [NSMutableArray array];
     
-    _drawOffset = CGPointMake(0,0);
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
-    _drawScale = 1.0;
+    self.drawOffset = CGPointMake(0,0);
+    self.drawScale = 1.0;
     _image = nil;
     [self setNeedsDisplay];
-}
-
-- (CGPoint) translateAndScalePoint:(CGPoint) p {
-    return CGPointMake((p.x - self.drawOffset.x) / self.drawScale, (p.y - self.drawOffset.y) / self.drawScale);
-}
-
-- (CGRect) reverseTranslateAndScaleRect:(CGRect) rect {
-    return CGRectMake(self.drawScale * rect.origin.x + self.drawOffset.x,
-                      self.drawScale * rect.origin.y + self.drawOffset.y,
-                      rect.size.width * self.drawScale, rect.size.height * self.drawScale);
-}
-
-#define DEFAULT_FINGER_DIM 6.0
-#define FINGER_X_OFFSET 6.0
-#define FINGER_Y_OFFSET 20.0
-- (CGRect) CGRectMakeFromFingerPoint:(CGPoint) p {
-    return CGRectMake(p.x,
-                      p.y,
-                      DEFAULT_FINGER_DIM,
-                      DEFAULT_FINGER_DIM);
 }
 
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint {
@@ -229,6 +145,10 @@
     }
 
     [self setNeedsDisplay];
+}
+
+- (void)clearCurrentRect {
+    self.currentMenuItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
 #pragma mark - Draw Metho¢ds
@@ -286,33 +206,6 @@
     [self drawMenuItems:context];
 }
 
-#pragma mark - Gesture recognizer
-
-- (void)pinchGesture:(UIPinchGestureRecognizer *)gesture {
-    
-    //scale the receipt view
-    if(gesture.state == UIGestureRecognizerStateBegan){
-        gesture.scale = self.drawScale;
-    } else if(gesture.state == UIGestureRecognizerStateChanged){
-        self.drawScale = gesture.scale;
-        CGPoint midPoint = [gesture locationInView:self];
-        CGFloat x = midPoint.x + self.drawScale * (self.frame.origin.x - midPoint.x);
-        CGFloat y = midPoint.y + self.drawScale * (self.frame.origin.y - midPoint.y);
-        self.drawOffset = CGPointMake(x,y);        
-    }
-}
-
-- (void)panGesture:(UIPanGestureRecognizer *)gesture {
-    
-    // if two-finger pan gesture inside the receiptView
-    if(gesture.numberOfTouches == 2 &&
-       (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged)) {
-            
-            self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
-                                          self.drawOffset.y + [gesture translationInView:self].y);
-            [gesture setTranslation:CGPointMake(0,0) inView:self];
-    }    
-}
 
 
 #pragma mark - View initialisation
