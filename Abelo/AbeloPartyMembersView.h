@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AbeloTouchableViewProtocol.h"
 
 @protocol AbeloPartyMembersViewProtocol
 
@@ -15,7 +16,7 @@
 @end
 
 
-@interface AbeloPartyMembersView : UIView
+@interface AbeloPartyMembersView : UIView<AbeloTouchableViewProtocol>
 
 @property (nonatomic, weak) id<AbeloPartyMembersViewProtocol> delegate;
 

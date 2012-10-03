@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "AbeloPartyMembersView.h"
+#import "AbeloTouchableViewProtocol.h"
 
-@interface AbeloMainView : UIView
+@interface AbeloMainView : UIView<AbeloTouchableViewProtocol>
 
 #pragma mark - MainView methods
 
 - (void) clearView;
 - (void) panGesture:(UIPanGestureRecognizer *)gesture;
-- (NSArray *) getViewsAtPoint:(CGPoint) point;
 
 #pragma mark - ReceiptView methods
 

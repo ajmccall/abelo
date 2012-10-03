@@ -243,13 +243,16 @@ enum ViewsDrawState {
            self.viewsDrawState == ViewsDrawStateTotal) {
             [self.mainView addPointToCurrentRect:touchPoint];
         } else if(self.viewsDrawState == ViewsDrawStateLinking){
-            id viewId = [[self.mainView getViewsAtPoint:touchPoint] objectAtIndex:0];
-           [self.mainView startLinkerFromPoint:touchPoint];
+            
+            //check that a uiView exists
+            if([self.mainView anyUIViewAtPoint:touchPoint]){
+                if([self.bill billItemExistForViewId:[[self.mainView uiViewsAtPoint:touchPoint] objectAtIndex:0]]){
+                    [self.mainView startLinkerFromPoint:touchPoint];
+                }
+            }
        }
     }
 }
-
-
 
 
 #pragma mark - Camera

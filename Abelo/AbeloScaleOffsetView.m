@@ -20,17 +20,19 @@
 
 - (void)setDrawOffset:(CGPoint)drawOffset {
     
+    CGRect scalableFrame = [self getTransformableFrame];
+    
     //check we're not trying to make hte offset too far outside of the view
     if(drawOffset.x > 0){
         drawOffset.x = 0;
-    } else if(0 - drawOffset.x + self.frame.size.width > self.drawScale * self.frame.size.width){
-        drawOffset.x = 0 + self.frame.size.width * (1 - self.drawScale);
+    } else if(0 - drawOffset.x + scalableFrame.size.width > self.drawScale * scalableFrame.size.width){
+        drawOffset.x = 0 + scalableFrame.size.width * (1 - self.drawScale);
     }
     
     if(drawOffset.y > 0){
         drawOffset.y = 0;
-    } else if(0 - drawOffset.y + self.frame.size.height > self.drawScale * self.frame.size.height){
-        drawOffset.y = 0 + self.frame.size.height * (1 - self.drawScale);
+    } else if(0 - drawOffset.y + scalableFrame.size.height > self.drawScale * scalableFrame.size.height){
+        drawOffset.y = 0 + scalableFrame.size.height * (1 - self.drawScale);
     }
     
     //check if you need to set these values and hence redraw the screen
@@ -66,6 +68,8 @@
     
 }
 
+#pragma mark - Implementation methods
+
 - (CGPoint) translateAndScalePoint:(CGPoint) p {
     return CGPointMake((p.x - self.drawOffset.x) / self.drawScale, (p.y - self.drawOffset.y) / self.drawScale);
 }
@@ -89,7 +93,9 @@
                       DEFAULT_FINGER_DIM);
 }
 
-#pragma mark - Implementation methods
+- (CGRect) getTransformableFrame {
+    return self.frame;
+}
 
 + (CGFloat)maximumScale {
     return MAX_SCALE;

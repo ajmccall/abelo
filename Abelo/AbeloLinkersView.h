@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "AbeloScaleOffsetView.h"
+#import "AbeloTouchableViewProtocol.h"
 
 
-@interface AbeloLinkersView : AbeloScaleOffsetView
+@interface AbeloLinkersView : AbeloScaleOffsetView<AbeloTouchableViewProtocol>
 
 @property (nonatomic) CGRect receiptViewRect;
 @property (nonatomic) CGRect partyMembersViewRect;

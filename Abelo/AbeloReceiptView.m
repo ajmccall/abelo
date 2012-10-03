@@ -206,7 +206,36 @@
     [self drawBillItems:context];
 }
 
+#pragma mark - AbeloTouchableViewProtocol
 
+- (id)anyUIViewAtPoint:(CGPoint)point {
+    int i = 0;
+    while(i < [self.billItems count]) {
+        if(CGRectContainsPoint([[self.billItems objectAtIndex:i] CGRectValue], [self translateAndScalePoint:point])) {
+            break;
+        }
+        i++;
+    }
+    
+    if(i == [self.billItems count]) {
+        return nil;
+    } else {
+        return [self.billItems objectAtIndex:i];
+    }
+}
+
+- (NSArray *)uiViewsAtPoint:(CGPoint)point {
+    NSMutableArray *array = [NSMutableArray array];
+    int i = 0;
+    while(i < [self.billItems count]) {
+        if(CGRectContainsPoint([[self.billItems objectAtIndex:i] CGRectValue], [self translateAndScalePoint:point])) {
+            [array addObject:[self.billItems objectAtIndex:i]];
+        }
+        i++;
+    }
+    
+    return array;
+}
 
 #pragma mark - View initialisation
 - (void)setup {

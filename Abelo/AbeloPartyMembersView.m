@@ -13,8 +13,7 @@
 @interface AbeloPartyMembersView ()
 
 @property (nonatomic) CGFloat newPartyMemberViewPosition;
-@property (nonatomic) int labelIndex;
-@property (nonatomic) NSMutableDictionary *partyMembers;
+@property (nonatomic) NSMutableArray *partyMembers;
 @property (nonatomic) IBOutlet UILabel *addPartyMemberLabel;
 @end
 
@@ -22,7 +21,6 @@
 
 @implementation AbeloPartyMembersView
 
-@synthesize labelIndex = _labelIndex;
 @synthesize partyMembers = _partyMembers;
 @synthesize newPartyMemberViewPosition = _newPartyMemberViewPosition;
 @synthesize addPartyMemberLabel = _addPartyMemberLabel;
@@ -39,16 +37,15 @@
     view.name = name;
     view.total = 0;
     
-    if(self.labelIndex % 2 == 0) {
+    if([self.partyMembers count] % 2 == 0) {
         [view setColor:[UIColor yellowColor]];
     } else {
         [view setColor:[UIColor cyanColor]];
     }
 
-    self.labelIndex++;
     self.newPartyMemberViewPosition = self.newPartyMemberViewPosition + view.frame.size.height;
 
-    [self.partyMembers setObject:view forKey:[NSNumber numberWithInt:self.labelIndex]];
+    [self.partyMembers addObject:view];
     [self addSubview:view];
     self.addPartyMemberLabel.frame = MRGRectMakeDeltaY(view.frame.size.height, self.addPartyMemberLabel.frame);
     
@@ -65,10 +62,37 @@
     CGPoint touchPoint = [touch locationInView:self];
     if(CGRectContainsPoint(self.addPartyMemberLabel.frame, touchPoint)) {
         [self.delegate addPartyMember:self];
-//        [self addPartyMemberWithName:@"ADD"];
     }
 }
 
+#pragma mark - AbeloTouchableViewsProtocol
+
+- (NSArray *)uiViewsAtPoint:(CGPoint)point {
+    NSMutableArray *array = [NSMutableArray array];
+    
+    int i = 0;
+    while(i < [self.partyMembers count]){
+        if(CGRectContainsPoint(((UILabel *)[self.partyMembers objectAtIndex:i]).frame, point)){
+            [array addObject:[self.partyMembers objectAtIndex:i]];
+        }
+        i++;
+    }
+    
+    return array;
+}
+
+- (id)anyUIViewAtPoint:(CGPoint)point {
+
+    int i = 0;
+    while(i < [self.partyMembers count]){
+        if(CGRectContainsPoint(((UILabel *)[self.partyMembers objectAtIndex:i]).frame, point)){
+            return [self.partyMembers objectAtIndex:i];
+        }
+        i++;
+    }
+    
+    return nil;
+}
 
 #pragma mark - Initialise
 

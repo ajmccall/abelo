@@ -125,7 +125,7 @@
 }
 
 - (BOOL)billItemExistForViewId:(id)viewId {
-    return ![self.billItems objectForKey:viewId];
+    return [self.billItems objectForKey:viewId] != nil;
 }
 @end
 	

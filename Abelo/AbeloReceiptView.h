@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "AbeloScaleOffsetView.h"
+#import "AbeloTouchableViewProtocol.h"
 
-@interface AbeloReceiptView : AbeloScaleOffsetView
+@interface AbeloReceiptView : AbeloScaleOffsetView<AbeloTouchableViewProtocol>
 
 @property (nonatomic) UIImage *image;
 

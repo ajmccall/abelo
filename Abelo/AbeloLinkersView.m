@@ -173,6 +173,21 @@ typedef struct Linker {
     
 }
 
+#pragma mark - AbeloTouchableViewProtocol
+
+- (NSArray *)uiViewsAtPoint:(CGPoint)point {
+    return [NSArray array];
+}
+
+- (id)anyUIViewAtPoint:(CGPoint)point {
+    return nil;
+}
+
+#pragma mark - AbeloScableOffsetView OVERRIDES
+
+- (CGRect)getTransformableFrame {
+    return self.receiptViewRect;
+}
 
 #pragma mark - Private methods
 

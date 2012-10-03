@@ -17,6 +17,9 @@
 - (CGPoint) reverseTranslateAndScalePoint:(CGPoint) p;
 - (CGRect) reverseTranslateAndScaleRect:(CGRect) rect;
 - (CGRect) CGRectMakeFromFingerPoint:(CGPoint) p;
+
+- (CGRect) getTransformableFrame;
+
 + (CGFloat) maximumScale;
 
 @end

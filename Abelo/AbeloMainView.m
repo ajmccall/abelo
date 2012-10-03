@@ -82,8 +82,25 @@
     
 }
 
-- (NSArray *)getViewsAtPoint:(CGPoint)point {
-    return [NSArray array];
+#pragma mark - AbeloTouchableViewProtocol
+
+- (id)anyUIViewAtPoint:(CGPoint)point{
+    //return any view id from the either receiptView, partyMembersView, linkersView
+    if([self.receiptView anyUIViewAtPoint:point]) {
+        return [self.receiptView anyUIViewAtPoint:point];
+    } else if([self.partyMembersView anyUIViewAtPoint:point]){
+        return [self.partyMembersView anyUIViewAtPoint:point];
+    } else if([self.linkerView anyUIViewAtPoint:point]){
+        return [self.linkerView anyUIViewAtPoint:point];
+    }
+    
+    // or nil if none exists
+    return nil;
+}
+
+- (NSArray *)uiViewsAtPoint:(CGPoint)point {
+    // return array by combining arrays from receiptView, partyMembersView, linkersView
+    return [[[self.linkerView uiViewsAtPoint:point] arrayByAddingObjectsFromArray:[self.partyMembersView uiViewsAtPoint:point]] arrayByAddingObjectsFromArray:[self.receiptView uiViewsAtPoint:point]];
 }
 
 #pragma mark - ReceiptView methods
