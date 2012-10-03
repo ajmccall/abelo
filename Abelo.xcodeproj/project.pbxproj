@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D200DF9B161CD3F800A1400D /* AbeloAddPartyMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */; };
 		D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */ = {isa = PBXBuildFile; fileRef = D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */; };
 		D23B77C416108F060033C55C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D23B77C316108F060033C55C /* Localizable.strings */; };
 		D2C6FDCC161C561100837E52 /* AbeloScaleOffsetView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C6FDCB161C561100837E52 /* AbeloScaleOffsetView.m */; };
@@ -44,6 +45,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D200DF99161CD3F800A1400D /* AbeloAddPartyMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloAddPartyMemberViewController.h; sourceTree = "<group>"; };
+		D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloAddPartyMemberViewController.m; sourceTree = "<group>"; };
 		D23B77BC16107BE80033C55C /* AbeloPartyMemberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloPartyMemberView.h; sourceTree = "<group>"; };
 		D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloPartyMemberView.m; sourceTree = "<group>"; };
 		D23B77C21610850A0033C55C /* AbeloStringDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloStringDefines.h; sourceTree = "<group>"; };
@@ -140,6 +143,8 @@
 		D2D5F27915FF4E5000923EFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D200DF99161CD3F800A1400D /* AbeloAddPartyMemberViewController.h */,
+				D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */,
 				D2C6FDCE161CA0F400837E52 /* AbeloTouchableViewProtocol.h */,
 				D2F44399161394B800AF9DCF /* AbeloMainView.h */,
 				D2F4439A161394B800AF9DCF /* AbeloMainView.m */,
@@ -160,8 +165,8 @@
 		D2E5786715F8A4F9001BA957 = {
 			isa = PBXGroup;
 			children = (
-				D2E578B215F8A56F001BA957 /* Reources */,
 				D2E5787C15F8A4F9001BA957 /* Abelo */,
+				D2E578B215F8A56F001BA957 /* Reources */,
 				D2E5789D15F8A4FA001BA957 /* AbeloTests */,
 				D2E5787515F8A4F9001BA957 /* Frameworks */,
 				D2E5787315F8A4F9001BA957 /* Products */,
@@ -191,17 +196,17 @@
 		D2E5787C15F8A4F9001BA957 /* Abelo */ = {
 			isa = PBXGroup;
 			children = (
-				D23B77CC161095F60033C55C /* Utilities */,
 				D2D5F27915FF4E5000923EFB /* Views */,
+				D2E578B615F8D6FF001BA957 /* Models */,
 				D2E5788515F8A4F9001BA957 /* AbeloAppDelegate.h */,
-				D2E5788E15F8A4F9001BA957 /* AbeloViewController.h */,
 				D2E5788615F8A4F9001BA957 /* AbeloAppDelegate.m */,
+				D2E5788E15F8A4F9001BA957 /* AbeloViewController.h */,
 				D2E5788F15F8A4F9001BA957 /* AbeloViewController.m */,
 				D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */,
 				D2E5788B15F8A4F9001BA957 /* MainStoryboard_iPad.storyboard */,
 				D2E5788815F8A4F9001BA957 /* MainStoryboard_iPhone.storyboard */,
-				D2E578B615F8D6FF001BA957 /* Models */,
 				D2E5787D15F8A4F9001BA957 /* Supporting Files */,
+				D23B77CC161095F60033C55C /* Utilities */,
 			);
 			path = Abelo;
 			sourceTree = "<group>";
@@ -376,6 +381,7 @@
 				D2DF70FD16136C2200EA8B85 /* AbeloLinkersView.m in Sources */,
 				D2F4439B161394B800AF9DCF /* AbeloMainView.m in Sources */,
 				D2C6FDCC161C561100837E52 /* AbeloScaleOffsetView.m in Sources */,
+				D200DF9B161CD3F800A1400D /* AbeloAddPartyMemberViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

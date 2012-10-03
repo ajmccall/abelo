@@ -119,12 +119,8 @@
 
 #pragma mark - PatyMember methods
 
-- (id) addPartyMemberWithName:(NSString *)name {
-    return [self.partyMembersView addPartyMemberWithName:name];
-}
-
-- (void)partyMembersViewDelegate:(id)delegate {
-    self.partyMembersView.delegate = delegate;
+- (id) addPartyMemberWithName:(NSString *)name andColor:(UIColor *)color {
+    return [self.partyMembersView addPartyMemberWithName:name andColor:color];
 }
 
 #pragma mark - LinkerView methods

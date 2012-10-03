@@ -10,10 +10,11 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import "AbeloReceiptView.h"
 #import "AbeloPartyMembersView.h"
+#import "AbeloAddPartyMemberViewController.h"
 
 @class AbeloMainView;
 
-@interface AbeloViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate, AbeloPartyMembersViewProtocol>
+@interface AbeloViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate, AbeloAddPartyMemberProtocol, UIPopoverControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet AbeloMainView *mainView;

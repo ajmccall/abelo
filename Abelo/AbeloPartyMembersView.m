@@ -25,11 +25,9 @@
 @synthesize newPartyMemberViewPosition = _newPartyMemberViewPosition;
 @synthesize addPartyMemberLabel = _addPartyMemberLabel;
 
-@synthesize delegate = _delegate;
-
 #pragma mark - Method implementations
 
-- (id) addPartyMemberWithName:(NSString *)name {
+- (id) addPartyMemberWithName:(NSString *)name andColor:(UIColor *) color{
     
     AbeloPartyMemberView *view = [[AbeloPartyMemberView alloc] init];
     view.frame = MRGRectMakeSetXY(0, self.newPartyMemberViewPosition, view.frame);
@@ -37,11 +35,7 @@
     view.name = name;
     view.total = 0;
     
-    if([self.partyMembers count] % 2 == 0) {
-        [view setColor:[UIColor yellowColor]];
-    } else {
-        [view setColor:[UIColor cyanColor]];
-    }
+    [view setColor:color];
 
     self.newPartyMemberViewPosition = self.newPartyMemberViewPosition + view.frame.size.height;
 
@@ -50,19 +44,6 @@
     self.addPartyMemberLabel.frame = MRGRectMakeDeltaY(view.frame.size.height, self.addPartyMemberLabel.frame);
     
     return view;
-}
-
-#pragma mark - Touch Events
-
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-    
-    UITouch *touch = [touches anyObject];
-    
-    CGPoint touchPoint = [touch locationInView:self];
-    if(CGRectContainsPoint(self.addPartyMemberLabel.frame, touchPoint)) {
-        [self.delegate addPartyMember:self];
-    }
 }
 
 #pragma mark - AbeloTouchableViewsProtocol

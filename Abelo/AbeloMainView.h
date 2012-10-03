@@ -26,8 +26,7 @@
 
 #pragma mark - PartyMembers view
 
--(void) partyMembersViewDelegate:(id<AbeloPartyMembersViewProtocol>) delegate;
--(id) addPartyMemberWithName:(NSString *)name;
+-(id) addPartyMemberWithName:(NSString *)name andColor:(UIColor *) color;
 
 
 #pragma mark - LinkerView methods

@@ -77,7 +77,6 @@ enum ViewsDrawState {
 - (void) setup {
     self.backButton.enabled = NO;
     self.okButton.enabled = NO;
-    [self.mainView partyMembersViewDelegate:self];
     [self.view addGestureRecognizer:self.panGesture];
 
 }
@@ -103,8 +102,13 @@ enum ViewsDrawState {
 #pragma mark - Outlet Actions
 
 - (IBAction)addGuestAction:(id)sender {
-    NSString *name = [AbeloViewController GenerateRandStringLength:3];
-    [self.bill addPartyMemberWithViewId:[self.mainView addPartyMemberWithName:name] withName:name];
+
+    AbeloAddPartyMemberViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AbeloAddPartyMemberViewController"];
+    vc.delegate = self;
+    self.popover.contentViewController = vc;
+    self.popover.popoverContentSize = CGSizeMake(320, 120);
+    [self.popover presentPopoverFromBarButtonItem:self.okButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
 }
 
 - (IBAction)backButtonAction:(id) sender {
@@ -295,18 +299,21 @@ enum ViewsDrawState {
     [self dismissModalViewControllerAnimated:YES];
 }
 
+#pragma mark - UIPopoverControllerDelegate
 
-#pragma mark - ReceiptViewDelegate protocol
-
-- (UIImage *)getImage {
-    return [UIImage imageNamed:@"dimt.jpg"];
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    [self.popover dismissPopoverAnimated:YES];
 }
 
-- (void) addBillItemWithIndex:(int) index {
+#pragma mark - AbeloAddPartyMemberProtocol
+
+- (void)addPartyMember:(AbeloAddPartyMemberViewController *)sender withName:(NSString *)name andColor:(UIColor *)color {
+    [self.bill addPartyMemberWithViewId:[self.mainView addPartyMemberWithName:name andColor:color] withName:name];
+    [self.popover dismissPopoverAnimated:YES];
 }
 
-- (void) clearBillItemWithIndex:(int) index {
-    
+- (void) cancelAddPartyMember:(AbeloAddPartyMemberViewController *)sender {
+    [self.popover dismissPopoverAnimated:YES];
 }
 
 #pragma mark - PartyMembersViewDelegate protocol
