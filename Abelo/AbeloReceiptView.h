@@ -16,11 +16,11 @@
 - (void) clearView;
 
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
-- (void) setCurrentRectAsBillItem;
-- (void) setCurrentRectAsTotal;
+- (id) setCurrentRectAsBillItem;
+- (id) setCurrentRectAsTotal;
+
 - (BOOL) clearLastBillItemAndReturnSuccess;
 - (BOOL) clearTotalAndReturnSuccess;
-
 - (void) clearCurrentRect;
 
 @end

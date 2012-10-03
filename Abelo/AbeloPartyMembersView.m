@@ -31,7 +31,7 @@
 
 #pragma mark - Method implementations
 
-- (void)addPartyMemberWithName:(NSString *)name {
+- (id) addPartyMemberWithName:(NSString *)name {
     
     AbeloPartyMemberView *view = [[AbeloPartyMemberView alloc] init];
     view.frame = MRGRectMakeSetXY(0, self.newPartyMemberViewPosition, view.frame);
@@ -51,6 +51,8 @@
     [self.partyMembers setObject:view forKey:[NSNumber numberWithInt:self.labelIndex]];
     [self addSubview:view];
     self.addPartyMemberLabel.frame = MRGRectMakeDeltaY(view.frame.size.height, self.addPartyMemberLabel.frame);
+    
+    return view;
 }
 
 #pragma mark - Touch Events

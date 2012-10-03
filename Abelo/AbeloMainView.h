@@ -15,18 +15,19 @@
 
 - (void) clearView;
 - (void) panGesture:(UIPanGestureRecognizer *)gesture;
+- (NSArray *) getViewsAtPoint:(CGPoint) point;
 
 #pragma mark - ReceiptView methods
 
 @property (nonatomic) UIImage *image;
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
-- (void) setCurrentRectAsBillItem;
-- (void) setCurrentRectAsTotal;
+- (id) setCurrentRectAsBillItem;
+- (id) setCurrentRectAsTotal;
 
 #pragma mark - PartyMembers view
 
 -(void) partyMembersViewDelegate:(id<AbeloPartyMembersViewProtocol>) delegate;
--(void) addPartyMemberWithName:(NSString *)name;
+-(id) addPartyMemberWithName:(NSString *)name;
 
 
 #pragma mark - LinkerView methods

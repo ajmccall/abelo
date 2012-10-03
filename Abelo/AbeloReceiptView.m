@@ -225,11 +225,14 @@
     [self setup];
 }
 
-- (void) setCurrentRectAsBillItem {
-    [self.billItems addObject:[NSValue valueWithCGRect:self.currentBillItemRect]];
+- (id) setCurrentRectAsBillItem {
+    NSValue *ret = [NSValue valueWithCGRect:self.currentBillItemRect];
+    [self.billItems addObject:ret];
     
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
     self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+
+    return ret;
 }
 
 - (void) setTotalRect {
@@ -237,10 +240,12 @@
     self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
-- (void)setCurrentRectAsTotal {
+- (id)setCurrentRectAsTotal {
     self.totalRect = self.currentBillItemRect;
     _currentTouch = CGPointMake(NIL_FLOAT, NIL_FLOAT);
     self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
+    
+    return [NSValue valueWithCGRect:self.totalRect];
 }
 
 

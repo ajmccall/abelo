@@ -134,13 +134,15 @@ typedef struct Linker {
     [[UIColor blackColor] setStroke];
     
     if(self.currentLinkerPointStart.x != -1){
-        CGContextMoveToPoint(context, self.currentLinkerPointStart.x, self.currentLinkerPointStart.y);
-        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:self.currentLinkerPointStart]);
-        CGContextFillEllipseInRect(context, [self makeRectForPoint:self.currentLinkerPointStart]);
+        CGPoint receiptPoint = [self reverseTranslateAndScalePoint:self.currentLinkerPointStart];
+        
+        CGContextMoveToPoint(context, receiptPoint.x, receiptPoint.y);
+        CGContextStrokeEllipseInRect(context, [self makeRectForPoint:receiptPoint]);
+        CGContextFillEllipseInRect(context, [self makeRectForPoint:receiptPoint]);
         
         if(self.currentLinkerPointEnd.x != -1){
             CGContextBeginPath(context);
-            CGContextMoveToPoint(context, self.currentLinkerPointStart.x, self.currentLinkerPointStart.y);
+            CGContextMoveToPoint(context, receiptPoint.x, receiptPoint.y);
             CGContextAddLineToPoint(context, self.currentLinkerPointEnd.x, self.currentLinkerPointEnd.y);
             CGContextStrokePath(context);
             CGContextStrokeEllipseInRect(context, [self makeRectForPoint:self.currentLinkerPointEnd]);
@@ -176,6 +178,7 @@ typedef struct Linker {
 
 - (void)clearCurrentLinkerPoints{
     self.currentLinkerPointStart = CGPointMake(-1, -1);
+    self.currentLinkerPointEnd = CGPointMake(-1, -1);
 }
 
 #pragma mark - View initialisation

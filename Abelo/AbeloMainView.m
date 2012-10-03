@@ -82,24 +82,28 @@
     
 }
 
+- (NSArray *)getViewsAtPoint:(CGPoint)point {
+    return [NSArray array];
+}
+
 #pragma mark - ReceiptView methods
 
 - (void)addPointToCurrentRect:(CGPoint)fingerPoint {
     [self.receiptView addPointToCurrentRect:fingerPoint];
 }
 
-- (void)setCurrentRectAsBillItem {
-    [self.receiptView setCurrentRectAsBillItem];
+- (id)setCurrentRectAsBillItem {
+    return [self.receiptView setCurrentRectAsBillItem];
 }
 
-- (void)setCurrentRectAsTotal {
-    [self.receiptView setCurrentRectAsTotal];
+- (id)setCurrentRectAsTotal {
+    return [self.receiptView setCurrentRectAsTotal];
 }
 
 #pragma mark - PatyMember methods
 
-- (void)addPartyMemberWithName:(NSString *)name {
-    [self.partyMembersView addPartyMemberWithName:name];
+- (id) addPartyMemberWithName:(NSString *)name {
+    return [self.partyMembersView addPartyMemberWithName:name];
 }
 
 - (void)partyMembersViewDelegate:(id)delegate {

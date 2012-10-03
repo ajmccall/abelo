@@ -19,7 +19,7 @@
 
 @property (nonatomic, weak) id<AbeloPartyMembersViewProtocol> delegate;
 
--(void) addPartyMemberWithName:(NSString *)name;
+-(id) addPartyMemberWithName:(NSString *)name;
 
 @end
 

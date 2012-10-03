@@ -104,8 +104,7 @@ enum ViewsDrawState {
 
 - (IBAction)addGuestAction:(id)sender {
     NSString *name = [AbeloViewController GenerateRandStringLength:3];
-    [self.bill addPartyMemberWithName:name];
-    [self.mainView addPartyMemberWithName:name];
+    [self.bill addPartyMemberWithViewId:[self.mainView addPartyMemberWithName:name] withName:name];
 }
 
 - (IBAction)backButtonAction:(id) sender {
@@ -169,8 +168,7 @@ enum ViewsDrawState {
 - (IBAction)okButtonAction:(id) sender {
     switch (self.viewsDrawState) {
         case ViewsDrawStateBillItems: {
-            [self.bill addBillItem:@"fake name" withTotal:5.50];
-            [self.mainView setCurrentRectAsBillItem];
+            [self.bill addBillItemWithId:[self.mainView setCurrentRectAsBillItem] withTotal:5.50];
             break;
         }
         case ViewsDrawStateTotal:
@@ -237,15 +235,16 @@ enum ViewsDrawState {
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
-    UITouch *touch = [touches anyObject];
+    CGPoint touchPoint = [[touches anyObject] locationInView:self.mainView];
     
     // add touch if we are drawing menu itme rectaganles or the total rectangles
     if([touches count] == 1){
         if(self.viewsDrawState == ViewsDrawStateBillItems ||
            self.viewsDrawState == ViewsDrawStateTotal) {
-            [self.mainView addPointToCurrentRect:[touch locationInView:self.mainView]];
+            [self.mainView addPointToCurrentRect:touchPoint];
         } else if(self.viewsDrawState == ViewsDrawStateLinking){
-           [self.mainView startLinkerFromPoint:[touch locationInView:self.mainView]];
+            id viewId = [[self.mainView getViewsAtPoint:touchPoint] objectAtIndex:0];
+           [self.mainView startLinkerFromPoint:touchPoint];
        }
     }
 }

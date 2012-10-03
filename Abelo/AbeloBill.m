@@ -30,9 +30,6 @@
 
 @interface AbeloBill()
 
-@property (nonatomic) int nextPartyMemberKey;
-@property (nonatomic) int nextBillItemKey;
-
 @property (nonatomic) NSMutableDictionary *partyMembers;
 @property (nonatomic) NSMutableDictionary *billItems;
 @property (nonatomic) NSMutableArray *billItemsLinked;
@@ -47,8 +44,6 @@
 
 #pragma mark - Synthesize
 
-@synthesize nextPartyMemberKey = _nextPartyMemberKey;
-@synthesize nextBillItemKey = _nextBillItemKey;
 @synthesize billItems = _billItems;
 @synthesize total = _total;
 @synthesize billItemsLinked = _billItemsLinked;
@@ -77,33 +72,35 @@
 
 #pragma mark - Method implementations
 
-- (int)addPartyMemberWithName:(NSString *)name {
-    int newKey = ++self.nextPartyMemberKey;
-    [self.partyMembers setObject:name forKey:[NSNumber numberWithInt:newKey]];
-    
-    return newKey;
+- (void)addPartyMemberWithViewId:(id)viewId withName:(NSString *)name {
+    [self.partyMembers setObject:name forKey:viewId];
 }
 
-- (void)removePartyMemberWithKey:(int)key {
-    [self.partyMembers removeObjectForKey:[NSNumber numberWithInt:key]];
+- (void)removePartyMemberForViewId:(id)viewId {
+    [self.partyMembers removeObjectForKey:viewId];
 }
 
-- (float)billTotalForPartyMemberWithKey:(int)key {
+- (float)billTotalForPartyMemberForViewId:(id)viewId {
     float ret = 0.0;
-    NSNumber *pKey = [NSNumber numberWithInt:key];
-    if(![self.partyMembers objectForKey:pKey]) {
-        return ret;
+    if(![self.partyMembers objectForKey:viewId]) {
+        return -1;
     }
-    
-    for (PartyMemberBillItem *partyMemberBillItem in self.billItemsLinked) {
-        if([partyMemberBillItem.partyMember isEqualToNumber:pKey]){
-            float billItemValue = [(NSNumber *)[self.billItems objectForKey:partyMemberBillItem.billItem] floatValue];
-            ret += billItemValue * partyMemberBillItem.percentageShared;
-        }
-    }
+
+//    for (PartyMemberBillItem *partyMemberBillItem in self.billItemsLinked) {
+//        if([partyMemberBillItem.partyMember isEqualToNumber:viewId]){
+//            float billItemValue = [(NSNumber *)[self.billItems objectForKey:partyMemberBillItem.billItem] floatValue];
+//            ret += billItemValue * partyMemberBillItem.percentageShared;
+//        }
+//    }
     
     return ret;
 }
+
+- (BOOL)partyMemberExitForViewId:(id)viewId {
+    return ![self.partyMembers objectForKey:viewId];
+}
+
+#pragma mark - Linker methods
 
 - (void)addBillItemWithKey:(int)billKey toPartyMemberWithKey:(int)partyMemberKey {
     NSNumber *pKey = [NSNumber numberWithInt:partyMemberKey];
@@ -121,13 +118,14 @@
     [self.billItemsLinked addObject:partyMemberBillItem];
 }
 
-- (int)addBillItem:(NSString *)itemName withTotal:(float)total {
-    int newKey = self.nextBillItemKey++;
-    [self.billItems setObject:[NSNumber numberWithFloat:total] forKey:[NSNumber numberWithInt:newKey]];
-    
-    return newKey;
-    
+#pragma mark - BillItem methods
+
+- (void)addBillItemWithId:(id)viewId withTotal:(float)total {
+    [self.billItems setObject:[NSNumber numberWithFloat:total] forKey:viewId];
 }
 
+- (BOOL)billItemExistForViewId:(id)viewId {
+    return ![self.billItems objectForKey:viewId];
+}
 @end
 	
