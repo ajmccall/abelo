@@ -74,6 +74,13 @@
     return CGPointMake((p.x - self.drawOffset.x) / self.drawScale, (p.y - self.drawOffset.y) / self.drawScale);
 }
 
+- (CGRect)translateAndScaleRect:(CGRect) rect{
+    return CGRectMake((rect.origin.x - self.drawOffset.x) / self.drawScale,
+                      (rect.origin.y - self.drawOffset.y) / self.drawScale,
+                      rect.size.width * self.drawScale,
+                      rect.size.height * self.drawScale);
+}
+
 - (CGPoint) reverseTranslateAndScalePoint:(CGPoint) p {
     return CGPointMake(self.drawScale * p.x + self.drawOffset.x,
                        self.drawScale * p.y + self.drawOffset.y);

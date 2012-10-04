@@ -20,9 +20,11 @@
 #pragma mark - ReceiptView methods
 
 @property (nonatomic) UIImage *image;
+
 - (void) addPointToCurrentRect:(CGPoint) fingerPoint;
 - (id) setCurrentRectAsBillItem;
 - (id) setCurrentRectAsTotal;
+- (UIImage *) getImageForRect:(CGRect) rect;
 
 #pragma mark - PartyMembers view
 

@@ -33,6 +33,9 @@ enum ViewsDrawState {
 @property (nonatomic) UIGestureRecognizer *panGesture;
 @property (nonatomic) ViewsDrawState viewsDrawState;
 
+- (void) showPartyMemberViewController;
+- (void) showBillItemViewControllerAtView:(id) view;
+
 @end
 
 #pragma mark - AbeloViewController implementation
@@ -65,14 +68,41 @@ enum ViewsDrawState {
     return _panGesture;
 }
 
-#pragma mark - ViewController initialise
-
 - (UIPopoverController *)popover {
     if(!_popover) {
         _popover = [[UIPopoverController alloc] initWithContentViewController:self];
     }
+    _popover.delegate = self;
     return _popover;
 }
+
+#pragma mark - Implmentations
+
+- (void) showPartyMemberViewController {
+    
+    AbeloAddPartyMemberViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AbeloAddPartyMemberViewController"];
+    vc.delegate = self;
+    self.popover.contentViewController = vc;
+    self.popover.popoverContentSize = CGSizeMake(320, 120);
+    [self.popover presentPopoverFromBarButtonItem:self.okButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+}
+
+- (void) showBillItemViewControllerAtView:(id) viewId {
+    AbeloBillItemViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AbeloBillItemViewController"];
+    vc.delegate = self;
+    self.popover.contentViewController = vc;
+    
+    CGRect rect = [((NSValue *)viewId) CGRectValue];
+    vc.image = [self.mainView getImageForRect:rect];
+    vc.billItemViewId = viewId;
+    self.popover.popoverContentSize = CGSizeMake(320, 240);
+    [self.popover presentPopoverFromRect:rect inView:self.mainView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    
+}
+
+
+#pragma mark - ViewController initialise
 
 - (void) setup {
     self.backButton.enabled = NO;
@@ -100,16 +130,6 @@ enum ViewsDrawState {
 }
 
 #pragma mark - Outlet Actions
-
-- (IBAction)addGuestAction:(id)sender {
-
-    AbeloAddPartyMemberViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AbeloAddPartyMemberViewController"];
-    vc.delegate = self;
-    self.popover.contentViewController = vc;
-    self.popover.popoverContentSize = CGSizeMake(320, 120);
-    [self.popover presentPopoverFromBarButtonItem:self.okButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    
-}
 
 - (IBAction)backButtonAction:(id) sender {
     switch (self.viewsDrawState) {
@@ -190,28 +210,39 @@ enum ViewsDrawState {
 - (IBAction)testDummyAction:(id)sender {
 }
 
-
 #pragma mark - Gesture recognizers
 
 #define ARC4RANDOM_MAX 0x100000000
 
 - (void)panGesture:(UIPanGestureRecognizer *)gesture {
     
-    if(gesture.numberOfTouches == 0
-       && self.viewsDrawState == ViewsDrawStateLinking &&
-       self.mainView.isDrawing){
-        [self.mainView addToCurrentLinkerPoint:[gesture locationInView:self.mainView]];
-        [self.mainView setCurrentLinkerWithColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                 green:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                  blue:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                 alpha:0.8]
-         ];
+    CGPoint touchInMainView = [gesture locationInView:self.mainView];
+    
+    if(gesture.numberOfTouches == 0){
+
+        if(self.viewsDrawState == ViewsDrawStateLinking && self.mainView.isDrawing){
+            [self.mainView addToCurrentLinkerPoint:touchInMainView];
+            [self.mainView setCurrentLinkerWithColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
+                                                                     green:((double)arc4random() / ARC4RANDOM_MAX)
+                                                                      blue:((double)arc4random() / ARC4RANDOM_MAX)
+                                                                     alpha:0.8]
+             ];
+        } else if(self.viewsDrawState == ViewsDrawStateBillItems) {
+            
+            id someUI = [self.mainView anyUIViewAtPoint:touchInMainView];
+            if(someUI){
+                if([someUI isKindOfClass:[NSValue class]]){
+                    [self showBillItemViewControllerAtView:someUI];
+                }
+            }
+            
+        }
     } else if(gesture.numberOfTouches == 1){
         if(self.viewsDrawState == ViewsDrawStateBillItems){
             
             if(gesture.state == UIGestureRecognizerStateBegan ||
                gesture.state == UIGestureRecognizerStateChanged) {
-                [self.mainView addPointToCurrentRect:[gesture locationInView:self.mainView]];
+                [self.mainView addPointToCurrentRect:touchInMainView];
             } else {
                 ULog(@"panGesture.state unknown[%d]", gesture.state);
             }
@@ -219,7 +250,7 @@ enum ViewsDrawState {
             
             if(gesture.state == UIGestureRecognizerStateBegan ||
                gesture.state == UIGestureRecognizerStateChanged) {
-                [self.mainView addPointToCurrentRect:[gesture locationInView:self.mainView]];
+                [self.mainView addPointToCurrentRect:touchInMainView];
             } else {
                 ULog(@"panGesture.state unknown[%d]", gesture.state);
             }
@@ -227,7 +258,7 @@ enum ViewsDrawState {
             
             if(gesture.state == UIGestureRecognizerStateBegan ||
                gesture.state == UIGestureRecognizerStateChanged) {
-                [self.mainView addToCurrentLinkerPoint:[gesture locationInView:self.mainView]];
+                [self.mainView addToCurrentLinkerPoint:touchInMainView];
             } else {
                 DLog(@"gesture.state[%d] unknow", gesture.state);
             }
@@ -302,6 +333,8 @@ enum ViewsDrawState {
 #pragma mark - UIPopoverControllerDelegate
 
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    //check viewController to see which VC it came from in order to
+    // determine if anything needs to be done
     [self.popover dismissPopoverAnimated:YES];
 }
 
@@ -316,12 +349,16 @@ enum ViewsDrawState {
     [self.popover dismissPopoverAnimated:YES];
 }
 
-#pragma mark - PartyMembersViewDelegate protocol
+#pragma mark - AbeloBillItemViewProtocol
 
-- (void)addPartyMember:(id)sender {
-    [self addGuestAction:sender];
+- (void)addBillItem:(AbeloBillItemViewController *)sender withAmount:(float)billItemAmount withBillItemViewId:(id)viewId{
+    [self.bill addBillItemWithId:viewId withTotal:billItemAmount];
+    [self.popover dismissPopoverAnimated:YES];
 }
 
+- (void)removeBillItem:(AbeloBillItemViewController *)sender forBillItemView:(id)view{
+    [self.popover dismissPopoverAnimated:YES];
+}
 
 
 # pragma mark - Private methods

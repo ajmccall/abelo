@@ -117,6 +117,10 @@
     return [self.receiptView setCurrentRectAsTotal];
 }
 
+- (UIImage *)getImageForRect:(CGRect)rect {
+    return [self.receiptView getImageForRect:rect];
+}
+
 #pragma mark - PatyMember methods
 
 - (id) addPartyMemberWithName:(NSString *)name andColor:(UIColor *)color {

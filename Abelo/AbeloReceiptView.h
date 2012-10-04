@@ -24,4 +24,6 @@
 - (BOOL) clearTotalAndReturnSuccess;
 - (void) clearCurrentRect;
 
+- (UIImage *) getImageForRect:(CGRect) rect;
+
 @end

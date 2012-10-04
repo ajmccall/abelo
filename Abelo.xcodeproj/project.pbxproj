@@ -10,7 +10,9 @@
 		D200DF9B161CD3F800A1400D /* AbeloAddPartyMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */; };
 		D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */ = {isa = PBXBuildFile; fileRef = D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */; };
 		D23B77C416108F060033C55C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D23B77C316108F060033C55C /* Localizable.strings */; };
+		D247AC8E161DAF160070609D /* AbeloBillItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D247AC8D161DAF160070609D /* AbeloBillItemViewController.m */; };
 		D2C6FDCC161C561100837E52 /* AbeloScaleOffsetView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2C6FDCB161C561100837E52 /* AbeloScaleOffsetView.m */; };
+		D2D3218D161DEC4600748908 /* testpattern.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = D2D3218C161DEC4600748908 /* testpattern.jpeg */; };
 		D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F27715FF4E2600923EFB /* dimt.jpg */; };
 		D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */; };
 		D2D5F29315FF5D1600923EFB /* AbeloReceiptView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2D5F29215FF5D1600923EFB /* AbeloReceiptView.m */; };
@@ -52,9 +54,12 @@
 		D23B77C21610850A0033C55C /* AbeloStringDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloStringDefines.h; sourceTree = "<group>"; };
 		D23B77C316108F060033C55C /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		D23B77CD1610967A0033C55C /* MRGRectMake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRGRectMake.h; sourceTree = "<group>"; };
+		D247AC8C161DAF160070609D /* AbeloBillItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloBillItemViewController.h; sourceTree = "<group>"; };
+		D247AC8D161DAF160070609D /* AbeloBillItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloBillItemViewController.m; sourceTree = "<group>"; };
 		D2C6FDCA161C561100837E52 /* AbeloScaleOffsetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloScaleOffsetView.h; sourceTree = "<group>"; };
 		D2C6FDCB161C561100837E52 /* AbeloScaleOffsetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloScaleOffsetView.m; sourceTree = "<group>"; };
 		D2C6FDCE161CA0F400837E52 /* AbeloTouchableViewProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloTouchableViewProtocol.h; sourceTree = "<group>"; };
+		D2D3218C161DEC4600748908 /* testpattern.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = testpattern.jpeg; sourceTree = "<group>"; };
 		D2D5F27315FE4A2A00923EFB /* MRGLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRGLog.h; sourceTree = "<group>"; };
 		D2D5F27715FF4E2600923EFB /* dimt.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dimt.jpg; sourceTree = "<group>"; };
 		D2D5F28E15FF596E00923EFB /* AbeloReceiptViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AbeloReceiptViewController.xib; sourceTree = "<group>"; };
@@ -125,6 +130,7 @@
 		D23B77C616108F1D0033C55C /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D2D3218C161DEC4600748908 /* testpattern.jpeg */,
 				D2D5F27715FF4E2600923EFB /* dimt.jpg */,
 			);
 			name = Images;
@@ -143,6 +149,8 @@
 		D2D5F27915FF4E5000923EFB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D247AC8C161DAF160070609D /* AbeloBillItemViewController.h */,
+				D247AC8D161DAF160070609D /* AbeloBillItemViewController.m */,
 				D200DF99161CD3F800A1400D /* AbeloAddPartyMemberViewController.h */,
 				D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */,
 				D2C6FDCE161CA0F400837E52 /* AbeloTouchableViewProtocol.h */,
@@ -337,6 +345,7 @@
 				D2D5F27815FF4E2600923EFB /* dimt.jpg in Resources */,
 				D2D5F29015FF596E00923EFB /* AbeloReceiptViewController.xib in Resources */,
 				D23B77C416108F060033C55C /* Localizable.strings in Resources */,
+				D2D3218D161DEC4600748908 /* testpattern.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +391,7 @@
 				D2F4439B161394B800AF9DCF /* AbeloMainView.m in Sources */,
 				D2C6FDCC161C561100837E52 /* AbeloScaleOffsetView.m in Sources */,
 				D200DF9B161CD3F800A1400D /* AbeloAddPartyMemberViewController.m in Sources */,
+				D247AC8E161DAF160070609D /* AbeloBillItemViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

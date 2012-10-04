@@ -16,31 +16,26 @@
                                 <rect key="frame" x="0.0" y="0.0" width="768" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem systemItem="rewind" id="v4f-ez-WKm">
-                                        <connections>
-                                            <action selector="backButtonAction:" destination="2" id="TkX-X0-jFN"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem systemItem="done" id="ekE-t9-dVC">
-                                        <connections>
-                                            <action selector="okButtonAction:" destination="2" id="X0d-c8-AOm"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem systemItem="fastForward" id="z3V-Jv-V8U">
-                                        <connections>
-                                            <action selector="nextButtonAction:" destination="2" id="bGt-89-v6w"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="YAb-rm-qF9"/>
                                     <barButtonItem title="Test" id="Rby-p8-SJ2">
                                         <connections>
                                             <action selector="testDummyAction:" destination="2" id="R7k-FF-nuu"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="IP9-KD-ord"/>
-                                    <barButtonItem title="Add Guest" id="67z-0W-Aqp">
+                                    <barButtonItem systemItem="rewind" id="v4f-ez-WKm">
                                         <connections>
-                                            <action selector="addGuestAction:" destination="2" id="oJh-7N-6ps"/>
+                                            <action selector="backButtonAction:" destination="2" id="TkX-X0-jFN"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="YAb-rm-qF9"/>
+                                    <barButtonItem systemItem="done" id="ekE-t9-dVC">
+                                        <connections>
+                                            <action selector="okButtonAction:" destination="2" id="X0d-c8-AOm"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="IP9-KD-ord"/>
+                                    <barButtonItem systemItem="fastForward" id="z3V-Jv-V8U">
+                                        <connections>
+                                            <action selector="nextButtonAction:" destination="2" id="bGt-89-v6w"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -77,7 +72,7 @@
                                 <rect key="frame" x="20" y="20" width="728" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="done"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="YPe-WV-drK">
                                 <rect key="frame" x="340" y="54" width="90" height="44"/>
@@ -109,6 +104,93 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XLC-sm-XPj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="804" y="-268"/>
+        </scene>
+        <!--Abelo Bill Item View Controller-->
+        <scene sceneID="cua-o3-vMQ">
+            <objects>
+                <viewController storyboardIdentifier="AbeloBillItemViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0Pv-oH-aHI" customClass="AbeloBillItemViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LCl-I3-s96">
+                        <rect key="frame" x="0.0" y="20" width="768" height="960"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="RDX-yU-0er">
+                                <rect key="frame" x="20" y="20" width="728" height="120"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="5" borderStyle="bezel" textAlignment="right" minimumFontSize="17" id="BXB-Se-LUB">
+                                <rect key="frame" x="286" y="154" width="94" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="49" borderStyle="bezel" minimumFontSize="17" id="TNN-3s-gGE">
+                                <rect key="frame" x="388" y="154" width="94" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                            </textField>
+                            <stepper opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" wraps="YES" maximumValue="1000" id="ixf-Hg-j10">
+                                <rect key="frame" x="286" y="192" width="94" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="stepperAction:" destination="0Pv-oH-aHI" eventType="valueChanged" id="33k-bp-tf9"/>
+                                </connections>
+                            </stepper>
+                            <stepper opaque="NO" clipsSubviews="YES" tag="-1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" wraps="YES" maximumValue="100" id="nvc-OL-nCH">
+                                <rect key="frame" x="388" y="192" width="94" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="stepperAction:" destination="0Pv-oH-aHI" eventType="valueChanged" id="YQR-oF-Ggk"/>
+                                </connections>
+                            </stepper>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yoV-zh-exP">
+                                <rect key="frame" x="721" y="192" width="27" height="28"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <state key="normal" title="Y">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="buttonAction:" destination="0Pv-oH-aHI" eventType="touchUpInside" id="lPK-z9-Q8h"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="-1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NrJ-8u-FI3">
+                                <rect key="frame" x="20" y="192" width="28" height="28"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                <state key="normal" title="N">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="buttonAction:" destination="0Pv-oH-aHI" eventType="touchUpInside" id="dC7-w9-E7e"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems>
+                        <barButtonItem title="Item" id="FD2-F9-xOI"/>
+                    </toolbarItems>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="billImageView" destination="RDX-yU-0er" id="LOh-77-cB8"/>
+                        <outlet property="pencesStepper" destination="nvc-OL-nCH" id="6J3-ZU-sbU"/>
+                        <outlet property="pencesTextField" destination="TNN-3s-gGE" id="sA3-oc-Z1G"/>
+                        <outlet property="poundsStepper" destination="ixf-Hg-j10" id="kRa-p1-Qdf"/>
+                        <outlet property="poundsTextField" destination="BXB-Se-LUB" id="n7q-E3-Lqk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4ps-2h-6Pp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="820" y="927"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

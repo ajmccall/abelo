@@ -14,6 +14,7 @@
 @property (nonatomic) CGPoint drawOffset;
 
 - (CGPoint) translateAndScalePoint:(CGPoint) p;
+- (CGRect) translateAndScaleRect:(CGRect)p;
 - (CGPoint) reverseTranslateAndScalePoint:(CGPoint) p;
 - (CGRect) reverseTranslateAndScaleRect:(CGRect) rect;
 - (CGRect) CGRectMakeFromFingerPoint:(CGPoint) p;

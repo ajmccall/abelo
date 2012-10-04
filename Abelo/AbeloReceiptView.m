@@ -23,8 +23,6 @@
 @property (nonatomic, readonly) UIColor *blueTransparent;
 @property (nonatomic, readonly) UIColor *greenTransparent;
 
-//- (CGPoint) translateAndScalePoint:(CGPoint) p;
-
 @end
 
 #pragma mark - AbeloReceiptView implementation
@@ -42,13 +40,15 @@
 - (void)setImage:(UIImage *)image {
     
     switch ([image imageOrientation]) {
-        case UIImageOrientationRight:
+        case UIImageOrientationUp:
             _image = image;
             break;
         default:
-            _image = [UIImage imageWithCGImage:image.CGImage scale:1.0 orientation:UIImageOrientationRight];
+            _image = [UIImage imageWithCGImage:image.CGImage scale:1.0 orientation:UIImageOrientationUp];
             break;
     }
+    _image = image;
+    
     [self setNeedsDisplay];
 }
 
@@ -151,7 +151,27 @@
     self.currentBillItemRect = CGRectMake(NIL_FLOAT, NIL_FLOAT, NIL_FLOAT, NIL_FLOAT);
 }
 
-#pragma mark - Draw Metho¢ds
+- (UIImage *)getImageForRect:(CGRect)rect {
+
+    CGFloat imageToDisplayRectScaleX = self.frame.size.width / self.image.size.width;
+    CGFloat imageToDisplayRectScaleY = self.frame.size.height / self.image.size.height;
+    
+    rect = CGRectMake(rect.origin.x / imageToDisplayRectScaleX,
+                      rect.origin.y / imageToDisplayRectScaleY,
+                      rect.size.width / imageToDisplayRectScaleX,
+                      rect.size.height / imageToDisplayRectScaleY);
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect(self.image.CGImage, rect);
+    
+    UIImage *ret = [UIImage imageWithCGImage:imageRef];
+    
+    // since CGImageRef is a Core Graphics object, not managed by ARC hnce needs to be released
+    CGImageRelease(imageRef);
+    
+    return ret;
+}
+
+#pragma mark - Draw Methods
 - (void) drawReceiptImage:(CGContextRef) context {
     UIGraphicsPushContext(context);
     CGRect rect = CGRectMake(self.drawOffset.x, self.drawOffset.y, self.frame.size.width * self.drawScale, self.frame.size.height * self.drawScale);
@@ -209,9 +229,15 @@
 #pragma mark - AbeloTouchableViewProtocol
 
 - (id)anyUIViewAtPoint:(CGPoint)point {
+    
+    point = [self translateAndScalePoint:point];
+    if(CGRectContainsPoint(self.currentBillItemRect, point)){
+        return [NSValue valueWithCGRect:self.currentBillItemRect];
+    }
+    
     int i = 0;
     while(i < [self.billItems count]) {
-        if(CGRectContainsPoint([[self.billItems objectAtIndex:i] CGRectValue], [self translateAndScalePoint:point])) {
+        if(CGRectContainsPoint([[self.billItems objectAtIndex:i] CGRectValue], point)) {
             break;
         }
         i++;
@@ -226,9 +252,11 @@
 
 - (NSArray *)uiViewsAtPoint:(CGPoint)point {
     NSMutableArray *array = [NSMutableArray array];
+    point = [self translateAndScalePoint:point];
+
     int i = 0;
     while(i < [self.billItems count]) {
-        if(CGRectContainsPoint([[self.billItems objectAtIndex:i] CGRectValue], [self translateAndScalePoint:point])) {
+        if(CGRectContainsPoint([[self.billItems objectAtIndex:i] CGRectValue], point)) {
             [array addObject:[self.billItems objectAtIndex:i]];
         }
         i++;

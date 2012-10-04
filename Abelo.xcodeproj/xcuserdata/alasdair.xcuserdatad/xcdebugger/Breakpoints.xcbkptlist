@@ -4,42 +4,29 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Abelo/AbeloBill.m"
-         timestampString = "370976933.209984"
+         filePath = "Abelo/AbeloViewController.m"
+         timestampString = "371078630.542532"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "128"
-         endingLineNumber = "128"
-         landmarkName = "-billItemExistForViewId:"
+         startingLineNumber = "355"
+         endingLineNumber = "355"
+         landmarkName = "-addBillItem:withAmount:withBillItemViewId:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Abelo/AbeloBill.m"
-         timestampString = "370977145.085066"
+         filePath = "Abelo/AbeloBillItemViewController.m"
+         timestampString = "371078987.854235"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "124"
-         endingLineNumber = "124"
-         landmarkName = "-addBillItemWithId:withTotal:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "Abelo/AbeloReceiptView.m"
-         timestampString = "370977292.908435"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "237"
-         endingLineNumber = "237"
-         landmarkName = "-uiViewsAtPoint:"
+         startingLineNumber = "65"
+         endingLineNumber = "65"
+         landmarkName = "-buttonAction:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
