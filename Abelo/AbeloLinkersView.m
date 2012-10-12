@@ -42,6 +42,9 @@ typedef struct Linker {
 @synthesize partyMembersViewRect = _partyMembersViewRect;
 @synthesize startLinkerPointInReceipt;
 
+@dynamic startPoint;
+@dynamic endPoint;
+
 #pragma mark - Property synthesis implementations
 
 - (void)setCurrentLinkerPointStart:(CGPoint)currentLinkerPointStart {
@@ -52,6 +55,14 @@ typedef struct Linker {
 - (void)setCurrentLinkerPointEnd:(CGPoint)currentLinkerPointEnd {
     _currentLinkerPointEnd = currentLinkerPointEnd;
     [self setNeedsDisplay];
+}
+
+- (CGPoint)startPoint {
+    return self.currentLinkerPointStart;
+}
+
+- (CGPoint)endPoint {
+    return self.currentLinkerPointEnd;
 }
 
 - (NSMutableArray *)linkers {

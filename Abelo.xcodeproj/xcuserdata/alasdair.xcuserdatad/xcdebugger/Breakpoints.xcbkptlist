@@ -4,29 +4,68 @@
    version = "1.0">
    <FileBreakpoints>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "Abelo/AbeloViewController.m"
-         timestampString = "371078630.542532"
+         timestampString = "371750212.667127"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "355"
-         endingLineNumber = "355"
-         landmarkName = "-addBillItem:withAmount:withBillItemViewId:"
+         startingLineNumber = "237"
+         endingLineNumber = "237"
+         landmarkName = "-addBillItem:forBillItemViewId:toPartyMemberWithViewId:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Abelo/AbeloBill.m"
+         timestampString = "371750317.071769"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "136"
+         endingLineNumber = "136"
+         landmarkName = "-addBillItemWithId:toPartyMemberWithId:withPercentage:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Abelo/AbeloMainView.m"
+         timestampString = "371752177.498684"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "286"
+         endingLineNumber = "286"
+         landmarkName = "-panGesture:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "Abelo/AbeloMainView.m"
+         timestampString = "371752367.308905"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "204"
+         endingLineNumber = "204"
+         landmarkName = "-updatePartyMemberId:withTotal:andNumberItems:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "Abelo/AbeloBillItemViewController.m"
-         timestampString = "371078987.854235"
+         filePath = "Abelo/AbeloBill.m"
+         timestampString = "371752423.835107"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "65"
-         endingLineNumber = "65"
-         landmarkName = "-buttonAction:"
+         startingLineNumber = "99"
+         endingLineNumber = "99"
+         landmarkName = "-partyMemberTotalForId:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

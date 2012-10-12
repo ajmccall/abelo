@@ -29,22 +29,26 @@
 @synthesize total = _total;
 @synthesize nameLabel = _nameLabel;
 @synthesize totalLabel = _totalLabel;
+@synthesize color = _color;
 
 - (void)setColor:(UIColor *)color {
     self.nameLabel.backgroundColor = color;
     self.totalLabel.backgroundColor = color;
+    self.backgroundColor = color;
     [self setNeedsDisplay];
 }
 
-- (void)setTotal:(float)total {
+- (UIColor *)color {
+    return self.nameLabel.backgroundColor;
+}
+
+- (void)setTotal:(int)total {
     _total = total;
     
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-    [formatter setLocale:[NSLocale currentLocale]];
-    NSString *localisedMoneyString = [formatter stringFromNumber:[NSNumber numberWithFloat:total]];
+    int pounds = total / 100;
+    int pennies = total % 100;
 
-    self.totalLabel.text = localisedMoneyString;
+    self.totalLabel.text = [NSString stringWithFormat:@"£%d.%.2d", pounds, pennies];
     
     if(self.totalLabel.frame.size.height == 0){
         self.totalLabel.frame = CGRectMake(self.frame.origin.x,
@@ -64,6 +68,14 @@
                                           NAME_LABEL_HEIGHT);
     }
 }
+
+#pragma mark - NSCopyingProtocol
+
+- (id)copyWithZone:(NSZone *)zone {
+    return self;
+}
+
+
 
 #pragma mark - Interface methods
 

@@ -9,10 +9,7 @@
 #import "AbeloViewController.h"
 #import "AbeloBill.h"
 #import "MRGLog.h"
-#import "AbeloReceiptView.h"
-#import "AbeloLinkersView.h"
-#import "AbeloPartyMembersView.h"
-#import "AbeloMainView.h"
+#import "MRGRectMake.h"
 
 // enum to control the drawing state of the recipet view
 enum ViewsDrawState {
@@ -26,14 +23,11 @@ enum ViewsDrawState {
 #pragma mark - AbeloViewController PRIVATE interface
 @interface AbeloViewController ()
 
-+ (NSString *) GenerateRandStringLength:(int) len;
-
 @property (nonatomic) AbeloBill *bill;
 @property (nonatomic) UIPopoverController *popover;
-@property (nonatomic) UIGestureRecognizer *panGesture;
 @property (nonatomic) ViewsDrawState viewsDrawState;
 
-- (void) showPartyMemberViewController;
+- (void) showPartyMemberViewControllerAtView:(id) view;
 - (void) showBillItemViewControllerAtView:(id) view;
 
 @end
@@ -48,7 +42,6 @@ enum ViewsDrawState {
 @synthesize mainView = _mainView;
 
 #pragma mark - Property synthesize declarations
-@synthesize panGesture = _panGesture;
 @synthesize popover = _popover;
 @synthesize bill = _bill;
 
@@ -61,13 +54,6 @@ enum ViewsDrawState {
     return _bill;
 }
 
-- (UIGestureRecognizer *)panGesture {
-    if(!_panGesture) {
-        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-    }
-    return _panGesture;
-}
-
 - (UIPopoverController *)popover {
     if(!_popover) {
         _popover = [[UIPopoverController alloc] initWithContentViewController:self];
@@ -78,26 +64,53 @@ enum ViewsDrawState {
 
 #pragma mark - Implmentations
 
-- (void) showPartyMemberViewController {
+- (void) showPartyMemberViewControllerAtView:(id) viewId {
     
-    AbeloAddPartyMemberViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AbeloAddPartyMemberViewController"];
+    // instantiate the viewController
+    AbeloPartyMemberViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AbeloPartyMemberViewController"];
     vc.delegate = self;
     self.popover.contentViewController = vc;
     self.popover.popoverContentSize = CGSizeMake(320, 120);
-    [self.popover presentPopoverFromBarButtonItem:self.okButton permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+
+    // set party member view congtroller properties.
+    vc.partyMemberViewId = viewId;
+    // if party member already exists, set name, billItems and total to display
+    if([self.bill partyMemberNameForId:viewId]){
+        vc.name = [self.bill partyMemberNameForId:viewId];
+        vc.billItems = [self.bill partyMemberBillItemsForId:viewId];
+        vc.total = [self.bill partyMemberTotalForId:viewId];
+        vc.color = [self.bill partyMemberColorForId:viewId];
+    }
+    
+    // determine the rect of the partyMember view, and translate that according to the main
+    // view so that the popoverVC displays properly
+    CGRect rect = ((UIView *) viewId).frame;
+    rect = [self.mainView translatePartyMemberRectInMainView:rect];
+    
+    //display
+    [self.popover presentPopoverFromRect:rect inView:self.mainView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
 }
 
 - (void) showBillItemViewControllerAtView:(id) viewId {
+
+    // instantiate the viewController
     AbeloBillItemViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"AbeloBillItemViewController"];
     vc.delegate = self;
     self.popover.contentViewController = vc;
+    self.popover.popoverContentSize = CGSizeMake(320, 240);
+
+    // set bill item view controller properties
+    vc.billItemViewId = viewId;
+    
+    //if bill item exists, set total
+    if([self.bill billItemExistForId:viewId]){
+        vc.total = [self.bill billItemTotalForId:viewId];
+    }
     
     CGRect rect = [((NSValue *)viewId) CGRectValue];
     vc.image = [self.mainView getImageForRect:rect];
-    vc.billItemViewId = viewId;
-    self.popover.popoverContentSize = CGSizeMake(320, 240);
-    [self.popover presentPopoverFromRect:rect inView:self.mainView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    [self.popover presentPopoverFromRect:[self.mainView scaleAndTranslateRectIfNecessary:rect] inView:self.mainView permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
     
 }
 
@@ -107,8 +120,7 @@ enum ViewsDrawState {
 - (void) setup {
     self.backButton.enabled = NO;
     self.okButton.enabled = NO;
-    [self.view addGestureRecognizer:self.panGesture];
-
+    self.mainView.delegate = self;
 }
 
 - (void)viewDidLoad
@@ -133,25 +145,6 @@ enum ViewsDrawState {
 
 - (IBAction)backButtonAction:(id) sender {
     switch (self.viewsDrawState) {
-//        case ViewsDrawStateBillItems:
-//            if([self.mainView clearLastBillItem]) {
-//                return;
-//            }
-//            [self.view removeGestureRecognizer:self.panGesture];
-//            [self.mainView clearView];
-//            self.okButton.enabled = NO;
-//            self.backButton.enabled = NO;
-//
-//            self.viewsDrawState--;
-//            break;
-//        case ViewsDrawStateTotal:
-//            if([self.mainView clearLastBillItem]) {
-//                return;
-//            }
-//            break;
-//        case ViewsDrawStateImage:
-//        case ViewsDrawStateStart:
-//        case ViewsDrawStateLinking:
         default:
             break;
     }
@@ -173,37 +166,12 @@ enum ViewsDrawState {
             self.mainView.image = [UIImage imageNamed:@"dimt.jpg"];
             [self nextButtonAction:sender];
             break;
-        case ViewsDrawStateBillItems:
-            self.okButton.enabled = YES;
-            self.backButton.enabled = YES;
-            break;
-        case ViewsDrawStateTotal:
-            [self.mainView setCurrentRectAsTotal];
-            break;
-        case ViewsDrawStateLinking:
-            self.okButton.enabled = NO;
-            self.nextButton.enabled = NO;
-            break;
         default:
             break;
     }
 }
 
 - (IBAction)okButtonAction:(id) sender {
-    switch (self.viewsDrawState) {
-        case ViewsDrawStateBillItems: {
-            [self.bill addBillItemWithId:[self.mainView setCurrentRectAsBillItem] withTotal:5.50];
-            break;
-        }
-        case ViewsDrawStateTotal:
-            [self.mainView setCurrentRectAsTotal];
-            break;
-        case ViewsDrawStateImage:
-        case ViewsDrawStateStart:
-        case ViewsDrawStateLinking:
-        default:
-            break;
-    }
 }
 
 
@@ -212,83 +180,8 @@ enum ViewsDrawState {
 
 #pragma mark - Gesture recognizers
 
+
 #define ARC4RANDOM_MAX 0x100000000
-
-- (void)panGesture:(UIPanGestureRecognizer *)gesture {
-    
-    CGPoint touchInMainView = [gesture locationInView:self.mainView];
-    
-    if(gesture.numberOfTouches == 0){
-
-        if(self.viewsDrawState == ViewsDrawStateLinking && self.mainView.isDrawing){
-            [self.mainView addToCurrentLinkerPoint:touchInMainView];
-            [self.mainView setCurrentLinkerWithColor:[UIColor colorWithRed:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                     green:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                      blue:((double)arc4random() / ARC4RANDOM_MAX)
-                                                                     alpha:0.8]
-             ];
-        } else if(self.viewsDrawState == ViewsDrawStateBillItems) {
-            
-            id someUI = [self.mainView anyUIViewAtPoint:touchInMainView];
-            if(someUI){
-                if([someUI isKindOfClass:[NSValue class]]){
-                    [self showBillItemViewControllerAtView:someUI];
-                }
-            }
-            
-        }
-    } else if(gesture.numberOfTouches == 1){
-        if(self.viewsDrawState == ViewsDrawStateBillItems){
-            
-            if(gesture.state == UIGestureRecognizerStateBegan ||
-               gesture.state == UIGestureRecognizerStateChanged) {
-                [self.mainView addPointToCurrentRect:touchInMainView];
-            } else {
-                ULog(@"panGesture.state unknown[%d]", gesture.state);
-            }
-        } else if(self.viewsDrawState == ViewsDrawStateTotal){
-            
-            if(gesture.state == UIGestureRecognizerStateBegan ||
-               gesture.state == UIGestureRecognizerStateChanged) {
-                [self.mainView addPointToCurrentRect:touchInMainView];
-            } else {
-                ULog(@"panGesture.state unknown[%d]", gesture.state);
-            }
-        } else if(self.viewsDrawState == ViewsDrawStateLinking) {
-            
-            if(gesture.state == UIGestureRecognizerStateBegan ||
-               gesture.state == UIGestureRecognizerStateChanged) {
-                [self.mainView addToCurrentLinkerPoint:touchInMainView];
-            } else {
-                DLog(@"gesture.state[%d] unknow", gesture.state);
-            }
-        }
-    } else if(gesture.numberOfTouches == 2){
-        [self.mainView panGesture:gesture];
-    }
-}
-
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    CGPoint touchPoint = [[touches anyObject] locationInView:self.mainView];
-    
-    // add touch if we are drawing menu itme rectaganles or the total rectangles
-    if([touches count] == 1){
-        if(self.viewsDrawState == ViewsDrawStateBillItems ||
-           self.viewsDrawState == ViewsDrawStateTotal) {
-            [self.mainView addPointToCurrentRect:touchPoint];
-        } else if(self.viewsDrawState == ViewsDrawStateLinking){
-            
-            //check that a uiView exists
-            if([self.mainView anyUIViewAtPoint:touchPoint]){
-                if([self.bill billItemExistForViewId:[[self.mainView uiViewsAtPoint:touchPoint] objectAtIndex:0]]){
-                    [self.mainView startLinkerFromPoint:touchPoint];
-                }
-            }
-       }
-    }
-}
-
 
 #pragma mark - Camera
 
@@ -329,50 +222,99 @@ enum ViewsDrawState {
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [self dismissModalViewControllerAnimated:YES];
 }
+#pragma mark - AbeloMainViewDelegate
 
-#pragma mark - UIPopoverControllerDelegate
+- (void)showPartyMemberController:(AbeloMainView *)sender forViewId:(id)viewId {
+    [self showPartyMemberViewControllerAtView:viewId];
+}
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
-    //check viewController to see which VC it came from in order to
-    // determine if anything needs to be done
+- (void)showBillItemController:(AbeloMainView *)sender forViewId:(id)viewId {
+    [self showBillItemViewControllerAtView:viewId];
+}
+
+- (void)addBillItem:(AbeloMainView *)sender forBillItemViewId:(id)billItemViewId toPartyMemberWithViewId:(id)partyMemberViewId {
+    
+    if([self.bill partyMemberNameForId:partyMemberViewId]){
+        [self.bill addBillItemWithId:billItemViewId
+                 toPartyMemberWithId:partyMemberViewId
+                      withPercentage:1.0];
+        
+        [self.mainView updatePartyMemberId:partyMemberViewId
+                                 withTotal:[self.bill partyMemberTotalForId:partyMemberViewId]
+                            andNumberItems:[self.bill numberOfItemsForPartyMemberForId:partyMemberViewId]];
+    }
+    
+}
+
+#pragma mark - AbeloPartyMemberProtocol
+
+- (void)setPartyMember:(AbeloPartyMemberViewController *)sender withName:(NSString *)name andColor:(UIColor *)color {
+    
+    //if partyMember exists, then update view
+    if([self.bill partyMemberNameForId:sender.partyMemberViewId]){
+        //update the bill model
+        [self.bill setPartyMemberWithId:sender.partyMemberViewId name:name color:color];
+        //update ui
+        [self.mainView updatePartyMemberId:sender.partyMemberViewId withName:name andColor:sender.view.backgroundColor];
+    } else {
+        // else add new partyMember
+        id viewId = [self.mainView addPartyMemberWithName:name andColor:color];
+        [self.bill setPartyMemberWithId:viewId name:name color:color];
+    }
+    
     [self.popover dismissPopoverAnimated:YES];
 }
 
-#pragma mark - AbeloAddPartyMemberProtocol
-
-- (void)addPartyMember:(AbeloAddPartyMemberViewController *)sender withName:(NSString *)name andColor:(UIColor *)color {
-    [self.bill addPartyMemberWithViewId:[self.mainView addPartyMemberWithName:name andColor:color] withName:name];
-    [self.popover dismissPopoverAnimated:YES];
+- (void)editPartyMember:(AbeloPartyMemberViewController *)sender withNewName:(NSString *)newName andNewColor:(UIColor *)newColor {
+    //if partyMember exists, then update view
+    if([self.bill partyMemberNameForId:sender.partyMemberViewId]){
+        //update the bill model
+        [self.bill setPartyMemberWithId:sender.partyMemberViewId name:newName color:newColor];
+        //update ui
+        [self.mainView updatePartyMemberId:sender.partyMemberViewId withName:newName andColor:sender.view.backgroundColor];
+    }
 }
 
-- (void) cancelAddPartyMember:(AbeloAddPartyMemberViewController *)sender {
+- (void)deletePartyMember:(AbeloPartyMemberViewController *)sender {
+    
+}
+
+- (void) cancelViewController:(AbeloPartyMemberViewController *)sender {
     [self.popover dismissPopoverAnimated:YES];
 }
 
 #pragma mark - AbeloBillItemViewProtocol
 
-- (void)addBillItem:(AbeloBillItemViewController *)sender withAmount:(float)billItemAmount withBillItemViewId:(id)viewId{
-    [self.bill addBillItemWithId:viewId withTotal:billItemAmount];
+- (void)setBillItem:(AbeloBillItemViewController *)sender withAmount:(int)billItemAmount{
+    [self.bill setBillItemWithId:sender.billItemViewId withTotal:billItemAmount];
+    [self.mainView setCurrentRectAsBillItem];
     [self.popover dismissPopoverAnimated:YES];
 }
 
-- (void)removeBillItem:(AbeloBillItemViewController *)sender forBillItemView:(id)view{
+- (void) editBilItem:(AbeloBillItemViewController *)sender withNewAmount:(int)billItemAmount {
+    if([self.bill billItemExistForId:sender.billItemViewId]){
+        [self.bill setBillItemWithId:sender.billItemViewId withTotal:billItemAmount];
+    }
+}
+
+- (void)deleteBillItem:(AbeloBillItemViewController *)sender{
+    [self.popover dismissPopoverAnimated:YES];
+}
+
+- (void) cancelController:(AbeloBillItemViewController *)sender {
+    [self.popover dismissPopoverAnimated:YES];
+    if(![self.bill billItemExistForId:sender.billItemViewId]){
+        [self.mainView clearCurrentBillItem];
+    }
+}
+
+#pragma mark - UIPopoverControllerDelegate
+
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
     [self.popover dismissPopoverAnimated:YES];
 }
 
 
 # pragma mark - Private methods
 
-NSString *letters = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-+ (NSString *) GenerateRandStringLength:(int) len {
-    
-    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
-    
-    for (int i=0; i<len; i++) {
-        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
-    }
-    
-    return randomString;
-}
 @end

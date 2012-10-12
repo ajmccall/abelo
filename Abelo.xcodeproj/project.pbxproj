@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D200DF9B161CD3F800A1400D /* AbeloAddPartyMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */; };
+		D200DF9B161CD3F800A1400D /* AbeloPartyMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D200DF9A161CD3F800A1400D /* AbeloPartyMemberViewController.m */; };
 		D23B77BE16107BE80033C55C /* AbeloPartyMemberView.m in Sources */ = {isa = PBXBuildFile; fileRef = D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */; };
 		D23B77C416108F060033C55C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D23B77C316108F060033C55C /* Localizable.strings */; };
 		D247AC8E161DAF160070609D /* AbeloBillItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D247AC8D161DAF160070609D /* AbeloBillItemViewController.m */; };
@@ -47,8 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D200DF99161CD3F800A1400D /* AbeloAddPartyMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloAddPartyMemberViewController.h; sourceTree = "<group>"; };
-		D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloAddPartyMemberViewController.m; sourceTree = "<group>"; };
+		D200DF99161CD3F800A1400D /* AbeloPartyMemberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloPartyMemberViewController.h; sourceTree = "<group>"; };
+		D200DF9A161CD3F800A1400D /* AbeloPartyMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloPartyMemberViewController.m; sourceTree = "<group>"; };
 		D23B77BC16107BE80033C55C /* AbeloPartyMemberView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AbeloPartyMemberView.h; sourceTree = "<group>"; };
 		D23B77BD16107BE80033C55C /* AbeloPartyMemberView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AbeloPartyMemberView.m; sourceTree = "<group>"; };
 		D23B77C21610850A0033C55C /* AbeloStringDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AbeloStringDefines.h; sourceTree = "<group>"; };
@@ -151,8 +151,8 @@
 			children = (
 				D247AC8C161DAF160070609D /* AbeloBillItemViewController.h */,
 				D247AC8D161DAF160070609D /* AbeloBillItemViewController.m */,
-				D200DF99161CD3F800A1400D /* AbeloAddPartyMemberViewController.h */,
-				D200DF9A161CD3F800A1400D /* AbeloAddPartyMemberViewController.m */,
+				D200DF99161CD3F800A1400D /* AbeloPartyMemberViewController.h */,
+				D200DF9A161CD3F800A1400D /* AbeloPartyMemberViewController.m */,
 				D2C6FDCE161CA0F400837E52 /* AbeloTouchableViewProtocol.h */,
 				D2F44399161394B800AF9DCF /* AbeloMainView.h */,
 				D2F4439A161394B800AF9DCF /* AbeloMainView.m */,
@@ -390,7 +390,7 @@
 				D2DF70FD16136C2200EA8B85 /* AbeloLinkersView.m in Sources */,
 				D2F4439B161394B800AF9DCF /* AbeloMainView.m in Sources */,
 				D2C6FDCC161C561100837E52 /* AbeloScaleOffsetView.m in Sources */,
-				D200DF9B161CD3F800A1400D /* AbeloAddPartyMemberViewController.m in Sources */,
+				D200DF9B161CD3F800A1400D /* AbeloPartyMemberViewController.m in Sources */,
 				D247AC8E161DAF160070609D /* AbeloBillItemViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,8 +9,17 @@
 #import "AbeloMainView.h"
 #import "AbeloReceiptView.h"
 #import "AbeloPartyMembersView.h"
+#import "AbeloPartyMemberView.h"
 #import "AbeloLinkersView.h"
 #import "MRGRectMake.h"
+#import "MRGLog.h"
+
+enum TouchState {
+    TouchStateBillItem,
+    TouchStatePartyMember,
+    TouchStateLinker,
+    TouchStateNone
+} typedef TouchState;
 
 #pragma mark - AbeloMainView PRIVATE interface
 
@@ -20,9 +29,12 @@
 @property (nonatomic) AbeloPartyMembersView *partyMembersView;
 @property (nonatomic) AbeloLinkersView *linkerView;
 @property (nonatomic) UIGestureRecognizer *pinchGesture;
-
+@property (nonatomic) UITapGestureRecognizer *tapGesture;
+@property (nonatomic) UIGestureRecognizer *panGesture;
 @property (nonatomic) CGFloat drawScale;
 @property (nonatomic) CGPoint drawOffset;
+@property (nonatomic) TouchState touchState;
+
 
 @end
 
@@ -36,18 +48,26 @@
 
 #pragma mark - Property synthesize definitions
 
-@synthesize pinchGesture = _pinchGesture;
+@synthesize delegate = _delegate;
 @dynamic image;
 @synthesize drawOffset = _drawOffset;
 @synthesize drawScale = _drawScale;
+
+@synthesize pinchGesture = _pinchGesture;
+@synthesize tapGesture = _tapGesture;
+@synthesize panGesture = _panGesture;
+
+@synthesize touchState = _touchState;
 
 #pragma mark - Property synthesize implementations
 
 - (void)setImage:(UIImage *)image {
     if(image){
         [self addGestureRecognizer:self.pinchGesture];
+        [self addGestureRecognizer:self.panGesture];
     } else {
         [self removeGestureRecognizer:self.pinchGesture];
+        [self removeGestureRecognizer:self.panGesture];
     }
     
     self.receiptView.image = image;
@@ -62,6 +82,24 @@
         _pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGesture:)];
     }
     return _pinchGesture;
+}
+
+- (UITapGestureRecognizer *)tapGesture {
+    if(!_tapGesture){
+        _tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGesture:)];
+        _tapGesture.numberOfTapsRequired = 1;
+        _tapGesture.numberOfTouchesRequired = 1;
+        
+    }
+    
+    return _tapGesture;
+}
+
+- (UIGestureRecognizer *)panGesture {
+    if(!_panGesture) {
+        _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    }
+    return _panGesture;
 }
 
 - (void)setDrawOffset:(CGPoint)drawOffset {
@@ -80,6 +118,29 @@
 
 - (void)clearView {
     
+}
+
+- (CGRect) scaleAndTranslateRectIfNecessary:(CGRect)rect {
+    
+    if(CGRectContainsRect(self.receiptView.frame, rect)){
+        return [self.receiptView reverseTranslateAndScaleRect:rect];
+    }
+    
+    return rect;    
+}
+
+- (BOOL)isTouchInPartyMembersView:(CGPoint)touchPoint {
+    return CGRectContainsPoint(self.partyMembersView.frame, touchPoint);
+}
+
+#pragma mark - Translation methods
+
+- (CGRect)translateBillItemRectInMainView:(CGRect)billItemRect {
+    return billItemRect;
+}
+
+- (CGRect)translatePartyMemberRectInMainView:(CGRect)partyMemberRect {
+    return MRGRectMakeSetX(self.receiptView.frame.size.width + partyMemberRect.origin.x, partyMemberRect);
 }
 
 #pragma mark - AbeloTouchableViewProtocol
@@ -121,10 +182,26 @@
     return [self.receiptView getImageForRect:rect];
 }
 
+- (void)clearCurrentBillItem {
+    [self.receiptView clearCurrentRect];
+}
+
 #pragma mark - PatyMember methods
 
 - (id) addPartyMemberWithName:(NSString *)name andColor:(UIColor *)color {
     return [self.partyMembersView addPartyMemberWithName:name andColor:color];
+}
+
+- (void)updatePartyMemberId:(id)viewId withName:(NSString *)name andColor:(UIColor *)color {
+
+    AbeloPartyMemberView *view = (AbeloPartyMemberView *) viewId;
+    view.name = name;
+    [view setColor:color];
+}
+
+- (void)updatePartyMemberId:(id)viewId withTotal:(int)total andNumberItems:(int)numberItems {
+    AbeloPartyMemberView *view = (AbeloPartyMemberView *) viewId;
+    view.total = total;
 }
 
 #pragma mark - LinkerView methods
@@ -165,18 +242,137 @@
     }
 }
 
+
+- (void)tapGesture:(UITapGestureRecognizer *)gesture {
+
+    // tap gesture clears touchState as they are used  for panGesture
+    self.touchState = TouchStateNone;
+    [self.linkerView clearCurrentLinkers];
+    [self.receiptView clearCurrentRect];
+
+    if([self.receiptView anyUIViewAtPoint:[gesture locationInView:self.receiptView]]){
+        [self.delegate showBillItemController:self forViewId:[self.receiptView anyUIViewAtPoint:[gesture locationInView:self.receiptView]]];
+    } else if([self.partyMembersView anyUIViewAtPoint:[gesture locationInView:self.partyMembersView]]) {
+        [self.delegate showPartyMemberController:self forViewId:[self.partyMembersView anyUIViewAtPoint:[gesture locationInView:self.partyMembersView]]];
+    } else if([self isTouchInPartyMembersView:[gesture locationInView:self.partyMembersView]]){
+        [self.delegate showPartyMemberController:self forViewId:nil];
+    }
+    
+}
+
 - (void)panGesture:(UIPanGestureRecognizer *)gesture {
     
-    // if two-finger pan gesture inside the receiptView
-    if(gesture.numberOfTouches == 2 &&
-       (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged)) {
+    if(gesture.numberOfTouches == 0){
         
-        [self.linkerView clearCurrentLinkers];
-        [self.receiptView clearCurrentRect];
+        if(self.touchState == TouchStateBillItem){
+            id viewId = [self.receiptView anyUIViewAtPoint:[gesture locationInView:self.receiptView]];
+            if(viewId){
+                [self.delegate showBillItemController:self forViewId:viewId];
+            }
+        }
+        
+        if(self.touchState == TouchStateLinker){
+            
+            //if the points ends inside of label within the partyMemberVC
+            id viewId = [self.partyMembersView anyUIViewAtPoint:[gesture locationInView:self.partyMembersView]];
+            if(viewId) {
 
-        self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
-                                      self.drawOffset.y + [gesture translationInView:self].y);
-        [gesture setTranslation:CGPointMake(0,0) inView:self];
+                [self addToCurrentLinkerPoint:[gesture locationInView:self]];
+                
+                //beware, THIS IS A HACK!
+                id pId = [self.partyMembersView anyUIViewAtPoint:[gesture locationInView:self.partyMembersView]];
+                id bId = [self.receiptView anyUIViewAtPoint:self.linkerView.startPoint];
+                
+                [self setCurrentLinkerWithColor:[UIColor colorWithRed:0.5 green:1.0 blue:0.33 alpha:0.8]];
+                
+                
+                [self.delegate addBillItem:self
+                         forBillItemViewId:bId
+                   toPartyMemberWithViewId:pId];
+                
+//                [self.delegate showLinkerController:self
+//                                  forBillItemViewId: billItemViewId
+//                               andPartyMemberViewId: partyMemberViewId];
+            } else {
+                [self.linkerView clearCurrentLinkers];
+            }
+        }
+        
+    } else if(gesture.numberOfTouches == 1){
+        
+        if(self.touchState == TouchStateBillItem){
+            if(gesture.state == UIGestureRecognizerStateBegan ||
+               gesture.state == UIGestureRecognizerStateChanged) {
+                if(CGRectContainsPoint(self.receiptView.frame, [gesture locationInView:self.receiptView])) {
+                    [self addPointToCurrentRect:[gesture locationInView:self.receiptView]];
+                }
+            } else {
+                DLog(@"panGesture.state unknown[%d]", gesture.state);
+            }
+        } else if(self.touchState == TouchStateLinker){
+            if(gesture.state == UIGestureRecognizerStateBegan ||
+               gesture.state == UIGestureRecognizerStateChanged) {
+                [self addToCurrentLinkerPoint:[gesture locationInView:self]];
+            } else {
+                DLog(@"gesture.state[%d] unknow", gesture.state);
+            }
+        }
+        
+    } else if(gesture.numberOfTouches == 2 &&
+           (gesture.state == UIGestureRecognizerStateBegan || gesture.state == UIGestureRecognizerStateChanged)) {
+            
+            [self.linkerView clearCurrentLinkers];
+            [self.receiptView clearCurrentRect];
+            
+            self.drawOffset = CGPointMake(self.drawOffset.x + [gesture translationInView:self].x,
+                                          self.drawOffset.y + [gesture translationInView:self].y);
+            [gesture setTranslation:CGPointMake(0,0) inView:self];
+        }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    CGPoint touchPoint = [[touches anyObject] locationInView:self];
+    
+    // add touch if we are drawing menu itme rectaganles or the total rectangles
+    if([touches count] == 1){
+        
+        //if the touch is in the receipt view then, add to current rect
+        if(CGRectContainsPoint(self.receiptView.frame, touchPoint)) {
+            
+            if([self.receiptView anyUIViewAtPoint:touchPoint]) {
+                self.touchState = TouchStateLinker;
+                [self startLinkerFromPoint:touchPoint];
+//                DLog(@"Found at at a billItem");
+            } else {
+                self.touchState = TouchStateBillItem;
+                [self addPointToCurrentRect:touchPoint];
+            }
+        }
+        
+        
+//        if(self.viewsDrawState == ViewsDrawStateBillItems ||
+//           self.viewsDrawState == ViewsDrawStateTotal) {
+        
+            //            if([self.mainView anyUIViewAtPoint:touchPoint]){
+            //                NSArray *viewIds = [self.mainView uiViewsAtPoint:touchPoint];
+            //                for (id viewId in viewIds) {
+            //                    if([self.bill billItemExistForViewId:viewId]) {
+            //                        [self showBillItemViewControllerAtView:viewId];
+            //                        break;
+            //                    }
+            //                }
+            //            }
+            
+//        } else if(self.viewsDrawState == ViewsDrawStateLinking){
+        
+            //check that a uiView exists
+            if([self anyUIViewAtPoint:touchPoint]){
+//                if([self.bill billItemExistForViewId:[[self.mainView uiViewsAtPoint:touchPoint] objectAtIndex:0]]){
+//                    [self startLinkerFromPoint:touchPoint];
+//                }
+//            }
+        }
     }
 }
 
@@ -187,6 +383,8 @@
 #define PARTY_MEMBERS_VIEW_WIDTH 150.0
 
 - (void) setupView {
+    
+    self.touchState = TouchStateNone;
     
     self.drawOffset = CGPointMake(0,0);
     self.drawScale = 1.0;
@@ -202,6 +400,8 @@
     
     _linkerView.receiptViewRect = _receiptView.frame;
     _linkerView.partyMembersViewRect = _partyMembersView.frame;
+    
+    [self addGestureRecognizer:self.tapGesture];
     
     [self addSubview:self.receiptView];
     [self addSubview:self.partyMembersView];

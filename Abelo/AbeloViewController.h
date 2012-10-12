@@ -8,18 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import <MobileCoreServices/UTCoreTypes.h>
-#import "AbeloAddPartyMemberViewController.h"
 #import "AbeloBillItemViewController.h"
+#import "AbeloPartyMemberViewController.h"
+#import "AbeloMainView.h"
 
-@class AbeloMainView;
-
-@interface AbeloViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate, AbeloAddPartyMemberProtocol, AbeloBillItemViewProtocol, UIPopoverControllerDelegate>
+@interface AbeloViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate, AbeloPartyMemberProtocol, AbeloBillItemViewProtocol, AbeloMainViewDelegate, UIPopoverControllerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIToolbar *toolbar;
 @property (weak, nonatomic) IBOutlet AbeloMainView *mainView;
 
-
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *backButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *okButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *nextButton;
+
 @end

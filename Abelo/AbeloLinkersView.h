@@ -16,6 +16,9 @@
 @property (nonatomic) CGRect receiptViewRect;
 @property (nonatomic) CGRect partyMembersViewRect;
 
+@property (nonatomic, readonly) CGPoint startPoint;
+@property (nonatomic, readonly) CGPoint endPoint;
+
 - (void) startLinkerFromPoint:(CGPoint) startPoint;
 - (void) addToCurrentLinkerPoint:(CGPoint) aPoint;
 - (void) setCurrentLinkerWithColor:(UIColor *) color;

@@ -39,14 +39,14 @@
 #pragma mark - Property synthesis implementation
 - (void)setImage:(UIImage *)image {
     
-    switch ([image imageOrientation]) {
-        case UIImageOrientationUp:
-            _image = image;
-            break;
-        default:
-            _image = [UIImage imageWithCGImage:image.CGImage scale:1.0 orientation:UIImageOrientationUp];
-            break;
-    }
+//    switch ([image imageOrientation]) {
+//        case UIImageOrientationUp:
+//            _image = image;
+//            break;
+//        default:
+//            _image = [UIImage imageWithCGImage:image.CGImage scale:1.0 orientation:UIImageOrientationUp];
+//            break;
+//    }
     _image = image;
     
     [self setNeedsDisplay];

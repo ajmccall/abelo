@@ -11,8 +11,10 @@
 
 @protocol AbeloBillItemViewProtocol
 
-- (void) addBillItem:(AbeloBillItemViewController *) sender withAmount:(float) billItemAmount withBillItemViewId:(id) viewId;
-- (void) removeBillItem:(AbeloBillItemViewController *) sender forBillItemView:(id) view;
+- (void) setBillItem:(AbeloBillItemViewController *) sender withAmount:(int) billItemAmount;
+- (void) editBilItem:(AbeloBillItemViewController *) sender withNewAmount:(int) billItemAmount;
+- (void) deleteBillItem:(AbeloBillItemViewController *) sender;
+- (void) cancelController:(AbeloBillItemViewController *) sender;
 
 @end
 
@@ -20,6 +22,7 @@
 
 @property (nonatomic, weak) id<AbeloBillItemViewProtocol> delegate;
 @property (nonatomic) UIImage *image;
+@property (nonatomic) int total;
 @property (nonatomic) id billItemViewId;
 
 @property (nonatomic) IBOutlet UIImageView *billImageView;

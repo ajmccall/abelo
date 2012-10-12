@@ -14,19 +14,26 @@
 
 #pragma mark - PartyMember methods
 
-- (void) addPartyMemberWithViewId:(id) viewId withName:(NSString *) name;
-- (void) removePartyMemberForViewId:(id) viewId;
-- (BOOL) partyMemberExitForViewId:(id) viewId;
-- (float) billTotalForPartyMemberForViewId:(id) viewId;
+- (void) setPartyMemberWithId:(id) partyMemberId name:(NSString *) name color:(UIColor *) color;
+- (void) removePartyMemberForId:(id) partyMemberId;
+- (NSString *) partyMemberNameForId:(id) partyMemberId;
+- (int) partyMemberTotalForId:(id) partyMemberId;
+- (int) numberOfItemsForPartyMemberForId:(id) partyMemberId;
+- (NSArray *) partyMemberBillItemsForId:(id) partyMemberId;
+
+- (UIColor *) partyMemberColorForId:(id) partyMemberId;
 
 #pragma mark - BillItem methods
 
-- (void) addBillItemWithId:(id) viewId withTotal:(float) total;
-- (BOOL) billItemExistForViewId:(id) viewId;
+- (void) setBillItemWithId:(id) billItemId withTotal:(int) total;
+- (void) removeBillItemForId:(id) billItemId;
+- (int) billItemTotalForId:(id) billItemId;
+- (BOOL) billItemExistForId:(id) billItemId;
 
 #pragma mark - Linker methods
 
-- (void) addBillItemWithKey:(int) billKey toPartyMemberWithKey:(int) partyMemberKey;
+- (void) addBillItemWithId:(id) billItemId toPartyMemberWithId:(id) partyMemberId withPercentage:(float) percent;
+- (void) addBillItemWithId:(id) billItemId toPartyMemberWithId:(id) partyMemberId;
 
 /*
 - (id) addBillItem:(NSString *) itemName withTotal:(double) itemTotal andQuantity:(int) quantity;

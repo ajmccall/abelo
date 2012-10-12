@@ -7,32 +7,48 @@
 //
 
 #import "AbeloBill.h"
+#import "MRGLog.h"
 
-#pragma mark - PartyMemberBillItem
+#pragma mark MODEL
+#pragma mark PartyMemberModel interface
 
-@interface PartyMemberBillItem : NSObject
+@interface PartyMemberModel : NSObject
 
-@property (nonatomic) NSNumber *partyMember;
-@property (nonatomic) NSNumber *billItem;
-@property (nonatomic) float percentageShared;
-
-@end
-
-@implementation PartyMemberBillItem
-
-@synthesize partyMember = _partyMember;
-@synthesize billItem = _billItem;
-@synthesize percentageShared = _percentageShared;
+@property (nonatomic) NSString *name;
+@property (nonatomic) UIColor *color;
+@property (nonatomic) NSMutableDictionary *billItemsAndPercentages;
+@property (nonatomic, readonly) int numberOfItems;
 
 @end
 
-#pragma mark - AbeloBill private interface 
+#pragma mark - PartyMemberModel implementation
+
+@implementation PartyMemberModel
+
+@synthesize name = _name;
+@synthesize color = _color;
+@synthesize billItemsAndPercentages = _billItemsAndPercentages;
+@dynamic numberOfItems;
+
+- (int)numberOfItems {
+    return [self.billItemsAndPercentages count];
+}
+
+- (NSMutableDictionary *) billItemsAndPercentages {
+    if(!_billItemsAndPercentages) {
+        _billItemsAndPercentages = [NSMutableDictionary dictionary];
+    }
+    return _billItemsAndPercentages;
+}
+
+@end
+
+#pragma mark - AbeloBill PRIVATE interface 
 
 @interface AbeloBill()
 
 @property (nonatomic) NSMutableDictionary *partyMembers;
 @property (nonatomic) NSMutableDictionary *billItems;
-@property (nonatomic) NSMutableArray *billItemsLinked;
 
 @end
 
@@ -40,16 +56,14 @@
 
 @implementation AbeloBill
 
+#pragma mark - Properties synthesis and definitions
+
 @synthesize partyMembers = _partyMembers;
-
-#pragma mark - Synthesize
-
 @synthesize billItems = _billItems;
 @synthesize total = _total;
-@synthesize billItemsLinked = _billItemsLinked;
 
 - (NSMutableDictionary *)partyMembers {
-    if(_partyMembers){
+    if(!_partyMembers){
         _partyMembers = [[NSMutableDictionary alloc] init];
     }
     
@@ -63,69 +77,83 @@
     return _billItems;
 }
 
-- (NSMutableArray *)billItemsLinked {
-    if(!_billItemsLinked){
-        _billItemsLinked = [[NSMutableArray alloc] init];
-    }
-    return _billItemsLinked;
-}
+#pragma mark - PartyMember implementations
 
-#pragma mark - Method implementations
-
-- (void)addPartyMemberWithViewId:(id)viewId withName:(NSString *)name {
-    [self.partyMembers setObject:name forKey:viewId];
-}
-
-- (void)removePartyMemberForViewId:(id)viewId {
-    [self.partyMembers removeObjectForKey:viewId];
-}
-
-- (float)billTotalForPartyMemberForViewId:(id)viewId {
-    float ret = 0.0;
-    if(![self.partyMembers objectForKey:viewId]) {
-        return -1;
-    }
-
-//    for (PartyMemberBillItem *partyMemberBillItem in self.billItemsLinked) {
-//        if([partyMemberBillItem.partyMember isEqualToNumber:viewId]){
-//            float billItemValue = [(NSNumber *)[self.billItems objectForKey:partyMemberBillItem.billItem] floatValue];
-//            ret += billItemValue * partyMemberBillItem.percentageShared;
-//        }
-//    }
+- (void)setPartyMemberWithId:(id)partyMemberId name:(NSString *)name color:(UIColor *)color {
     
-    return ret;
+    PartyMemberModel *pm = [self.partyMembers objectForKey:partyMemberId];
+    if(!pm) {
+        pm = [[PartyMemberModel alloc] init];
+    }
+    pm.name = name;
+    pm.color = color;
+    
+    [self.partyMembers setObject:pm forKey:partyMemberId];
 }
 
-- (BOOL)partyMemberExitForViewId:(id)viewId {
-    return ![self.partyMembers objectForKey:viewId];
+- (void)removePartyMemberForId:(id)partyMemberId {
+    [self.partyMembers removeObjectForKey:partyMemberId];
+}
+
+- (int)partyMemberTotalForId:(id)partyMemberId {
+    int total = 0.0;
+    PartyMemberModel *pm = [self.partyMembers objectForKey:partyMemberId];
+    NSMutableDictionary *dic = pm.billItemsAndPercentages;
+    for(id key in dic){
+        total += [((NSNumber *)[self.billItems objectForKey:key]) intValue];
+    }
+    
+    return total;
+}
+
+- (NSString *) partyMemberNameForId:(id)partyMemberId {
+    PartyMemberModel *pm = [self.partyMembers objectForKey:partyMemberId];
+    return pm.name;
+}
+
+- (int)numberOfItemsForPartyMemberForId:(id)partyMemberId {
+    PartyMemberModel *pm = [self.partyMembers objectForKey:partyMemberId];
+    return pm.numberOfItems;
+}
+
+- (NSArray *)partyMemberBillItemsForId:(id)partyMemberId {
+    DLog(@"NOT IMPLEMENTED YET");
+    return nil;
+}
+
+- (UIColor *)partyMemberColorForId:(id)partyMemberId {
+    PartyMemberModel *pm = [self.partyMembers objectForKey:partyMemberId];
+    return pm.color;
 }
 
 #pragma mark - Linker methods
 
-- (void)addBillItemWithKey:(int)billKey toPartyMemberWithKey:(int)partyMemberKey {
-    NSNumber *pKey = [NSNumber numberWithInt:partyMemberKey];
-    NSNumber *bKey = [NSNumber numberWithInt:billKey];
-    if(![self.partyMembers objectForKey:pKey] ||
-       ![self.billItems objectForKey:bKey]) {
-        return;
-    }
+- (void)addBillItemWithId:(id)billItemId toPartyMemberWithId:(id)partyMemberId {
+    [self addBillItemWithId:billItemId toPartyMemberWithId:partyMemberId withPercentage:1.0];
+}
 
-    PartyMemberBillItem *partyMemberBillItem = [[PartyMemberBillItem alloc] init];
-    partyMemberBillItem.partyMember = pKey;
-    partyMemberBillItem.billItem = bKey;
-    partyMemberBillItem.percentageShared = 1.0;
-
-    [self.billItemsLinked addObject:partyMemberBillItem];
+- (void)addBillItemWithId:(id)billItemId toPartyMemberWithId:(id)partyMemberId withPercentage:(float)percent {
+    PartyMemberModel *pm = [self.partyMembers objectForKey:partyMemberId];
+    [pm.billItemsAndPercentages setObject:[NSNumber numberWithFloat:percent] forKey:billItemId];
 }
 
 #pragma mark - BillItem methods
 
-- (void)addBillItemWithId:(id)viewId withTotal:(float)total {
-    [self.billItems setObject:[NSNumber numberWithFloat:total] forKey:viewId];
+- (void)setBillItemWithId:(id)billItemId withTotal:(int)total {
+    [self.billItems setObject:[NSNumber numberWithInt:total] forKey:billItemId];
 }
 
-- (BOOL)billItemExistForViewId:(id)viewId {
-    return [self.billItems objectForKey:viewId] != nil;
+- (void)removeBillItemForId:(id)billItemId {
+    DLog(@"NOT IMPLEMENTED YET");
+    //todo: go through all partymember bill items and remove them?
 }
+
+- (BOOL)billItemExistForId:(id)billItemId {
+    return [self.billItems objectForKey:billItemId] != nil;
+}
+
+- (int)billItemTotalForId:(id)billItemId {
+    return [((NSNumber *)[self.billItems objectForKey:billItemId]) intValue];
+}
+
 @end
-	

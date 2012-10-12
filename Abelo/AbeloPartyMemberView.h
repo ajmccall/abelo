@@ -8,11 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AbeloPartyMemberView : UIView
+@interface AbeloPartyMemberView : UIView<NSCopying>
 
 @property (nonatomic) NSString *name;
-@property (nonatomic) float total;
-
-- (void) setColor:(UIColor *) color;
+@property (nonatomic) int total;
+@property (nonatomic) UIColor *color;
 + (CGFloat) defaultViewHeight;
 @end

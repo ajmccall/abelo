@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="11G56" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="11G63" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="2">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
     </dependencies>
@@ -35,7 +35,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="IP9-KD-ord"/>
                                     <barButtonItem systemItem="fastForward" id="z3V-Jv-V8U">
                                         <connections>
-                                            <action selector="nextButtonAction:" destination="2" id="bGt-89-v6w"/>
+                                            <action selector="nextButtonAction:" destination="2" id="25L-jf-yoh"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -51,7 +51,6 @@
                     <connections>
                         <outlet property="backButton" destination="v4f-ez-WKm" id="2XL-Vl-3Jb"/>
                         <outlet property="mainView" destination="97J-Ll-jK8" id="L8t-WZ-ota"/>
-                        <outlet property="nextButton" destination="z3V-Jv-V8U" id="m8f-x9-iXh"/>
                         <outlet property="okButton" destination="ekE-t9-dVC" id="mC1-eK-Gtd"/>
                         <outlet property="toolbar" destination="y4Z-C2-ee5" id="xcv-4R-teV"/>
                     </connections>
@@ -60,10 +59,10 @@
             </objects>
             <point key="canvasLocation" x="-59" y="-209"/>
         </scene>
-        <!--Abelo Add Party Member View Controller-->
+        <!--Abelo Party Member View Controller-->
         <scene sceneID="rIy-YW-oOb">
             <objects>
-                <viewController storyboardIdentifier="AbeloAddPartyMemberViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="etv-wL-J5C" customClass="AbeloAddPartyMemberViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AbeloPartyMemberViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="etv-wL-J5C" customClass="AbeloPartyMemberViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BV5-fC-0R4">
                         <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

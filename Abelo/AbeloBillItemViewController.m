@@ -29,7 +29,7 @@
 
 @synthesize delegate = _delegate;
 @synthesize billItemViewId = _billItemViewId;
-
+@synthesize total = _total;
 @synthesize image = _image;
 
 #pragma mark - Property synthesis implementation
@@ -37,16 +37,21 @@
 
 - (void)setImage:(UIImage *)image {
     
-    _image = [image copy];
-    NSData *imageData = UIImagePNGRepresentation(_image);
-    
-    NSString  *jpgPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/test.png"];
-    // identity the home directory and file name
-    [imageData writeToFile:jpgPath atomically:YES];
-
+    _image = image;
     self.billImageView.image = _image;
     [self.billImageView setNeedsDisplay];
     [self.view setNeedsDisplay];
+}
+
+- (void)setTotal:(int)total {
+    _total = total;
+    
+    int pennies = total % 100;
+    int pounds = total / 100;
+    
+    self.pencesTextField.text = [NSString stringWithFormat:@"%d", pennies];
+    self.poundsTextField.text = [NSString stringWithFormat:@"%d", pounds];
+    [self setSteppers];
 }
 
 #pragma mark - IBOutlet Actions
@@ -61,10 +66,10 @@
 
 - (IBAction)buttonAction:(UIButton *)sender {
     if(sender.tag == BUTTON_YES_TAG) {
-        float amount = [self.poundsTextField.text intValue] + ((float)[self.pencesTextField.text intValue] / 100);
-        [self.delegate addBillItem:self withAmount:amount withBillItemViewId:self.billItemViewId];
+        int amount = [self.poundsTextField.text intValue] * 100 + [self.pencesTextField.text intValue];
+        [self.delegate setBillItem:self withAmount:amount];
     } else {
-        [self.delegate removeBillItem:self forBillItemView:self.billItemViewId];
+        [self.delegate cancelController:self];
     }
 }
 
@@ -74,6 +79,8 @@
     
 }
 
+- (IBAction)thisButtonActio:(id)sender {
+}
 
 
 
