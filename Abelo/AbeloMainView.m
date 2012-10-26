@@ -35,6 +35,8 @@ enum TouchState {
 @property (nonatomic) CGPoint drawOffset;
 @property (nonatomic) TouchState touchState;
 
+//@property (nonatomic) 
+
 
 @end
 
@@ -281,18 +283,14 @@ enum TouchState {
                 
                 //beware, THIS IS A HACK!
                 id pId = [self.partyMembersView anyUIViewAtPoint:[gesture locationInView:self.partyMembersView]];
-                id bId = [self.receiptView anyUIViewAtPoint:self.linkerView.startPoint];
+                id bId = [self.receiptView anyUIViewAtPoint:[self.receiptView reverseTranslateAndScalePoint:self.linkerView.startPoint]];
                 
                 [self setCurrentLinkerWithColor:[UIColor colorWithRed:0.5 green:1.0 blue:0.33 alpha:0.8]];
-                
                 
                 [self.delegate addBillItem:self
                          forBillItemViewId:bId
                    toPartyMemberWithViewId:pId];
                 
-//                [self.delegate showLinkerController:self
-//                                  forBillItemViewId: billItemViewId
-//                               andPartyMemberViewId: partyMemberViewId];
             } else {
                 [self.linkerView clearCurrentLinkers];
             }
@@ -343,35 +341,14 @@ enum TouchState {
             if([self.receiptView anyUIViewAtPoint:touchPoint]) {
                 self.touchState = TouchStateLinker;
                 [self startLinkerFromPoint:touchPoint];
-//                DLog(@"Found at at a billItem");
             } else {
                 self.touchState = TouchStateBillItem;
                 [self addPointToCurrentRect:touchPoint];
             }
         }
-        
-        
-//        if(self.viewsDrawState == ViewsDrawStateBillItems ||
-//           self.viewsDrawState == ViewsDrawStateTotal) {
-        
-            //            if([self.mainView anyUIViewAtPoint:touchPoint]){
-            //                NSArray *viewIds = [self.mainView uiViewsAtPoint:touchPoint];
-            //                for (id viewId in viewIds) {
-            //                    if([self.bill billItemExistForViewId:viewId]) {
-            //                        [self showBillItemViewControllerAtView:viewId];
-            //                        break;
-            //                    }
-            //                }
-            //            }
-            
-//        } else if(self.viewsDrawState == ViewsDrawStateLinking){
-        
-            //check that a uiView exists
-            if([self anyUIViewAtPoint:touchPoint]){
-//                if([self.bill billItemExistForViewId:[[self.mainView uiViewsAtPoint:touchPoint] objectAtIndex:0]]){
-//                    [self startLinkerFromPoint:touchPoint];
-//                }
-//            }
+
+        //check that a uiView exists
+        if([self anyUIViewAtPoint:touchPoint]){
         }
     }
 }
